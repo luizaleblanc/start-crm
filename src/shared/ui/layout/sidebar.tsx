@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { ReactNode } from "react";
 import { cn } from "../cn";
 
@@ -18,7 +19,7 @@ export function Sidebar({ items, header }: SidebarProps) {
       {header && <div className="flex h-16 items-center px-6">{header}</div>}
       <nav className="flex flex-col gap-1 px-3 py-4">
         {items.map((item) => (
-          <a
+          <Link
             key={item.href}
             href={item.href}
             className={cn(
@@ -27,7 +28,7 @@ export function Sidebar({ items, header }: SidebarProps) {
             )}
           >
             {item.label}
-          </a>
+          </Link>
         ))}
       </nav>
     </aside>

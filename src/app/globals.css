@@ -3,6 +3,8 @@
 @tailwind utilities;
 
 :root {
+  color-scheme: light;
+
   --color-ink: #16161c;
   --color-paper: #f6f5f8;
   --color-midnight: #193073;
@@ -26,18 +28,4 @@
   --secondary: var(--color-deep-blue);
   --secondary-foreground: var(--color-paper);
   --success: var(--color-success);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: var(--color-midnight);
-    --foreground: var(--color-paper);
-    --muted-foreground: var(--color-text-tertiary);
-    --border: rgb(255 255 255 / 12%);
-    --primary: var(--color-kennedy);
-    --primary-foreground: var(--color-ink);
-    --secondary: var(--color-deep-blue);
-    --secondary-foreground: var(--color-paper);
-    --success: var(--color-success);
-  }
 }

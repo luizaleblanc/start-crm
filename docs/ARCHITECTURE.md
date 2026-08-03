@@ -373,11 +373,25 @@ passa a apontar para `--color-midnight` (o "fundo escuro" oficial da
 paleta) em vez de `--color-paper`, mas o componente continua só usando
 `bg-background`.
 
-**Assunção documentada:** o Figma não define uma paleta dark-mode
-completa (só o par claro/escuro de fundo). Cor de borda no dark mode
-(`rgb(255 255 255 / 12%)`) e o mapeamento de texto terciário como
-`muted-foreground` no dark mode são escolhas minhas, não extraídas do
-arquivo — a revisitar se o Figma ganhar telas em dark mode no futuro.
+**Atualização pós-Fase 3, a pedido do usuário — dark mode removido, só
+light mode por enquanto:** a primeira versão acionava o dark mode
+automaticamente via `@media (prefers-color-scheme: dark)`, herdando a
+preferência do sistema operacional do usuário. Isso nunca foi desenhado
+nem aprovado — era uma suposição minha sobre a cor de fundo escuro
+(`--color-midnight`), a cor de borda (`rgb(255 255 255 / 12%)`) e o
+mapeamento de texto terciário, nenhuma extraída do Figma. Ao testar num
+sistema com tema escuro ativado, isso ligava sozinho, sem ter sido
+validado visualmente. Decisão: o bloco `@media (prefers-color-scheme:
+dark)` foi removido de `globals.css`, `darkMode` foi removido do
+`tailwind.config.ts` (nenhum componente usa a variante `dark:`, então
+a config não tinha efeito nenhum de qualquer forma), e `color-scheme:
+light` foi fixado em `:root` para que também os controles nativos do
+navegador (`<select>`, `<input type="date">`, scrollbar) não escureçam
+sozinhos com base no SO. O app sempre renderiza no tema claro até que
+um dark mode de verdade seja desenhado e aprovado — nesse momento, a
+separação marca/semântica já deixa isso pronto para voltar: basta
+reintroduzir os valores corretos (agora sim confirmados) atrás de um
+mecanismo explícito de troca de tema, não mais automático via SO.
 
 ### 4. Fonte via `next/font/google`, não `<link>` externo
 

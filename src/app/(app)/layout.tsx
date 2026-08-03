@@ -7,6 +7,7 @@ import { AuthGuard } from "@/shared/auth/auth-guard";
 import { Button } from "@/shared/ui/button";
 import { AppShell } from "@/shared/ui/layout/app-shell";
 import type { SidebarItem } from "@/shared/ui/layout/sidebar";
+import { LogoMark } from "@/shared/ui/logo-mark";
 
 const NAV_ITEMS: Array<Omit<SidebarItem, "active">> = [
   { label: "Painel", href: "/" },
@@ -34,7 +35,12 @@ function AppShellWithNav({ children }: { children: ReactNode }) {
   return (
     <AppShell
       sidebarItems={items}
-      sidebarHeader={<span className="text-h5 font-bold text-foreground">StartCRM</span>}
+      sidebarHeader={
+        <div className="flex items-center gap-2">
+          <LogoMark size={28} className="text-foreground" />
+          <span className="text-h5 font-bold text-foreground">StartCRM</span>
+        </div>
+      }
       pageActions={
         <div className="flex items-center gap-3">
           <span className="text-caption text-muted-foreground">{user?.name}</span>
