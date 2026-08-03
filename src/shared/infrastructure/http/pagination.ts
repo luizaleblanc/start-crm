@@ -9,3 +9,13 @@ export function parsePagination(request: Request): PaginationParams {
     pageSize: Number.isFinite(pageSize) && pageSize > 0 ? Math.min(pageSize, 100) : 20,
   };
 }
+
+export function parseFilters(request: Request): Record<string, string> | undefined {
+  const url = new URL(request.url);
+  const filters: Record<string, string> = {};
+  for (const [key, value] of url.searchParams.entries()) {
+    if (key === "page" || key === "pageSize") continue;
+    filters[key] = value;
+  }
+  return Object.keys(filters).length > 0 ? filters : undefined;
+}

@@ -433,11 +433,127 @@ conferir visualmente com `npm run dev` antes de aprovar o commit.
 
 ---
 
+## Fase 4 — Implementação das Telas do MVP
+
+### 1. Escopo confirmado com o usuário
+
+Quatro telas: Login, Dashboard, Lista + Detalhe de Leads, Pipeline de
+Negócios (Kanban). Todas consomem exclusivamente os Route Handlers
+construídos na Fase 2 (`/api/**`) — nenhuma tela fala com
+`NEST_API_URL`/`PYTHON_API_URL`, mantendo o padrão BFF intacto.
+
+### 2. TanStack Query — a primeira dependência nova desde a Fase 1
+
+**Decisão:** `@tanstack/react-query` foi instalado agora, não antes.
+
+**Por quê:** nas Fases 1–3 não havia nenhuma tela consumindo dados, então
+qualquer lib de data-fetching seria dependência sem uso real — decisão já
+registrada na Fase 2. Agora existe uso genuíno: cache entre telas (ex.
+navegar de Leads para o Dashboard não força um novo fetch imediato),
+`invalidateQueries` após mutações (mudar estágio, registrar interação,
+fechar negócio) e estados de loading/erro sem reimplementar isso à mão em
+cada tela. Continua sendo a única dependência de runtime nova do projeto.
+
+### 3. Sessão do mock: `localStorage` + `useSyncExternalStore`, não cookie
+
+**Decisão:** após `POST /api/auth/login`, o token e o usuário ficam em
+`localStorage` (chave `start-crm.session`). O `AuthProvider` lê esse
+estado com `useSyncExternalStore` (não `useState` + `useEffect`).
+
+**Por quê:** o guard de autenticação da Fase 2 (`requireAuth`) só aceita
+`Authorization: Bearer <token>` — não lê cookies. Como o client precisa
+montar esse header manualmente em cada chamada (`apiFetch`), o token
+precisa estar acessível em JS, o que descarta `httpOnly cookie` (mais
+seguro, mas ilegível pelo client). Isso é uma escolha de conveniência do
+**mock**, não a recomendação final: quando a Fase 5 conectar ao Nest.js
+real, a estratégia de sessão (cookie httpOnly vs. Bearer em memória) deve
+seguir o que o backend real implementar — provavelmente uma migração
+para cookie de sessão, o que é mais seguro contra XSS que localStorage.
+Isso está documentado aqui para não ser esquecido.
+
+Sobre o `useSyncExternalStore`: a primeira versão do `AuthProvider` usava
+`useState` inicial vazio + `useEffect` para ler o `localStorage` e chamar
+`setUser`/`setIsLoading`. O ESLint (regra `react-hooks/set-state-in-effect`,
+parte do conjunto de regras do React Compiler) rejeitou isso como **erro**,
+não aviso — `setState` síncrono dentro de um efeito é exatamente o padrão
+que a regra existe para pegar. A correção não foi suprimir a regra: é
+usar a API que o próprio React recomenda para sincronizar com um "external
+store" como `localStorage` — `useSyncExternalStore`, com `getServerSnapshot`
+retornando `null` (evita mismatch de hidratação, já que o servidor nunca
+tem acesso a `localStorage`).
+
+**Bug encontrado em teste manual e corrigido:** a primeira versão de
+`getStoredSession()` fazia `JSON.parse(raw)` a cada chamada, devolvendo
+um objeto novo mesmo quando o conteúdo do `localStorage` não mudava.
+`useSyncExternalStore` exige que `getSnapshot` devolva a **mesma
+referência** enquanto nada mudou — do contrário, o React interpreta
+"mudou" a cada render, entra em loop de re-render e a UI trava sem
+refletir a navegação (sintoma observado: login retornava 200 mas a tela
+não trocava). A correção foi cachear a última string bruta lida e seu
+objeto já parseado em `api-client.ts`, só reparseando quando a string
+muda de fato — restaurando a referência estável que o hook exige.
+
+### 4. Filtro genérico por query param no kernel da Fase 2
+
+**Decisão:** `InMemoryRepository.list()` e `createCollectionRoute` (Fase 2) ganharam suporte a filtro por igualdade via query string — qualquer
+param que não seja `page`/`pageSize` vira um filtro exato
+(`?leadId=lead_1` → só registros com `leadId === "lead_1"`).
+
+**Por quê:** a tela de detalhe do Lead precisa das interações e reuniões
+_daquele_ lead, e os endpoints genéricos (`/api/lead-interactions`,
+`/api/meetings`) não tinham como restringir isso. Em vez de buscar tudo e
+filtrar no client (funcionaria com os poucos registros do mock, mas seria
+o padrão errado a replicar contra um backend real com milhares de linhas),
+o filtro foi implementado no kernel — ou seja, em todos os 22 recursos de
+uma vez, não só nos dois que a Fase 4 precisava. É o tipo de convenção
+REST (`GET /recurso?campoId=valor`) que o Nest.js real provavelmente já
+segue, então o contrato do client não muda na Fase 5.
+
+### 5. Guarda de rota client-side, não Next.js Middleware
+
+**Decisão:** proteção de rota via um componente `AuthGuard` (client)
+dentro do layout do grupo `(app)`, que redireciona para `/login` se não
+houver sessão — não via `middleware.ts` do Next.js.
+
+**Por quê:** consequência direta da decisão da seção 3. `middleware.ts`
+roda no servidor/edge e só enxerga cookies e headers da requisição, nunca
+`localStorage`. Como o token mock vive em `localStorage`, um middleware
+não teria como checar a sessão. Isso é uma limitação real do MVP nesse
+estado: uma pessoa não autenticada que acesse `/leads` diretamente recebe
+o HTML da página antes do JS redirecionar (perceptível só por uma fração
+de segundo, mas existe). Não é um problema de segurança de dados — todas
+as chamadas a `/api/**` continuam exigindo o Bearer token válido — mas é
+um problema de UX/robustez a revisitar se a Fase 5 migrar para cookie de
+sessão (aí sim um `middleware.ts` real passa a ser possível).
+
+### 6. Estrutura: hooks de dados em `src/modules/crm/presentation/hooks/`
+
+Os hooks do TanStack Query (`use-leads.ts`, `use-deals.ts`,
+`use-catalog.ts`) ficam em `presentation/` dentro do módulo `crm` — são a
+camada que conecta UI a `apiFetch`, análoga à camada de apresentação de
+uma Clean Architecture tradicional, mas adaptada ao formato de hooks do
+React em vez de controllers/presenters explícitos. Não existe uma camada
+de "use case" adicional aqui (diferente do `application/` do lado
+servidor, Fase 2) porque não há regra de negócio no client — cada hook só
+traduz uma chamada HTTP em cache reativo; a regra de negócio de verdade
+(ex. "não fechar negócio que já está fechado") já mora nos use cases do
+BFF e seria duplicação criar uma segunda camada dela aqui.
+
+### 7. Validação
+
+Lint (incluindo a correção do erro de `set-state-in-effect` e dos avisos
+de `exhaustive-deps` em `useMemo`), typecheck e build limpos. Testado via
+`curl`: todas as páginas novas respondem 200, e o filtro por query param
+(`?leadId=`) foi validado contra a API real do mock, retornando somente
+os registros do lead correto.
+
+---
+
 ## Próximas fases (a documentar quando executadas)
 
-- **Fase 4:** telas do MVP, introdução do TanStack Query para consumir
-  os endpoints construídos na Fase 2, usando os componentes da Fase 3.
 - **Fase 5:** troca de `API_MODE=mock` para `real` — os Route Handlers
   passam a fazer `fetch` para `NEST_API_URL`/`PYTHON_API_URL` em vez de
   consultar os repositórios em memória; validação da suposição de
-  delete lógico x físico (Fase 2, seção 5) contra o schema real.
+  delete lógico x físico (Fase 2, seção 5) contra o schema real; decisão
+  de estratégia de sessão (cookie httpOnly vs. Bearer) a definir junto
+  com o backend real (Fase 4, seção 3).

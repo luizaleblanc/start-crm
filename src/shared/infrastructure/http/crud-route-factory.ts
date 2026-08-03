@@ -4,12 +4,12 @@ import { requireAuth } from "@/shared/infrastructure/auth/require-auth";
 import type { InMemoryRepository } from "@/shared/infrastructure/mock/in-memory-repository";
 import { ApiError } from "./api-error";
 import { handleRoute } from "./handle-route";
-import { parsePagination } from "./pagination";
+import { parseFilters, parsePagination } from "./pagination";
 
 export function createCollectionRoute<T extends BaseEntity>(repository: InMemoryRepository<T>) {
   const GET = handleRoute(async (request) => {
     requireAuth(request);
-    return NextResponse.json(repository.list(parsePagination(request)));
+    return NextResponse.json(repository.list(parsePagination(request), parseFilters(request)));
   });
 
   const POST = handleRoute(async (request) => {

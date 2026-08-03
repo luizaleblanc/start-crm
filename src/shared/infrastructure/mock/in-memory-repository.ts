@@ -15,10 +15,18 @@ export class InMemoryRepository<T extends BaseEntity> {
     this.softDelete = options.softDelete ?? false;
   }
 
-  list({ page, pageSize }: PaginationParams): PaginatedResult<T> {
-    const visible = this.softDelete
+  list({ page, pageSize }: PaginationParams, filters?: Record<string, string>): PaginatedResult<T> {
+    let visible = this.softDelete
       ? this.items.filter((item) => (item as unknown as SoftDeletable).ativo !== false)
       : this.items;
+
+    if (filters) {
+      const entries = Object.entries(filters);
+      visible = visible.filter((item) =>
+        entries.every(([key, value]) => String((item as Record<string, unknown>)[key]) === value),
+      );
+    }
+
     const start = (page - 1) * pageSize;
     return {
       data: visible.slice(start, start + pageSize),
