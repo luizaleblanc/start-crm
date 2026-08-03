@@ -2,8 +2,8 @@ import { forwardRef } from "react";
 import type { ButtonHTMLAttributes } from "react";
 import { cn } from "./cn";
 
-type ButtonVariant = "primary" | "secondary" | "outline" | "ghost";
-type ButtonSize = "sm" | "md" | "lg";
+export type ButtonVariant = "primary" | "secondary" | "outline" | "ghost";
+export type ButtonSize = "sm" | "md" | "lg";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
@@ -23,20 +23,34 @@ const sizeClasses: Record<ButtonSize, string> = {
   lg: "h-12 px-6 text-body",
 };
 
+interface ButtonVariantsOptions {
+  variant?: ButtonVariant;
+  size?: ButtonSize;
+  className?: string;
+}
+
+export function buttonVariants({
+  variant = "primary",
+  size = "md",
+  className,
+}: ButtonVariantsOptions = {}): string {
+  return cn(
+    "inline-flex items-center justify-center gap-2 rounded-md font-medium transition-colors",
+    "disabled:pointer-events-none disabled:opacity-50",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+    variantClasses[variant],
+    sizeClasses[size],
+    className,
+  );
+}
+
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = "primary", size = "md", type = "button", ...props }, ref) => {
     return (
       <button
         ref={ref}
         type={type}
-        className={cn(
-          "inline-flex items-center justify-center gap-2 rounded-md font-medium transition-colors",
-          "disabled:pointer-events-none disabled:opacity-50",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
-          variantClasses[variant],
-          sizeClasses[size],
-          className,
-        )}
+        className={buttonVariants({ variant, size, className })}
         {...props}
       />
     );

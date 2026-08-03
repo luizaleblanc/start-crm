@@ -1,13 +1,15 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { useAuth } from "@/shared/auth/auth-context";
 import { ApiClientError } from "@/shared/infrastructure/http/api-client";
-import { Button } from "@/shared/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/shared/ui/card";
+import { Button, buttonVariants } from "@/shared/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
 import { Input } from "@/shared/ui/input";
+import { LogoMark } from "@/shared/ui/logo-mark";
 
 export default function LoginPage() {
   const { user, isLoading, login } = useAuth();
@@ -39,9 +41,9 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-6">
       <Card className="w-full max-w-sm">
-        <CardHeader>
+        <CardHeader className="items-center text-center">
+          <LogoMark size={72} className="mb-2 text-foreground" />
           <CardTitle>Entrar no Start CRM</CardTitle>
-          <CardDescription>Use as credenciais provisionadas pelo seed.</CardDescription>
         </CardHeader>
         <CardContent>
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
@@ -59,10 +61,19 @@ export default function LoginPage() {
               onChange={(event) => setPassword(event.target.value)}
               required
             />
+            <Link
+              href="/forgot-password"
+              className="self-end text-caption text-primary underline-offset-4 hover:underline"
+            >
+              Esqueceu a senha?
+            </Link>
             {error && <p className="text-caption text-red-500">{error}</p>}
             <Button type="submit" disabled={isSubmitting}>
               {isSubmitting ? "Entrando…" : "Entrar"}
             </Button>
+            <Link href="/register" className={buttonVariants({ variant: "outline" })}>
+              Criar conta
+            </Link>
           </form>
         </CardContent>
       </Card>
