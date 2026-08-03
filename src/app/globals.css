@@ -29,3 +29,17 @@
   --secondary-foreground: var(--color-paper);
   --success: var(--color-success);
 }
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --background: var(--color-midnight);
+  --foreground: var(--color-paper);
+  --muted-foreground: var(--color-text-tertiary);
+  --border: rgb(255 255 255 / 12%);
+  --primary: var(--color-kennedy);
+  --primary-foreground: var(--color-paper);
+  --secondary: var(--color-deep-blue);
+  --secondary-foreground: var(--color-paper);
+  --success: var(--color-success);
+}

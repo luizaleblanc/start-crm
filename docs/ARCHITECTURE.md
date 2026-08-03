@@ -393,6 +393,25 @@ separação marca/semântica já deixa isso pronto para voltar: basta
 reintroduzir os valores corretos (agora sim confirmados) atrás de um
 mecanismo explícito de troca de tema, não mais automático via SO.
 
+**Atualização seguinte, a pedido do usuário — toggle explícito de
+tema:** os mesmos valores de dark mode removidos acima foram
+reintroduzidos em `globals.css`, mas atrás de `:root[data-theme="dark"]`
+em vez de `@media (prefers-color-scheme: dark)` — ou seja, dark mode
+só liga se a pessoa clicar no toggle (`ThemeToggle`,
+`src/shared/theme/`), nunca automaticamente pelo SO. Isso resolve o
+problema original (dark mode ligando sozinho sem ter sido aprovado
+visualmente) sem abrir mão de oferecer a opção. O estado do tema é
+lido/escrito em `localStorage` via `useSyncExternalStore`, seguindo
+exatamente o mesmo padrão do `AuthProvider` (Fase 4) — inclusive a
+mesma armadilha já resolvida lá: o `getSnapshot` faz cache da última
+string lida do `localStorage` para não devolver uma referência nova a
+cada chamada. A aplicação do atributo `data-theme` no `<html>` acontece
+num `useEffect` que só mexe no DOM (não chama `setState`), então não
+esbarra na regra `react-hooks/set-state-in-effect` que pegou o mesmo
+bug na Fase 4. As cores em si (dark mode) continuam sendo minha
+suposição, não uma validação do Figma — isso não mudou, só a forma de
+ativação.
+
 ### 4. Fonte via `next/font/google`, não `<link>` externo
 
 **Decisão:** Manrope carregada com `next/font/google` no
