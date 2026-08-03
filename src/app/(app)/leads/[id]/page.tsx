@@ -180,7 +180,7 @@ export default function LeadDetailPage() {
               <li className="text-caption text-muted-foreground">Nenhuma interação registrada.</li>
             )}
             {interactions.map((interaction) => (
-              <li key={interaction.id} className="rounded-md border border-border p-3">
+              <li key={interaction.id} className="rounded-md border border-border p-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Badge variant="muted">{INTERACTION_TYPE_LABELS[interaction.type]}</Badge>
@@ -239,7 +239,7 @@ export default function LeadDetailPage() {
               <li className="text-caption text-muted-foreground">Nenhuma reunião agendada.</li>
             )}
             {meetings.map((meeting) => (
-              <li key={meeting.id} className="rounded-md border border-border p-3">
+              <li key={meeting.id} className="rounded-md border border-border p-2">
                 <div className="flex items-center justify-between">
                   <p className="text-body text-foreground">
                     {new Date(meeting.scheduledAt).toLocaleString("pt-BR")}

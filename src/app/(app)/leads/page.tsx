@@ -151,58 +151,72 @@ function LeadsTableView({
   sourceNameById,
 }: LeadsTableViewProps) {
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Nome</TableHead>
-          <TableHead>E-mail</TableHead>
-          <TableHead>Origem</TableHead>
-          <TableHead>Estágio</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {isLoading && (
+    <div className="flex flex-col gap-3">
+      <div className="flex justify-end">
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={(event) => event.preventDefault()}
+          title="Requer integração de back-end com tabelas externas — ainda não implementado"
+        >
+          Importar minha Tabela
+        </Button>
+      </div>
+
+      <Table>
+        <TableHeader>
           <TableRow>
-            <TableCell colSpan={4} className="text-muted-foreground">
-              Carregando…
-            </TableCell>
+            <TableHead>Nome</TableHead>
+            <TableHead>E-mail</TableHead>
+            <TableHead>Origem</TableHead>
+            <TableHead>Estágio</TableHead>
           </TableRow>
-        )}
-        {!isLoading && leads.length === 0 && (
-          <TableRow>
-            <TableCell colSpan={4} className="text-muted-foreground">
-              Nenhum lead encontrado.
-            </TableCell>
-          </TableRow>
-        )}
-        {leads.map((lead) => {
-          const stage = stageById.get(lead.funnelStageId);
-          const color = stage ? getStageTemperatureColor(stage, funnelStages) : undefined;
-          return (
-            <TableRow key={lead.id}>
-              <TableCell>
-                <Link
-                  href={`/leads/${lead.id}`}
-                  className="inline-block text-foreground"
-                  style={color ? { borderBottom: `2px solid ${color}` } : undefined}
-                >
-                  {lead.name}
-                </Link>
-              </TableCell>
-              <TableCell className="text-muted-foreground">{lead.email}</TableCell>
-              <TableCell>{sourceNameById.get(lead.sourceId) ?? lead.sourceId}</TableCell>
-              <TableCell>
-                {stage ? (
-                  <TemperatureBadge stage={stage} allStages={funnelStages} />
-                ) : (
-                  lead.funnelStageId
-                )}
+        </TableHeader>
+        <TableBody>
+          {isLoading && (
+            <TableRow>
+              <TableCell colSpan={4} className="text-muted-foreground">
+                Carregando…
               </TableCell>
             </TableRow>
-          );
-        })}
-      </TableBody>
-    </Table>
+          )}
+          {!isLoading && leads.length === 0 && (
+            <TableRow>
+              <TableCell colSpan={4} className="text-muted-foreground">
+                Nenhum lead encontrado.
+              </TableCell>
+            </TableRow>
+          )}
+          {leads.map((lead) => {
+            const stage = stageById.get(lead.funnelStageId);
+            const color = stage ? getStageTemperatureColor(stage, funnelStages) : undefined;
+            return (
+              <TableRow key={lead.id}>
+                <TableCell>
+                  <Link
+                    href={`/leads/${lead.id}`}
+                    className="inline-block text-foreground"
+                    style={color ? { borderBottom: `2px solid ${color}` } : undefined}
+                  >
+                    {lead.name}
+                  </Link>
+                </TableCell>
+                <TableCell className="text-muted-foreground">{lead.email}</TableCell>
+                <TableCell>{sourceNameById.get(lead.sourceId) ?? lead.sourceId}</TableCell>
+                <TableCell>
+                  {stage ? (
+                    <TemperatureBadge stage={stage} allStages={funnelStages} />
+                  ) : (
+                    lead.funnelStageId
+                  )}
+                </TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
+    </div>
   );
 }
 
