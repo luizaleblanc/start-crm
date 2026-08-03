@@ -161,12 +161,166 @@ conversam só com `/api/*`) será implementada e documentada na Fase 2.
 
 ---
 
+## Fase 2 — Estruturação Arquitetural e Mock da API
+
+### Contexto: espelhando a API real (Start CRM API / NestJS)
+
+O time de back-end forneceu a especificação da API real: NestJS +
+TypeORM + PostgreSQL, multi-tenant, RBAC, funil comercial, auditoria e
+billing interno, com 22 recursos CRUD e 5 ações de CRM explícitas
+(`assign`, `stage`, `interactions`, `meetings` em `/crm/leads/:leadId`,
+e `close` em `/crm/deals/:negocioId`). A decisão central da Fase 2 foi:
+**os Route Handlers do Next.js reproduzem esse contrato 1:1** — mesmos
+paths, mesmos verbos HTTP, mesmo formato de resposta — só que hoje
+respondem com dados em memória em vez de consultar o Postgres via
+Nest.js. Isso significa que qualquer tela construída na Fase 4 contra
+`/api/leads`, `/api/deals` etc. já está, por construção, integrada com
+o contrato real; na Fase 5 só o _interior_ de cada Route Handler muda.
+
+### 1. Onde vive o "mock": dentro do BFF, não numa lib externa
+
+**Decisão:** o mock não usa MSW, nem fixtures hard-coded nos
+componentes — ele é o próprio corpo dos Route Handlers (`app/api/**`),
+respaldado por repositórios em memória seedados na inicialização do
+processo Node.
+
+**Por quê:** com o mock vivendo na mesma camada que futuramente fará a
+chamada real, não existe um "modo mock" e um "modo real" com código
+diferente na parte que interessa (regras de negócio, formato de
+resposta). Trocar de mock para real é trocar a implementação interna
+de uma função, não reescrever a aplicação. Ferramentas como MSW
+resolveriam um problema que não temos aqui (interceptar chamadas de
+rede do client) — o client nunca fala com o back-end real de qualquer
+forma, então o ponto de interceptação natural já é o Route Handler.
+
+### 2. Sem dependências novas
+
+**Decisão:** toda a Fase 2 foi construída só com o que já estava no
+`package.json` da Fase 1, mais o módulo `crypto` nativo do Node (para
+gerar UUIDs e assinar o token mock via HMAC-SHA256). Nenhuma lib de
+validação (zod/yup), nenhuma lib de JWT (`jsonwebtoken`/`jose`),
+nenhuma lib de mock de rede (MSW) e nenhuma lib de query/cache
+(TanStack Query — adiada para a Fase 4, quando efetivamente houver
+componentes consumindo os endpoints; instalar antes disso seria
+dependência sem uso real no repositório).
+
+**Por quê:** pedido explícito de manter o projeto livre de dependências
+pesadas. Um HMAC assinado com `crypto.createHmac` é suficiente para o
+propósito de um token de desenvolvimento local — ele não protege nada
+de verdade (é descartado inteiramente na Fase 5, quando o JWT real do
+Nest.js assume esse papel), então não há ganho em trazer uma lib de
+JWT completa só para o ambiente mock.
+
+### 3. Kernel compartilhado (`src/shared/`)
+
+- `domain/pagination.ts`, `domain/base-entity.ts` — contratos comuns
+  (`Identifiable`, `Timestamps`, `SoftDeletable`, `PaginatedResult`).
+- `infrastructure/mock/in-memory-repository.ts` — uma classe genérica
+  `InMemoryRepository<T>` com `list/findById/create/update/delete`,
+  parametrizável por `softDelete`. É o único lugar que sabe como
+  paginar, gerar timestamps e decidir entre delete lógico e físico.
+- `infrastructure/http/crud-route-factory.ts` — `createCollectionRoute`
+  e `createItemRoute`, que a partir de **qualquer** `InMemoryRepository`
+  produzem os handlers `GET/POST` e `GET/PATCH/DELETE` já protegidos
+  por autenticação, com tratamento de erro e paginação embutidos.
+- `infrastructure/http/handle-route.ts` + `api-error.ts` — wrapper que
+  captura `ApiError` e converte em resposta HTTP padronizada
+  (`{ statusCode, message }`), evitando `try/catch` repetido em cada
+  handler.
+- `infrastructure/auth/token.ts` + `require-auth.ts` — assinatura e
+  verificação do token mock, e o guard usado por todo endpoint
+  protegido.
+
+Essa camada é o motivo de os 22 recursos CRUD terem sido implementados
+sem 22 implementações divergentes de paginação, erro ou autenticação:
+cada rota gerada é literalmente `createCollectionRoute(repositorio)` /
+`createItemRoute(repositorio)`.
+
+### 4. Organização por módulo (`src/modules/`)
+
+Os 22 recursos do schema foram agrupados em 6 contextos, e não em 22
+pastas isoladas (diferente da convenção `src/modules/{domain}/{entity}`
+usada no repositório do NestJS, que faz sentido lá por causa de
+TypeORM/migrations por entidade — aqui, no front-end, o mock é só
+tipo + array em memória, então 22 pastas seriam estrutura sem
+conteúdo):
+
+| Contexto        | Recursos                                                                           |
+| --------------- | ---------------------------------------------------------------------------------- |
+| `iam`           | organizations, users, roles, permissions, role-permissions, user-roles             |
+| `crm`           | sources, funnel-stages, leads, lead-ownerships, lead-interactions, meetings, deals |
+| `people`        | user-absences                                                                      |
+| `notifications` | notifications                                                                      |
+| `billing`       | plans, plan-features, subscriptions, invoices, payments, plan-usages               |
+| `audit`         | audit-logs                                                                         |
+
+Cada contexto tem `domain/entities.ts` (os tipos), `infrastructure/seed.ts`
+(dados iniciais) e `infrastructure/repositories.ts` (as instâncias de
+`InMemoryRepository`). Só `crm` tem uma pasta `application/` — é o
+único contexto com regras de negócio reais no MVP (as 5 ações de CRM);
+os demais são CRUD puro, então uma camada de use cases ali seria
+abstração sem função (regra de "não adicionar indireção que nada usa").
+
+### 5. Decisão assumida e a validar: quais recursos usam `ativo`
+
+O enunciado da API real diz "recursos com `ativo` usam delete lógico,
+os demais delete físico", mas não lista quais são quais. Assumi, para
+poder avançar:
+
+- **Delete lógico (`ativo`):** organizations, users, roles,
+  permissions, sources, funnel-stages, leads, plans, plan-features —
+  são dados de cadastro/catálogo ou o próprio lead (perder histórico
+  comercial ao apagar de verdade seria ruim para um CRM).
+- **Delete físico:** role-permissions, user-roles, lead-ownerships,
+  lead-interactions, meetings, deals, user-absences, notifications,
+  subscriptions, invoices, payments, plan-usages, audit-logs — são
+  tabelas de associação ou eventos/transações.
+
+**Isso precisa ser confirmado contra o schema real do Postgres na Fase
+5** — é uma suposição documentada, não um fato confirmado pelo
+back-end.
+
+### 6. Multi-tenancy e RBAC no mock
+
+Todo registro de negócio carrega `organizationId` (a seed usa uma única
+organização, `org_1`). RBAC está modelado (`roles`, `permissions`,
+`role-permissions`, `user-roles`) mas **não é aplicado** nas
+autorizações do mock — o guard de autenticação (`requireAuth`) só
+verifica se existe um token válido, não se o usuário tem a permissão
+específica para a ação. Autorização granular por permissão é
+responsabilidade do back-end real (é ele quem tem a fonte da verdade de
+papéis); replicar essa lógica no mock seria trabalho descartável.
+
+### 7. Autenticação mock
+
+`POST /api/auth/login` aceita `admin@startcrm.local` /
+`ChangeMe123!` (as credenciais do seed do backend real, conforme o
+README da API) e devolve um token HMAC-assinado com 1h de validade.
+Todo recurso protegido (todos, exceto `/api/health` e
+`/api/auth/login`) exige `Authorization: Bearer <token>`; sem isso,
+`401`. O segredo de assinatura vem de `AUTH_MOCK_SECRET` no `.env` —
+puramente de desenvolvimento, sem uso de Argon2 (a senha do mock é
+comparada em texto puro; a real, no NestJS, é hasheada — isso não é
+replicado aqui porque o mock nunca guarda uma senha real).
+
+### 8. Testado manualmente
+
+Validado com o servidor de desenvolvimento rodando: `POST /auth/login`
+com credenciais erradas (401), login correto (200 + token), acesso sem
+token a um recurso protegido (401), acesso com token (200 + paginação),
+`PATCH /crm/leads/:id/stage` e `PATCH /crm/deals/:id/close` alterando
+estado de verdade nos repositórios em memória, e 404 de negócio ao
+tentar agir sobre um lead inexistente.
+
+---
+
 ## Próximas fases (a documentar quando executadas)
 
-- **Fase 2:** Clean Architecture por módulo, contrato dos Route Handlers
-  (BFF), estratégia de fixtures/mocks internos, TanStack Query.
 - **Fase 3:** extração dos tokens reais do Figma, biblioteca de
   componentes.
-- **Fase 4:** telas do MVP.
-- **Fase 5:** troca de `API_MODE=mock` para `real`, client HTTP dos
-  Route Handlers em direção ao Nest.js/Python.
+- **Fase 4:** telas do MVP, introdução do TanStack Query para consumir
+  os endpoints construídos na Fase 2.
+- **Fase 5:** troca de `API_MODE=mock` para `real` — os Route Handlers
+  passam a fazer `fetch` para `NEST_API_URL`/`PYTHON_API_URL` em vez de
+  consultar os repositórios em memória; validação da suposição de
+  delete lógico x físico (seção 5) contra o schema real.
