@@ -1,4 +1,4 @@
-import { InMemoryRepository } from "@/shared/infrastructure/mock/in-memory-repository";
+import { createResourceRepository } from "@/shared/infrastructure/repository-factory";
 import type {
   Deal,
   FunnelStage,
@@ -18,14 +18,34 @@ import {
   sourcesSeed,
 } from "./seed";
 
-export const sourcesRepository = new InMemoryRepository<Source>(sourcesSeed, { softDelete: true });
-export const funnelStagesRepository = new InMemoryRepository<FunnelStage>(funnelStagesSeed, {
+export const sourcesRepository = createResourceRepository<Source>({
+  resource: "sources",
+  seed: sourcesSeed,
   softDelete: true,
 });
-export const leadsRepository = new InMemoryRepository<Lead>(leadsSeed, { softDelete: true });
-export const leadOwnershipsRepository = new InMemoryRepository<LeadOwnership>(leadOwnershipsSeed);
-export const leadInteractionsRepository = new InMemoryRepository<LeadInteraction>(
-  leadInteractionsSeed,
-);
-export const meetingsRepository = new InMemoryRepository<Meeting>(meetingsSeed);
-export const dealsRepository = new InMemoryRepository<Deal>(dealsSeed);
+export const funnelStagesRepository = createResourceRepository<FunnelStage>({
+  resource: "funnel-stages",
+  seed: funnelStagesSeed,
+  softDelete: true,
+});
+export const leadsRepository = createResourceRepository<Lead>({
+  resource: "leads",
+  seed: leadsSeed,
+  softDelete: true,
+});
+export const leadOwnershipsRepository = createResourceRepository<LeadOwnership>({
+  resource: "lead-ownerships",
+  seed: leadOwnershipsSeed,
+});
+export const leadInteractionsRepository = createResourceRepository<LeadInteraction>({
+  resource: "lead-interactions",
+  seed: leadInteractionsSeed,
+});
+export const meetingsRepository = createResourceRepository<Meeting>({
+  resource: "meetings",
+  seed: meetingsSeed,
+});
+export const dealsRepository = createResourceRepository<Deal>({
+  resource: "deals",
+  seed: dealsSeed,
+});

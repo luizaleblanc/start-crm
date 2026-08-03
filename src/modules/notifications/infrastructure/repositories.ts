@@ -1,4 +1,4 @@
-import { InMemoryRepository } from "@/shared/infrastructure/mock/in-memory-repository";
+import { createResourceRepository } from "@/shared/infrastructure/repository-factory";
 import type { Notification } from "../domain/entities";
 
 const now = new Date().toISOString();
@@ -15,4 +15,7 @@ const notificationsSeed: Notification[] = [
   },
 ];
 
-export const notificationsRepository = new InMemoryRepository<Notification>(notificationsSeed);
+export const notificationsRepository = createResourceRepository<Notification>({
+  resource: "notifications",
+  seed: notificationsSeed,
+});

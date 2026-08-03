@@ -1,12 +1,15 @@
 import { NextResponse } from "next/server";
 import { changeLeadStage } from "@/modules/crm/application/change-lead-stage.use-case";
-import { requireAuth } from "@/shared/infrastructure/auth/require-auth";
+import { extractBearerToken, requireAuth } from "@/shared/infrastructure/auth/require-auth";
 import { handleRoute } from "@/shared/infrastructure/http/handle-route";
 
-export const PATCH = handleRoute<{ leadId: string }>(async (request, context) => {
+export const PATCH = handleRoute<{ leadId: string }>(async (request, routeContext) => {
   requireAuth(request);
-  const { leadId } = await context.params;
+  const { leadId } = await routeContext.params;
   const { funnelStageId } = await request.json();
-  const lead = changeLeadStage({ leadId, funnelStageId });
+  const lead = await changeLeadStage(
+    { leadId, funnelStageId },
+    { token: extractBearerToken(request) },
+  );
   return NextResponse.json(lead);
 });

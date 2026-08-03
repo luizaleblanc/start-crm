@@ -1,12 +1,13 @@
 import { randomUUID } from "crypto";
 import type { BaseEntity, SoftDeletable } from "@/shared/domain/base-entity";
 import type { PaginatedResult, PaginationParams } from "@/shared/domain/pagination";
+import type { Repository } from "@/shared/domain/repository";
 
 interface InMemoryRepositoryOptions {
   softDelete?: boolean;
 }
 
-export class InMemoryRepository<T extends BaseEntity> {
+export class InMemoryRepository<T extends BaseEntity> implements Repository<T> {
   private items: T[];
   private readonly softDelete: boolean;
 
@@ -15,7 +16,10 @@ export class InMemoryRepository<T extends BaseEntity> {
     this.softDelete = options.softDelete ?? false;
   }
 
-  list({ page, pageSize }: PaginationParams, filters?: Record<string, string>): PaginatedResult<T> {
+  async list(
+    { page, pageSize }: PaginationParams,
+    filters?: Record<string, string>,
+  ): Promise<PaginatedResult<T>> {
     let visible = this.softDelete
       ? this.items.filter((item) => (item as unknown as SoftDeletable).ativo !== false)
       : this.items;
@@ -34,18 +38,18 @@ export class InMemoryRepository<T extends BaseEntity> {
     };
   }
 
-  findById(id: string): T | undefined {
+  async findById(id: string): Promise<T | undefined> {
     return this.items.find((item) => item.id === id);
   }
 
-  create(input: Omit<T, "id" | "createdAt" | "updatedAt">): T {
+  async create(input: Omit<T, "id" | "createdAt" | "updatedAt">): Promise<T> {
     const now = new Date().toISOString();
     const record = { ...input, id: randomUUID(), createdAt: now, updatedAt: now } as T;
     this.items.push(record);
     return record;
   }
 
-  update(id: string, patch: Partial<Omit<T, "id" | "createdAt">>): T | undefined {
+  async update(id: string, patch: Partial<Omit<T, "id" | "createdAt">>): Promise<T | undefined> {
     const index = this.items.findIndex((item) => item.id === id);
     if (index === -1) return undefined;
     const updated = {
@@ -57,9 +61,9 @@ export class InMemoryRepository<T extends BaseEntity> {
     return updated;
   }
 
-  delete(id: string): boolean {
+  async delete(id: string): Promise<boolean> {
     if (this.softDelete) {
-      return Boolean(this.update(id, { ativo: false } as never));
+      return Boolean(await this.update(id, { ativo: false } as never));
     }
     const before = this.items.length;
     this.items = this.items.filter((item) => item.id !== id);

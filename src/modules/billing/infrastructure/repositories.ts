@@ -1,4 +1,4 @@
-import { InMemoryRepository } from "@/shared/infrastructure/mock/in-memory-repository";
+import { createResourceRepository } from "@/shared/infrastructure/repository-factory";
 import type {
   Invoice,
   Payment,
@@ -16,11 +16,29 @@ import {
   subscriptionsSeed,
 } from "./seed";
 
-export const plansRepository = new InMemoryRepository<Plan>(plansSeed, { softDelete: true });
-export const planFeaturesRepository = new InMemoryRepository<PlanFeature>(planFeaturesSeed, {
+export const plansRepository = createResourceRepository<Plan>({
+  resource: "plans",
+  seed: plansSeed,
   softDelete: true,
 });
-export const subscriptionsRepository = new InMemoryRepository<Subscription>(subscriptionsSeed);
-export const invoicesRepository = new InMemoryRepository<Invoice>(invoicesSeed);
-export const paymentsRepository = new InMemoryRepository<Payment>(paymentsSeed);
-export const planUsagesRepository = new InMemoryRepository<PlanUsage>(planUsagesSeed);
+export const planFeaturesRepository = createResourceRepository<PlanFeature>({
+  resource: "plan-features",
+  seed: planFeaturesSeed,
+  softDelete: true,
+});
+export const subscriptionsRepository = createResourceRepository<Subscription>({
+  resource: "subscriptions",
+  seed: subscriptionsSeed,
+});
+export const invoicesRepository = createResourceRepository<Invoice>({
+  resource: "invoices",
+  seed: invoicesSeed,
+});
+export const paymentsRepository = createResourceRepository<Payment>({
+  resource: "payments",
+  seed: paymentsSeed,
+});
+export const planUsagesRepository = createResourceRepository<PlanUsage>({
+  resource: "plan-usages",
+  seed: planUsagesSeed,
+});

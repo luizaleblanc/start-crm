@@ -1,3 +1,4 @@
+import type { RequestContext } from "@/shared/domain/repository";
 import { ApiError } from "@/shared/infrastructure/http/api-error";
 import { leadOwnershipsRepository, leadsRepository } from "../infrastructure/repositories";
 
@@ -6,13 +7,16 @@ interface AssignLeadInput {
   userId: string;
 }
 
-export function assignLead({ leadId, userId }: AssignLeadInput) {
-  const lead = leadsRepository.findById(leadId);
+export async function assignLead({ leadId, userId }: AssignLeadInput, context?: RequestContext) {
+  const lead = await leadsRepository.findById(leadId, context);
   if (!lead) throw new ApiError(404, "Lead não encontrado");
 
-  return leadOwnershipsRepository.create({
-    leadId,
-    userId,
-    assignedAt: new Date().toISOString(),
-  });
+  return leadOwnershipsRepository.create(
+    {
+      leadId,
+      userId,
+      assignedAt: new Date().toISOString(),
+    },
+    context,
+  );
 }

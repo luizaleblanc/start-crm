@@ -549,11 +549,133 @@ os registros do lead correto.
 
 ---
 
-## Próximas fases (a documentar quando executadas)
+## Fase 5 — Integração Front-Back (preparação, sem backend real disponível)
 
-- **Fase 5:** troca de `API_MODE=mock` para `real` — os Route Handlers
-  passam a fazer `fetch` para `NEST_API_URL`/`PYTHON_API_URL` em vez de
-  consultar os repositórios em memória; validação da suposição de
-  delete lógico x físico (Fase 2, seção 5) contra o schema real; decisão
-  de estratégia de sessão (cookie httpOnly vs. Bearer) a definir junto
-  com o backend real (Fase 4, seção 3).
+### 0. Escopo e uma limitação honesta
+
+Não há Nest.js/Python rodando em nenhum ambiente acessível a partir
+deste repositório — por decisão de arquitetura (front-end isolado), o
+back-end vive em outro repositório que não fazia parte deste trabalho.
+Com aprovação do usuário, esta fase entrega o **código de integração
+pronto** (`HttpRepository`, switch `API_MODE`, encaminhamento de
+token), mas **nada aqui foi testado contra uma API real**. Tudo foi
+validado apenas em `API_MODE=mock` (o padrão), reexecutando a mesma
+bateria de testes manuais das fases anteriores para garantir que o
+refactor do kernel não quebrou nada que já funcionava.
+
+### 1. `Repository<T>`: uma interface para abstrair mock e real
+
+**Decisão:** nova interface em `shared/domain/repository.ts` com os
+métodos `list/findById/create/update/delete`, todos retornando
+`Promise`. `InMemoryRepository` (Fase 2) passou a implementá-la
+formalmente — os métodos, que eram síncronos, agora são `async`. Uma
+nova classe `HttpRepository<T>` implementa a mesma interface fazendo
+`fetch` para `NEST_API_URL`.
+
+**Por quê:** essa era a peça que faltava para o `API_MODE=real`
+prometido desde a Fase 1 ser mais que uma variável de ambiente sem
+efeito. Como as duas classes implementam o mesmo contrato,
+`crud-route-factory` (Fase 2) e os 5 use cases de CRM (Fase 2) não
+precisam saber qual delas está por trás — só o `repository-factory`
+(seção 2) decide isso, uma vez, no boot do processo.
+
+`InMemoryRepository` não declara o parâmetro `context` (usado só pelo
+`HttpRepository` para saber qual token enviar) nas suas assinaturas —
+isso é compatível em TypeScript porque uma função com menos parâmetros
+satisfaz estruturalmente um tipo de função com mais parâmetros. Evita
+poluir o mock com um parâmetro que ele nunca usa.
+
+### 2. `repository-factory.ts`: onde o switch de verdade acontece
+
+`createResourceRepository({ resource, seed, softDelete })` decide, uma
+única vez por recurso, se devolve um `InMemoryRepository` (seed local)
+ou um `HttpRepository` (aponta para `NEST_API_URL`), lendo
+`process.env.API_MODE`. Os 6 arquivos `repositories.ts` por contexto
+(iam, crm, people, notifications, billing, audit) foram todos migrados
+para chamar essa fábrica em vez de instanciar `InMemoryRepository`
+diretamente — é a materialização exata da promessa da Fase 1: trocar
+mock por real é mudar uma variável de ambiente, não reescrever código.
+
+### 3. Encaminhamento de token: por que os métodos ganharam um parâmetro `context`
+
+**Problema real que apareceu ao implementar:** o `requireAuth` da Fase
+2 só sabia validar a assinatura HMAC do **nosso** token mock. Num
+cenário `API_MODE=real`, o token que o browser envia é o JWT emitido
+pelo Nest.js de verdade — o BFF não tem (e não deveria ter) o segredo
+para validá-lo por conta própria.
+
+**Decisão:**
+
+- `requireAuth` ficou ciente do modo: em `mock`, continua validando o
+  HMAC como antes; em `real`, só exige que _algum_ Bearer token esteja
+  presente — a validade de fato é responsabilidade do back-end real,
+  que vai devolver 401 se o token for inválido quando o
+  `HttpRepository` fizer a chamada.
+- Toda a cadeia `Route Handler → use case → Repository` passou a
+  carregar um `RequestContext { token }` opcional, extraído do header
+  `Authorization` da requisição original (`extractBearerToken`) e
+  repassado explicitamente até o `HttpRepository`, que o usa para
+  montar o header `Authorization` da chamada ao Nest.js.
+
+**Alternativa descartada:** propagar o token implicitamente via
+`AsyncLocalStorage` (evitaria mudar assinaturas de função). Descartada
+por ser mais "mágica" e mais difícil de testar/entender sem um backend
+real para validar contra — explícito e datilografado venceu, especialmente
+numa fase que não pode ser validada ponta a ponta.
+
+### 4. Login e health também ficaram cientes do modo
+
+- `POST /api/auth/login`: em `mock`, comportamento inalterado
+  (credenciais do seed). Em `real`, faz proxy para
+  `POST {NEST_API_URL}/auth/login` e devolve a resposta do backend
+  real como está — o front-end nunca vê ou guarda a lógica de emissão
+  do JWT real, só repassa.
+- `GET /api/health`: em `mock`, responde `{ status: "ok", apiMode: "mock" }`
+  direto. Em `real`, faz um `fetch` a `{NEST_API_URL}/health` com
+  timeout de 3s e reporta o status upstream — útil para diagnosticar
+  rapidamente, uma vez conectado a um backend real, se o problema é de
+  rede/configuração antes mesmo de tentar logar.
+
+### 5. O que **não** foi resolvido nesta fase (fica para quando houver backend real)
+
+- **PYTHON_API_URL não é usado em lugar nenhum.** A especificação de
+  API fornecida cobre só o serviço NestJS (todos os 22 recursos e as
+  ações de CRM vivem lá). Não há, até agora, nenhum endpoint atribuído
+  ao serviço Python — a variável continua no `.env.example` porque o
+  briefing original menciona "Nest.js e Python", mas não há contrato
+  para rotear a ela.
+- **Estratégia de sessão** (Bearer em `localStorage`, decidida na Fase 4) segue sem revisão. Continua funcionando com o encaminhamento de
+  token desta fase, mas é a decisão mais provável de mudar quando o
+  backend real existir (ex.: se o Nest.js usar cookie de sessão em vez
+  de retornar um JWT para o client guardar).
+- **Suposição de delete lógico x físico** (Fase 2, seção 5) segue sem
+  confirmação — só o schema real do Postgres pode validar isso.
+- **Nenhuma chamada real foi testada.** `HttpRepository` foi escrito
+  com o mesmo formato de resposta que o mock usa (`PaginatedResult<T>`,
+  mesmos paths REST) porque é o que a especificação da API descreve,
+  mas divergências de formato só vão aparecer no primeiro teste contra
+  o Nest.js de verdade.
+
+### 6. Validação
+
+Lint, typecheck e build limpos após o refactor do kernel. Reexecutada a
+bateria de testes manuais via `curl` em `API_MODE=mock`: health, login
+(sucesso e falha), listagem paginada com e sem token, filtro por query
+param, e a ação `close deal` alterando estado de verdade — todos com o
+mesmo resultado de antes do refactor, confirmando que a introdução de
+`Repository<T>`/`HttpRepository` não regrediu o comportamento mock.
+
+---
+
+## Resumo do estado do MVP
+
+As 5 fases do roadmap original foram completadas. O front-end tem: setup
+profissional containerizado (Fase 1), uma camada BFF completa espelhando
+os 22 recursos + 5 ações de CRM da API real, hoje respondendo com dados
+mockados (Fase 2), um Design System extraído do Figma e componentizado
+(Fase 3), 4 telas funcionais do MVP consumindo essa camada (Fase 4), e o
+código de integração com o back-end real pronto para ativar via
+`API_MODE=real` assim que ele existir (Fase 5). O que resta é
+inerentemente dependente de recursos externos a este repositório: um
+Nest.js real para testar contra, e decisões de UX/produto para telas
+além do escopo mínimo aprovado.

@@ -1,4 +1,4 @@
-import { InMemoryRepository } from "@/shared/infrastructure/mock/in-memory-repository";
+import { createResourceRepository } from "@/shared/infrastructure/repository-factory";
 import type {
   Organization,
   Permission,
@@ -16,15 +16,31 @@ import {
   usersSeed,
 } from "./seed";
 
-export const organizationsRepository = new InMemoryRepository<Organization>(organizationsSeed, {
+export const organizationsRepository = createResourceRepository<Organization>({
+  resource: "organizations",
+  seed: organizationsSeed,
   softDelete: true,
 });
-export const usersRepository = new InMemoryRepository<User>(usersSeed, { softDelete: true });
-export const rolesRepository = new InMemoryRepository<Role>(rolesSeed, { softDelete: true });
-export const permissionsRepository = new InMemoryRepository<Permission>(permissionsSeed, {
+export const usersRepository = createResourceRepository<User>({
+  resource: "users",
+  seed: usersSeed,
   softDelete: true,
 });
-export const rolePermissionsRepository = new InMemoryRepository<RolePermission>(
-  rolePermissionsSeed,
-);
-export const userRolesRepository = new InMemoryRepository<UserRole>(userRolesSeed);
+export const rolesRepository = createResourceRepository<Role>({
+  resource: "roles",
+  seed: rolesSeed,
+  softDelete: true,
+});
+export const permissionsRepository = createResourceRepository<Permission>({
+  resource: "permissions",
+  seed: permissionsSeed,
+  softDelete: true,
+});
+export const rolePermissionsRepository = createResourceRepository<RolePermission>({
+  resource: "role-permissions",
+  seed: rolePermissionsSeed,
+});
+export const userRolesRepository = createResourceRepository<UserRole>({
+  resource: "user-roles",
+  seed: userRolesSeed,
+});

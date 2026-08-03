@@ -1,3 +1,4 @@
+import type { RequestContext } from "@/shared/domain/repository";
 import { ApiError } from "@/shared/infrastructure/http/api-error";
 import type { LeadInteractionType } from "../domain/entities";
 import { leadInteractionsRepository, leadsRepository } from "../infrastructure/repositories";
@@ -9,9 +10,12 @@ interface AddLeadInteractionInput {
   notes: string;
 }
 
-export function addLeadInteraction({ leadId, userId, type, notes }: AddLeadInteractionInput) {
-  const lead = leadsRepository.findById(leadId);
+export async function addLeadInteraction(
+  { leadId, userId, type, notes }: AddLeadInteractionInput,
+  context?: RequestContext,
+) {
+  const lead = await leadsRepository.findById(leadId, context);
   if (!lead) throw new ApiError(404, "Lead não encontrado");
 
-  return leadInteractionsRepository.create({ leadId, userId, type, notes });
+  return leadInteractionsRepository.create({ leadId, userId, type, notes }, context);
 }

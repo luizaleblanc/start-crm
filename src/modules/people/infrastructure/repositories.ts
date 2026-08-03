@@ -1,4 +1,7 @@
-import { InMemoryRepository } from "@/shared/infrastructure/mock/in-memory-repository";
+import { createResourceRepository } from "@/shared/infrastructure/repository-factory";
 import type { UserAbsence } from "../domain/entities";
 
-export const userAbsencesRepository = new InMemoryRepository<UserAbsence>([]);
+export const userAbsencesRepository = createResourceRepository<UserAbsence>({
+  resource: "user-absences",
+  seed: [],
+});

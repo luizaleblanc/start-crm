@@ -1,4 +1,7 @@
-import { InMemoryRepository } from "@/shared/infrastructure/mock/in-memory-repository";
+import { createResourceRepository } from "@/shared/infrastructure/repository-factory";
 import type { AuditLog } from "../domain/entities";
 
-export const auditLogsRepository = new InMemoryRepository<AuditLog>([]);
+export const auditLogsRepository = createResourceRepository<AuditLog>({
+  resource: "audit-logs",
+  seed: [],
+});
