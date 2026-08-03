@@ -122,3 +122,25 @@ export function useScheduleMeeting(leadId: string) {
     },
   });
 }
+
+export function useDeleteLeadInteraction(leadId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (interactionId: string) =>
+      apiFetch<void>(`/api/lead-interactions/${interactionId}`, { method: "DELETE" }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["lead-interactions", leadId] });
+    },
+  });
+}
+
+export function useDeleteMeeting(leadId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (meetingId: string) =>
+      apiFetch<void>(`/api/meetings/${meetingId}`, { method: "DELETE" }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["meetings", leadId] });
+    },
+  });
+}
