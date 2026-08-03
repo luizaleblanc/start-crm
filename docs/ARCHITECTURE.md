@@ -314,13 +314,130 @@ tentar agir sobre um lead inexistente.
 
 ---
 
+## Fase 3 — Integração do Design System
+
+### 1. O Figma não tinha specs de componentes — só identidade visual
+
+**Achado:** o arquivo do Figma fornecido (`System Design — Star CRM`)
+contém uma única página, com um frame de showcase de marca: lockups do
+logo, paleta de cores, escala tipográfica e o app icon. Não existe
+nenhum componente de interface desenhado (sem Button, Input, Select,
+Card, Modal, Table). Confirmado via `get_metadata` (estrutura completa
+da página) antes de assumir que havia mais conteúdo.
+
+**Decisão:** com a aprovação do usuário, os componentes base foram
+desenhados por mim, usando como fundação os tokens reais extraídos do
+Figma (cores e tipografia) — não são um chute visual, mas também não
+são a tradução 1:1 de um componente já especificado, porque esse
+componente não existia no arquivo de origem.
+
+### 2. Tokens extraídos (via `get_design_context` nos nós de paleta/tipografia)
+
+Paleta oficial:
+
+| Token           | Hex       | Uso                 |
+| --------------- | --------- | ------------------- |
+| Ink             | `#16161C` | marca / texto forte |
+| Paper           | `#F6F5F8` | fundo claro         |
+| Azul Meia-noite | `#193073` | fundo escuro        |
+| Kennedy         | `#6D88DF` | acento primário     |
+| Azul Escuro     | `#2A4EBC` | acento secundário   |
+
+Cores auxiliares (vistas no código gerado a partir dos nós reais, não
+nomeadas na paleta oficial mas usadas de fato no mock da marca):
+`#1C1B22` (texto primário), `#6A6678` (texto secundário/corpo),
+`#9B97A6` (texto terciário), `#BDB9C8` (texto quaternário/legendas),
+`#EFEDF2` (borda), `#159A6B` (positivo, visto no indicador "+18,4%").
+
+Tipografia: família **Manrope**, pesos 400/500/600/700. Escala de
+títulos documentada no Figma (H1 48px/700 até H6 13px/700 caixa-alta)
+e escala de conteúdo (Display 56, Título 32, Subtítulo 20, Corpo 15,
+Mono 15, Legenda 12).
+
+### 3. De HSL-placeholder para hex nomeado por variável CSS
+
+**Decisão:** o `globals.css` da Fase 1 usava um esquema de 3 variáveis
+HSL genéricas (`--background`, `--foreground`, `--muted-foreground`).
+Na Fase 3 isso foi substituído por variáveis CSS em hex direto
+(`--color-ink`, `--color-paper`, `--color-kennedy` etc.) mais um
+segundo nível de variáveis **semânticas** (`--background`,
+`--foreground`, `--primary`, `--border`...) que apontam para as
+variáveis de marca. `tailwind.config.ts` consome só a camada semântica.
+
+**Por quê:** converter os 5+ hex reais do Figma para HSL manualmente é
+fonte de erro de arredondamento sem ganho nenhum — `var(--x)` aceita
+hex diretamente, e o Tailwind não exige o formato `hsl()`. A separação
+em duas camadas (marca → semântica) é o que permite trocar o tema
+(ex: dark mode) sem tocar nos componentes: no dark mode, `--background`
+passa a apontar para `--color-midnight` (o "fundo escuro" oficial da
+paleta) em vez de `--color-paper`, mas o componente continua só usando
+`bg-background`.
+
+**Assunção documentada:** o Figma não define uma paleta dark-mode
+completa (só o par claro/escuro de fundo). Cor de borda no dark mode
+(`rgb(255 255 255 / 12%)`) e o mapeamento de texto terciário como
+`muted-foreground` no dark mode são escolhas minhas, não extraídas do
+arquivo — a revisitar se o Figma ganhar telas em dark mode no futuro.
+
+### 4. Fonte via `next/font/google`, não `<link>` externo
+
+**Decisão:** Manrope carregada com `next/font/google` no
+`RootLayout`, expondo `--font-manrope` como CSS variable consumida
+pelo Tailwind (`fontFamily.sans`).
+
+**Por quê:** `next/font` faz self-hosting automático do arquivo de
+fonte no build (sem requisição em runtime para o Google Fonts, sem
+layout shift por FOUT/FOIT mal tratado) — é a prática recomendada pelo
+próprio Next.js e não introduz nenhuma dependência nova (`next/font`
+já vem com o framework).
+
+### 5. Sem biblioteca de componentes de terceiros
+
+**Decisão:** nenhum Radix UI, shadcn/ui, Headless UI ou similar foi
+adicionado. Os 7 componentes pedidos no roadmap (Button, Input, Select,
+Badge, Card, Table, Modal) mais o layout (Sidebar/Topbar/AppShell)
+foram escritos à mão em `src/shared/ui/`.
+
+**Por quê:** os componentes em si são simples o bastante (sem
+necessidade de floating UI, portais complexos ou animações) para não
+justificarem uma dependência. O único caso que normalmente pede uma
+lib (Modal/Dialog, por acessibilidade — foco preso, ESC, fechar no
+backdrop) foi resolvido com o elemento nativo `<dialog>` do HTML, que
+já entrega isso de graça nos navegadores modernos. Resultado: zero
+dependências novas em `package.json` desde a Fase 1.
+
+O composer de classes (`cn()`) também foi escrito à mão (~15 linhas)
+em vez de instalar `clsx` + `tailwind-merge` — o projeto ainda não tem
+nenhum caso de conflito de classes Tailwind que o `tailwind-merge`
+resolveria (className sempre é o último argumento e vence por ordem no
+DOM), então adicionar a lib seria dependência sem problema real para
+resolver ainda.
+
+### 6. Estrutura: `src/shared/ui/`
+
+Componentes vivem em `src/shared/ui/` (não em `src/modules/`) porque
+são reutilizáveis por qualquer módulo de feature — não pertencem a
+nenhum domínio de negócio específico. `layout/` é uma subpasta com o
+`AppShell`, `Sidebar` e `Topbar`. Uma página de showcase em
+`/dev/components` (`src/app/dev/components/page.tsx`) existe para
+visualizar todos os componentes juntos durante o desenvolvimento — não
+faz parte do produto final, é uma ferramenta interna de QA visual.
+
+### 7. Validação
+
+Lint, typecheck e build limpos. A página de showcase foi verificada via
+`curl` (SSR retornando as seções esperadas) — não foi possível tirar um
+screenshot real porque este ambiente Windows não tem uma ferramenta de
+automação de navegador (Playwright/chromium-cli) instalada. Recomendo
+conferir visualmente com `npm run dev` antes de aprovar o commit.
+
+---
+
 ## Próximas fases (a documentar quando executadas)
 
-- **Fase 3:** extração dos tokens reais do Figma, biblioteca de
-  componentes.
 - **Fase 4:** telas do MVP, introdução do TanStack Query para consumir
-  os endpoints construídos na Fase 2.
+  os endpoints construídos na Fase 2, usando os componentes da Fase 3.
 - **Fase 5:** troca de `API_MODE=mock` para `real` — os Route Handlers
   passam a fazer `fetch` para `NEST_API_URL`/`PYTHON_API_URL` em vez de
   consultar os repositórios em memória; validação da suposição de
-  delete lógico x físico (seção 5) contra o schema real.
+  delete lógico x físico (Fase 2, seção 5) contra o schema real.

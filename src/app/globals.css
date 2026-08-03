@@ -3,15 +3,41 @@
 @tailwind utilities;
 
 :root {
-  --background: 0 0% 100%;
-  --foreground: 222 47% 11%;
-  --muted-foreground: 215 16% 47%;
+  --color-ink: #16161c;
+  --color-paper: #f6f5f8;
+  --color-midnight: #193073;
+  --color-kennedy: #6d88df;
+  --color-deep-blue: #2a4ebc;
+
+  --color-text-primary: #1c1b22;
+  --color-text-secondary: #6a6678;
+  --color-text-tertiary: #9b97a6;
+  --color-text-quaternary: #bdb9c8;
+
+  --color-border: #efedf2;
+  --color-success: #159a6b;
+
+  --background: var(--color-paper);
+  --foreground: var(--color-text-primary);
+  --muted-foreground: var(--color-text-secondary);
+  --border: var(--color-border);
+  --primary: var(--color-kennedy);
+  --primary-foreground: var(--color-paper);
+  --secondary: var(--color-deep-blue);
+  --secondary-foreground: var(--color-paper);
+  --success: var(--color-success);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: 222 47% 11%;
-    --foreground: 0 0% 100%;
-    --muted-foreground: 215 16% 65%;
+    --background: var(--color-midnight);
+    --foreground: var(--color-paper);
+    --muted-foreground: var(--color-text-tertiary);
+    --border: rgb(255 255 255 / 12%);
+    --primary: var(--color-kennedy);
+    --primary-foreground: var(--color-ink);
+    --secondary: var(--color-deep-blue);
+    --secondary-foreground: var(--color-paper);
+    --success: var(--color-success);
   }
 }
