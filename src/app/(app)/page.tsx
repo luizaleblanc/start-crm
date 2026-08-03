@@ -5,6 +5,7 @@ import { useDeals } from "@/modules/crm/presentation/hooks/use-deals";
 import { useSources } from "@/modules/crm/presentation/hooks/use-catalog";
 import { useLeads } from "@/modules/crm/presentation/hooks/use-leads";
 import { Badge } from "@/shared/ui/badge";
+import { PieChart } from "@/shared/ui/charts/pie-chart";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/shared/ui/card";
 
 export default function DashboardPage() {
@@ -60,14 +61,10 @@ export default function DashboardPage() {
           <CardDescription>Distribuição das {leads.length} leads captadas</CardDescription>
         </CardHeader>
         <CardContent>
-          <ul className="flex flex-col gap-3">
-            {leadsBySource.map(({ source, count }) => (
-              <li key={source.id} className="flex items-center justify-between text-body">
-                <span className="text-foreground">{source.name}</span>
-                <span className="text-muted-foreground">{count}</span>
-              </li>
-            ))}
-          </ul>
+          <PieChart
+            ariaLabel="Distribuição de leads por origem"
+            data={leadsBySource.map(({ source, count }) => ({ label: source.name, value: count }))}
+          />
         </CardContent>
       </Card>
 
