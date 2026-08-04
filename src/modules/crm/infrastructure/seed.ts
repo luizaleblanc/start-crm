@@ -120,16 +120,4 @@ export const leadInteractionsSeed: LeadInteraction[] = [
 
 export const meetingsSeed: Meeting[] = [];
 
-export const dealsSeed: Deal[] = [
-  {
-    id: "deal_1",
-    organizationId: "org_1",
-    leadId: "lead_2",
-    title: "Plano Anual",
-    value: 12000,
-    status: "open",
-    closedAt: null,
-    createdAt: now,
-    updatedAt: now,
-  },
-];
+export const dealsSeed: Deal[] = [];
