@@ -44,7 +44,7 @@ function AppShellWithNav({ children }: { children: ReactNode }) {
         <button
           type="button"
           onClick={logout}
-          className="w-full rounded-md border border-white bg-white px-3 py-2 text-left text-body text-black transition-opacity hover:opacity-90"
+          className="w-full rounded-md bg-foreground px-3 py-2 text-left text-body text-background transition-opacity hover:opacity-90"
         >
           Sair
         </button>
