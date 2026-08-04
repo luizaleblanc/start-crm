@@ -11,9 +11,10 @@ export interface SidebarItem {
 interface SidebarProps {
   items: SidebarItem[];
   header?: ReactNode;
+  footer?: ReactNode;
 }
 
-export function Sidebar({ items, header }: SidebarProps) {
+export function Sidebar({ items, header, footer }: SidebarProps) {
   return (
     <aside className="flex h-full w-60 shrink-0 flex-col border-r border-border bg-background">
       {header && <div className="flex h-16 items-center px-6">{header}</div>}
@@ -31,6 +32,7 @@ export function Sidebar({ items, header }: SidebarProps) {
           </Link>
         ))}
       </nav>
+      {footer && <div className="mt-[26rem] px-3 py-4">{footer}</div>}
     </aside>
   );
 }

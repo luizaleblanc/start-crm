@@ -4,7 +4,6 @@ import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import { useAuth } from "@/shared/auth/auth-context";
 import { AuthGuard } from "@/shared/auth/auth-guard";
-import { Button } from "@/shared/ui/button";
 import { AppShell } from "@/shared/ui/layout/app-shell";
 import type { SidebarItem } from "@/shared/ui/layout/sidebar";
 import { LogoMark } from "@/shared/ui/logo-mark";
@@ -41,14 +40,16 @@ function AppShellWithNav({ children }: { children: ReactNode }) {
           <span className="text-h5 font-bold text-foreground">StartCRM</span>
         </div>
       }
-      pageActions={
-        <div className="flex items-center gap-3">
-          <span className="text-caption text-muted-foreground">{user?.name}</span>
-          <Button variant="ghost" size="sm" onClick={logout}>
-            Sair
-          </Button>
-        </div>
+      sidebarFooter={
+        <button
+          type="button"
+          onClick={logout}
+          className="w-full rounded-md border border-white bg-white px-3 py-2 text-left text-body text-black transition-opacity hover:opacity-90"
+        >
+          Sair
+        </button>
       }
+      pageActions={<span className="text-body text-foreground">{user?.name}</span>}
     >
       {children}
     </AppShell>
