@@ -1,3 +1,4 @@
+<img width="1915" height="1127" alt="image" src="https://github.com/user-attachments/assets/ecdbfa20-b72a-439f-98b8-aeb476c84c86" />
 # Start CRM — Front-end
 
 MVP de front-end do Start CRM, construído em Next.js (App Router) com
