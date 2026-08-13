@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
-import { mockCredentials } from "@/modules/iam/infrastructure/auth-credentials.mock";
+import { findCredential } from "@/modules/iam/infrastructure/auth-credentials.mock";
 import { usersRepository } from "@/modules/iam/infrastructure/repositories";
+import { verifyPassword } from "@/shared/infrastructure/auth/password";
 import { signMockToken } from "@/shared/infrastructure/auth/token";
 import { ApiError } from "@/shared/infrastructure/http/api-error";
 import { handleRoute } from "@/shared/infrastructure/http/handle-route";
@@ -28,8 +29,8 @@ async function loginReal(email: string, password: string) {
 }
 
 async function loginMock(email: string, password: string) {
-  const credentials = mockCredentials[email];
-  if (!credentials || credentials.password !== password) {
+  const credentials = findCredential(email);
+  if (!credentials || !verifyPassword(password, credentials.passwordHash)) {
     throw new ApiError(401, "Credenciais inválidas");
   }
 

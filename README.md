@@ -17,9 +17,11 @@ arquiteturais completas, com o porquê de cada uma, em
 - **Design System**: tokens extraídos do Figma (cores, tipografia Manrope),
   biblioteca de componentes em `src/shared/ui/` (Button, Input, Select, Card,
   Table, Modal, gráfico de pizza), sem nenhuma dependência de UI de terceiros.
-- **Telas do MVP**: Login, Dashboard, Leads (lista, filtros, Kanban por
-  estágio do funil com indicador de temperatura do lead, detalhe com
-  interações/reuniões) e Pipeline de Negócios.
+- **Telas do MVP**: Login, Cadastro (self-service: cria organização + usuário
+  admin, com login automático), recuperação de senha (mock, sem envio real
+  de e-mail), Dashboard, Leads (lista, filtros, Kanban por estágio do funil
+  com indicador de temperatura do lead, detalhe com interações/reuniões) e
+  Pipeline de Negócios.
 - **Toggle de tema** claro/escuro, com preferência salva no navegador.
 - **Preparação para o back-end real**: `HttpRepository` e o switch
   `API_MODE=mock|real` já implementados (não testados contra uma API real —
@@ -45,6 +47,11 @@ credenciais do seed mock:
 E-mail:  admin@startcrm.local
 Senha:   ChangeMe123!
 ```
+
+Também é possível criar uma conta nova em `/register` (cria uma organização
+e um usuário admin próprios). Como os dados vivem em memória, contas criadas
+assim — assim como qualquer outro dado do mock — são efêmeras e somem a
+cada restart do servidor.
 
 ## Variáveis de ambiente
 

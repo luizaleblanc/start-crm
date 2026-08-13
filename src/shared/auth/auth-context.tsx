@@ -10,15 +10,23 @@ import {
   subscribeToSession,
 } from "@/shared/infrastructure/http/api-client";
 
-interface LoginResponse {
+interface AuthResponse {
   accessToken: string;
   user: User;
+}
+
+interface RegisterInput {
+  name: string;
+  organizationName: string;
+  email: string;
+  password: string;
 }
 
 interface AuthContextValue {
   user: User | null;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
+  register: (input: RegisterInput) => Promise<void>;
   logout: () => void;
 }
 
@@ -37,9 +45,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const user = useSyncExternalStore(subscribeToSession, getSnapshot, getServerSnapshot);
 
   const login = useCallback(async (email: string, password: string) => {
-    const response = await apiFetch<LoginResponse>("/api/auth/login", {
+    const response = await apiFetch<AuthResponse>("/api/auth/login", {
       method: "POST",
       body: { email, password },
+      auth: false,
+    });
+    setStoredSession({ accessToken: response.accessToken, user: response.user });
+  }, []);
+
+  const register = useCallback(async (input: RegisterInput) => {
+    const response = await apiFetch<AuthResponse>("/api/auth/register", {
+      method: "POST",
+      body: input,
       auth: false,
     });
     setStoredSession({ accessToken: response.accessToken, user: response.user });
@@ -50,7 +67,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, isLoading: false, login, logout }}>
+    <AuthContext.Provider value={{ user, isLoading: false, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );

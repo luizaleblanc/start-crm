@@ -700,15 +700,121 @@ mesmo resultado de antes do refactor, confirmando que a introdução de
 
 ---
 
+## Fase 6 — Cadastro de Conta (self-service)
+
+### 0. Escopo e motivação
+
+Até esta fase, `/register` era um stub estático ("cadastro não disponível
+nesta versão do MVP") e `/forgot-password` também — nenhum dos dois tinha
+endpoint por trás. O `login`, por outro lado, já era um fluxo real desde a
+Fase 2 (não um mock de fachada): a lacuna não era "auth estar no front", era
+a ausência de um caminho para criar conta e de um lugar próprio para essa
+regra de negócio viver (ao contrário do contexto `crm`, `iam` não tinha
+`application/`).
+
+Esta fase também respondeu a uma checagem de compatibilidade contra um
+diagrama de arquitetura-alvo (SaaS multi-tenant completo, com RBAC dinâmico,
+billing e integrações externas) trazido pelo usuário. Duas decisões saíram
+dessa checagem: manter o nome `organizationId` já usado em todo o código em
+vez de renomear para `tenant_id` (mesmo conceito, troca seria só cosmética),
+e **não** migrar para NextAuth.js/Supabase Auth + Postgres agora — o
+diagrama descreve visão de longo prazo (Meta Ads, Stripe, Redis, WhatsApp
+também não existem em nenhuma parte do repositório hoje), enquanto o projeto
+já documentava um backend real diferente (Nest.js, `NEST_API_URL`). Migrar
+de fato para Supabase seria um projeto à parte, com dependência nova e
+infraestrutura fora deste repositório — fora do escopo de "terminar
+login/cadastro dentro do MVP mock existente".
+
+### 1. Escolha de escopo do cadastro: Organização + Admin, não usuário solto
+
+**Decisão:** cadastro cria uma `Organization` nova, uma `Role` "Admin" para
+ela, o vínculo dessa role à permissão global `perm_all` (já existente no
+seed, não recriada por org), o `User` e o `UserRole` ligando os dois —
+exatamente a mesma topologia que `seed.ts` já monta fixa para `org_1`.
+
+**Por quê:** `User.organizationId` é obrigatório e antes desta fase só
+existia uma org seedada. Um cadastro que só criasse `User` dentro dela faria
+qualquer pessoa virar "colega" de uma empresa fictícia compartilhada — não é
+o que um CRM B2B faz (o padrão do mercado é: quem se cadastra cria a conta
+da própria empresa). Essa escolha também é a que exercita o modelo de dados
+multi-tenant por inteiro, em vez de deixá-lo metade sem uso.
+
+### 2. Hash de senha sem dependência nova
+
+Antes desta fase, `mockCredentials` era um `const` estático, com a única
+senha do seed em **texto plano** — aceitável enquanto nada novo era escrito
+ali. Agora que o cadastro passa a _gravar_ senhas de verdade em runtime
+(ainda que só em memória), isso deixou de ser aceitável.
+
+**Decisão:** `src/shared/infrastructure/auth/password.ts` usa
+`crypto.scryptSync` (nativo do Node, mesma família de API já usada pelo
+`crypto.createHmac` do token mock) com salt aleatório por senha, no formato
+`salt:hash`. `auth-credentials.mock.ts` deixou de ser um objeto imutável e
+virou um `Map` mutável (`findCredential`/`credentialExists`/`saveCredential`),
+com a credencial seed (`admin@startcrm.local`) já armazenada com hash. O
+`loginMock` em `/api/auth/login` foi ajustado para usar `verifyPassword` em
+vez de comparação de texto plano.
+
+**Alternativa descartada:** bcrypt/argon2 via dependência nova. Descartada
+pela mesma filosofia da Fase 2 (mock não precisa de garantias
+criptográficas de produção, só parar de guardar segredo em texto plano) —
+`scrypt` nativo já resolve isso sem tocar `package.json`.
+
+### 3. `iam` ganha `application/`, no mesmo padrão de `crm`
+
+**Decisão:** `src/modules/iam/application/register-account.use-case.ts`
+concentra toda a regra de "criar conta" (validação, checagem de e-mail
+único, criação encadeada das 5 entidades, hashing da senha), no mesmo
+formato dos 5 use cases de CRM (Fase 2): função pura, recebe o input já
+desestruturado, lança `ApiError` para os casos de erro. `POST
+/api/auth/register` (`src/app/api/auth/register/route.ts`) segue o mesmo
+padrão de `login/route.ts` — proxy para `{NEST_API_URL}/auth/register`
+quando `API_MODE=real`, chama o use case quando mock — e devolve o mesmo
+formato de resposta do login (`{ accessToken, user }`), permitindo login
+automático após o cadastro. Não usa `createCollectionRoute` (que sempre
+exige `requireAuth` e não fizeram sentido aqui: registro é público e mexe em
+múltiplas entidades) — mesmo raciocínio já aplicado às 5 ações de CRM.
+
+Sem transação real disponível (`InMemoryRepository` não tem uma), o use case
+faz uma tentativa simples de desfazer a `Organization` criada se algum passo
+seguinte falhar — é uma rede de segurança best-effort, não uma garantia
+forte. Aceito como limitação do mock, igual à suposição de delete lógico x
+físico já registrada na Fase 2.
+
+### 4. "Esqueci a senha": mock de UX, não recuperação real
+
+**Decisão:** `POST /api/auth/forgot-password` sempre responde com uma
+mensagem de sucesso genérica, independente de o e-mail existir na base, e
+não envia e-mail nenhum.
+
+**Por quê:** não há nenhuma infraestrutura de e-mail no projeto (nenhuma
+variável de SMTP, nenhuma dependência de envio). Implementar recuperação de
+verdade sem isso seria só teatro. Responder sempre com sucesso genérico,
+mesmo sendo um mock, já segue a prática correta de não revelar quais e-mails
+existem na base — então a tela deixa de ser um stub morto sem fingir uma
+capacidade que o projeto não tem.
+
+### 5. Validação
+
+Lint, typecheck e build limpos. Testes manuais via curl em `API_MODE=mock`:
+login existente (`admin@startcrm.local`) continua funcionando após a troca
+para hash; `POST /api/auth/register` com sucesso (201), e-mail duplicado
+(409), senha fraca e campos faltando (400); cadastro pela UI seguido de
+login automático e navegação autenticada em `(app)`; `POST
+/api/auth/forgot-password` sempre retornando a mesma confirmação genérica.
+
+---
+
 ## Resumo do estado do MVP
 
-As 5 fases do roadmap original foram completadas. O front-end tem: setup
-profissional containerizado (Fase 1), uma camada BFF completa espelhando
-os 22 recursos + 5 ações de CRM da API real, hoje respondendo com dados
-mockados (Fase 2), um Design System extraído do Figma e componentizado
-(Fase 3), 4 telas funcionais do MVP consumindo essa camada (Fase 4), e o
-código de integração com o back-end real pronto para ativar via
-`API_MODE=real` assim que ele existir (Fase 5). O que resta é
-inerentemente dependente de recursos externos a este repositório: um
-Nest.js real para testar contra, e decisões de UX/produto para telas
-além do escopo mínimo aprovado.
+As 6 fases do roadmap completado até aqui entregam: setup profissional
+containerizado (Fase 1), uma camada BFF completa espelhando os 22 recursos +
+5 ações de CRM da API real, hoje respondendo com dados mockados (Fase 2), um
+Design System extraído do Figma e componentizado (Fase 3), 4 telas
+funcionais do MVP consumindo essa camada (Fase 4), o código de integração
+com o back-end real pronto para ativar via `API_MODE=real` assim que ele
+existir (Fase 5), e um fluxo de cadastro self-service (organização + admin)
+com login automático, hash de senha e um mock honesto de recuperação de
+senha (Fase 6). O que resta é inerentemente dependente de recursos externos
+a este repositório: um Nest.js real para testar contra, e decisões de
+UX/produto para telas além do escopo mínimo aprovado.
