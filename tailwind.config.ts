@@ -12,6 +12,7 @@ const config: Config = {
         foreground: "var(--foreground)",
         "muted-foreground": "var(--muted-foreground)",
         border: "var(--border)",
+        card: "var(--card)",
         primary: {
           DEFAULT: "var(--primary)",
           foreground: "var(--primary-foreground)",
@@ -21,6 +22,8 @@ const config: Config = {
           foreground: "var(--secondary-foreground)",
         },
         success: "var(--success)",
+        destructive: "var(--destructive)",
+        warning: "var(--warning)",
         ink: "var(--color-ink)",
         paper: "var(--color-paper)",
         midnight: "var(--color-midnight)",

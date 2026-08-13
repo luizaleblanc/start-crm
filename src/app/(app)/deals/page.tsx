@@ -1,5 +1,6 @@
 "use client";
 
+import { Check, X } from "lucide-react";
 import { useMemo } from "react";
 import type { Deal, DealStatus } from "@/modules/crm/domain/entities";
 import { useCloseDeal, useDeals } from "@/modules/crm/presentation/hooks/use-deals";
@@ -7,6 +8,8 @@ import { useLeads } from "@/modules/crm/presentation/hooks/use-leads";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { Card, CardContent, CardHeader } from "@/shared/ui/card";
+import { ErrorState } from "@/shared/ui/error-state";
+import { Skeleton } from "@/shared/ui/skeleton";
 
 const COLUMNS: Array<{ status: DealStatus; label: string }> = [
   { status: "open", label: "Em aberto" },
@@ -25,6 +28,10 @@ export default function DealsPage() {
     [leadsQuery.data],
   );
 
+  if (dealsQuery.isError) {
+    return <ErrorState title="Não foi possível carregar os negócios" />;
+  }
+
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
       {COLUMNS.map((column) => {
@@ -41,10 +48,15 @@ export default function DealsPage() {
             </div>
 
             {dealsQuery.isLoading && (
-              <p className="text-caption text-muted-foreground">Carregando…</p>
+              <div className="flex flex-col gap-3">
+                <Skeleton className="h-20 w-full" />
+                <Skeleton className="h-20 w-full" />
+              </div>
             )}
             {!dealsQuery.isLoading && columnDeals.length === 0 && (
-              <p className="text-caption text-muted-foreground">Nenhum negócio.</p>
+              <p className="rounded-md border border-dashed border-border px-3 py-4 text-center text-caption text-muted-foreground">
+                Nenhum negócio.
+              </p>
             )}
 
             {columnDeals.map((deal) => (
@@ -85,9 +97,11 @@ function DealCard({
         {deal.status === "open" && (
           <div className="flex gap-2">
             <Button size="sm" variant="outline" disabled={isClosing} onClick={() => onClose("won")}>
+              <Check aria-hidden size={14} />
               Ganhar
             </Button>
             <Button size="sm" variant="ghost" disabled={isClosing} onClick={() => onClose("lost")}>
+              <X aria-hidden size={14} />
               Perder
             </Button>
           </div>

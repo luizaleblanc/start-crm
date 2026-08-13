@@ -1,18 +1,40 @@
 "use client";
 
+import {
+  BarChart3,
+  Calendar,
+  Handshake,
+  LayoutDashboard,
+  LogOut,
+  MessageCircle,
+  Settings,
+  Users,
+} from "lucide-react";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 import type { ReactNode } from "react";
 import { useAuth } from "@/shared/auth/auth-context";
 import { AuthGuard } from "@/shared/auth/auth-guard";
+import { Avatar } from "@/shared/ui/avatar";
 import { AppShell } from "@/shared/ui/layout/app-shell";
 import type { SidebarItem } from "@/shared/ui/layout/sidebar";
 import { LogoMark } from "@/shared/ui/logo-mark";
 
 const NAV_ITEMS: Array<Omit<SidebarItem, "active">> = [
-  { label: "Painel", href: "/" },
-  { label: "Leads", href: "/leads" },
-  { label: "Negócios", href: "/deals" },
+  { label: "Painel", href: "/", icon: LayoutDashboard },
+  { label: "Leads", href: "/leads", icon: Users },
+  { label: "Negócios", href: "/deals", icon: Handshake },
+  { label: "Administração", href: "#administracao", icon: Settings, disabled: true },
 ];
+
+const INTEGRATIONS_SECTION = {
+  label: "Integrações",
+  items: [
+    { label: "Reuniões", icon: Calendar, badge: "breve" },
+    { label: "Relatórios", icon: BarChart3, badge: "breve" },
+    { label: "WhatsApp", icon: MessageCircle, badge: "breve" },
+  ],
+};
 
 export default function AppLayout({ children }: { children: ReactNode }) {
   return (
@@ -25,31 +47,70 @@ export default function AppLayout({ children }: { children: ReactNode }) {
 function AppShellWithNav({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const { user, logout } = useAuth();
+  const [collapsed, setCollapsed] = useState(false);
 
   const items: SidebarItem[] = NAV_ITEMS.map((item) => ({
     ...item,
-    active: item.href === "/" ? pathname === "/" : pathname.startsWith(item.href),
+    active: item.disabled
+      ? false
+      : item.href === "/"
+        ? pathname === "/"
+        : pathname.startsWith(item.href),
   }));
+
+  const activeItem = items.find((item) => item.active);
 
   return (
     <AppShell
       sidebarItems={items}
+      sidebarSecondarySection={INTEGRATIONS_SECTION}
+      sidebarCollapsed={collapsed}
+      onToggleSidebarCollapse={() => setCollapsed((current) => !current)}
+      pageTitle={activeItem?.label}
       sidebarHeader={
         <div className="flex items-center gap-2">
-          <LogoMark size={28} className="text-foreground" />
-          <span className="text-h5 font-bold text-foreground">StartCRM</span>
+          <span className="flex h-6 w-6 shrink-0 items-center justify-center">
+            <LogoMark size={22} className="text-foreground" />
+          </span>
+          {!collapsed && <span className="text-h5 font-bold text-foreground">StartCRM</span>}
         </div>
       }
       sidebarFooter={
-        <button
-          type="button"
-          onClick={logout}
-          className="w-full rounded-md bg-foreground px-3 py-2 text-left text-body text-background transition-opacity hover:opacity-90"
-        >
-          Sair
-        </button>
+        user &&
+        (collapsed ? (
+          <div className="flex items-center gap-1.5">
+            <Avatar name={user.name} size="sm" />
+            <button
+              type="button"
+              onClick={logout}
+              aria-label="Sair"
+              title="Sair"
+              className="hover:bg-foreground/5 flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <LogOut aria-hidden size={14} />
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2.5">
+            <Avatar name={user.name} />
+            <div className="flex min-w-0 flex-1 flex-col">
+              <span className="truncate text-caption font-medium text-foreground">{user.name}</span>
+              <span className="truncate text-caption text-muted-foreground">{user.email}</span>
+            </div>
+            <button
+              type="button"
+              onClick={logout}
+              aria-label="Sair"
+              title="Sair"
+              className="hover:bg-foreground/5 flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <LogOut aria-hidden size={16} />
+            </button>
+          </div>
+        ))
       }
-      pageActions={<span className="text-body text-foreground">{user?.name}</span>}
+      search
+      notifications
     >
       {children}
     </AppShell>

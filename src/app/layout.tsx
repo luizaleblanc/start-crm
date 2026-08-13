@@ -23,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" className={manrope.variable}>
-      <body className="bg-background font-sans text-foreground antialiased">
+      <body className="overflow-x-hidden bg-background font-sans text-foreground antialiased">
         <QueryProvider>
           <AuthProvider>
             <ThemeToggle />

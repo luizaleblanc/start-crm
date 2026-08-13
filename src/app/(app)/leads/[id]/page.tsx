@@ -1,5 +1,7 @@
 "use client";
 
+import { Mail, MessageCircle, Phone, StickyNote, Trash2 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import type { FormEvent } from "react";
@@ -20,9 +22,13 @@ import { useAuth } from "@/shared/auth/auth-context";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
+import { EmptyState } from "@/shared/ui/empty-state";
+import { ErrorState } from "@/shared/ui/error-state";
 import { Input } from "@/shared/ui/input";
 import { Modal } from "@/shared/ui/modal";
 import { Select } from "@/shared/ui/select";
+import { Skeleton } from "@/shared/ui/skeleton";
+import { Spinner } from "@/shared/ui/spinner";
 
 const INTERACTION_TYPES: LeadInteractionType[] = ["call", "email", "whatsapp", "note"];
 
@@ -31,6 +37,13 @@ const INTERACTION_TYPE_LABELS: Record<LeadInteractionType, string> = {
   email: "E-mail",
   whatsapp: "WhatsApp",
   note: "Nota",
+};
+
+const INTERACTION_TYPE_ICONS: Record<LeadInteractionType, LucideIcon> = {
+  call: Phone,
+  email: Mail,
+  whatsapp: MessageCircle,
+  note: StickyNote,
 };
 
 type DeleteTarget = { kind: "interaction" | "meeting"; id: string } | null;
@@ -56,12 +69,22 @@ export default function LeadDetailPage() {
   const [meetingNotes, setMeetingNotes] = useState("");
   const [deleteTarget, setDeleteTarget] = useState<DeleteTarget>(null);
 
+  if (leadQuery.isError) {
+    return <ErrorState title="Não foi possível carregar o lead" />;
+  }
+
   if (leadQuery.isLoading) {
-    return <p className="text-muted-foreground">Carregando…</p>;
+    return (
+      <div className="flex flex-col gap-4">
+        <Skeleton className="h-24 w-full" />
+        <Skeleton className="h-48 w-full" />
+        <Skeleton className="h-48 w-full" />
+      </div>
+    );
   }
 
   if (!leadQuery.data) {
-    return <p className="text-muted-foreground">Lead não encontrado.</p>;
+    return <EmptyState title="Lead não encontrado" description="Ele pode ter sido removido." />;
   }
 
   const lead = leadQuery.data;
@@ -136,7 +159,10 @@ export default function LeadDetailPage() {
             ))}
           </Select>
           {changeStage.isPending && (
-            <span className="mt-8 text-caption text-muted-foreground">Salvando…</span>
+            <span className="mt-8 flex items-center gap-1.5 text-caption text-muted-foreground">
+              <Spinner size={14} />
+              Salvando…
+            </span>
           )}
         </CardContent>
       </Card>
@@ -169,38 +195,47 @@ export default function LeadDetailPage() {
             <Button
               type="submit"
               className="self-start"
-              disabled={!isInteractionFormComplete || addInteraction.isPending}
+              disabled={!isInteractionFormComplete}
+              isLoading={addInteraction.isPending}
             >
               Registrar
             </Button>
           </form>
 
-          <ul className="flex flex-col gap-3">
-            {interactions.length === 0 && (
-              <li className="text-caption text-muted-foreground">Nenhuma interação registrada.</li>
-            )}
-            {interactions.map((interaction) => (
-              <li key={interaction.id} className="rounded-md border border-border p-2">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Badge variant="muted">{INTERACTION_TYPE_LABELS[interaction.type]}</Badge>
-                    <span className="text-caption text-muted-foreground">
-                      {new Date(interaction.createdAt).toLocaleString("pt-BR")}
-                    </span>
-                  </div>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setDeleteTarget({ kind: "interaction", id: interaction.id })}
-                  >
-                    Excluir
-                  </Button>
-                </div>
-                <p className="mt-2 text-body text-foreground">{interaction.notes}</p>
-              </li>
-            ))}
-          </ul>
+          {interactions.length === 0 ? (
+            <EmptyState title="Nenhuma interação registrada" />
+          ) : (
+            <ul className="flex flex-col gap-3">
+              {interactions.map((interaction) => {
+                const Icon = INTERACTION_TYPE_ICONS[interaction.type];
+                return (
+                  <li key={interaction.id} className="rounded-md border border-border p-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Badge variant="muted">
+                          <Icon aria-hidden size={12} />
+                          {INTERACTION_TYPE_LABELS[interaction.type]}
+                        </Badge>
+                        <span className="text-caption text-muted-foreground">
+                          {new Date(interaction.createdAt).toLocaleString("pt-BR")}
+                        </span>
+                      </div>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setDeleteTarget({ kind: "interaction", id: interaction.id })}
+                      >
+                        <Trash2 aria-hidden size={14} />
+                        Excluir
+                      </Button>
+                    </div>
+                    <p className="mt-2 text-body text-foreground">{interaction.notes}</p>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
         </CardContent>
       </Card>
 
@@ -228,37 +263,40 @@ export default function LeadDetailPage() {
             <Button
               type="submit"
               className="self-start"
-              disabled={!isMeetingFormComplete || scheduleMeeting.isPending}
+              disabled={!isMeetingFormComplete}
+              isLoading={scheduleMeeting.isPending}
             >
               Agendar
             </Button>
           </form>
 
-          <ul className="flex flex-col gap-3">
-            {meetings.length === 0 && (
-              <li className="text-caption text-muted-foreground">Nenhuma reunião agendada.</li>
-            )}
-            {meetings.map((meeting) => (
-              <li key={meeting.id} className="rounded-md border border-border p-2">
-                <div className="flex items-center justify-between">
-                  <p className="text-body text-foreground">
-                    {new Date(meeting.scheduledAt).toLocaleString("pt-BR")}
-                  </p>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setDeleteTarget({ kind: "meeting", id: meeting.id })}
-                  >
-                    Excluir
-                  </Button>
-                </div>
-                {meeting.notes && (
-                  <p className="mt-1 text-caption text-muted-foreground">{meeting.notes}</p>
-                )}
-              </li>
-            ))}
-          </ul>
+          {meetings.length === 0 ? (
+            <EmptyState title="Nenhuma reunião agendada" />
+          ) : (
+            <ul className="flex flex-col gap-3">
+              {meetings.map((meeting) => (
+                <li key={meeting.id} className="rounded-md border border-border p-2">
+                  <div className="flex items-center justify-between">
+                    <p className="text-body text-foreground">
+                      {new Date(meeting.scheduledAt).toLocaleString("pt-BR")}
+                    </p>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setDeleteTarget({ kind: "meeting", id: meeting.id })}
+                    >
+                      <Trash2 aria-hidden size={14} />
+                      Excluir
+                    </Button>
+                  </div>
+                  {meeting.notes && (
+                    <p className="mt-1 text-caption text-muted-foreground">{meeting.notes}</p>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
         </CardContent>
       </Card>
 
@@ -275,7 +313,7 @@ export default function LeadDetailPage() {
             <Button variant="ghost" onClick={() => setDeleteTarget(null)}>
               Cancelar
             </Button>
-            <Button variant="primary" disabled={isDeletingTarget} onClick={handleConfirmDelete}>
+            <Button variant="primary" isLoading={isDeletingTarget} onClick={handleConfirmDelete}>
               Excluir
             </Button>
           </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import { CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import type { FormEvent } from "react";
@@ -36,8 +37,12 @@ export default function ForgotPasswordPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-6">
       <Card className="w-full max-w-sm">
-        <CardHeader className="items-center text-center">
-          <LogoMark size={56} className="mb-2 text-foreground" />
+        <CardHeader className="items-center gap-2 text-center">
+          {isSubmitted ? (
+            <CheckCircle2 aria-hidden size={40} className="mb-1 text-success" />
+          ) : (
+            <LogoMark size={56} className="mb-1 text-foreground" />
+          )}
           <CardTitle>Recuperar senha</CardTitle>
           {isSubmitted ? (
             <CardDescription>
@@ -66,9 +71,9 @@ export default function ForgotPasswordPage() {
                 onChange={(event) => setEmail(event.target.value)}
                 required
               />
-              {error && <p className="text-caption text-red-500">{error}</p>}
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? "Enviando…" : "Enviar instruções"}
+              {error && <p className="text-caption text-destructive">{error}</p>}
+              <Button type="submit" isLoading={isSubmitting}>
+                Enviar instruções
               </Button>
               <Link href="/login" className={buttonVariants({ variant: "outline" })}>
                 Voltar para o login

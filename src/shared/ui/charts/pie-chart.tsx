@@ -8,13 +8,17 @@ interface PieChartProps {
   ariaLabel: string;
 }
 
+// Paleta categórica de 8 matizes fixos (ver globals.css --chart-1..8),
+// validada com o skill de dataviz — ordem fixa, nunca ciclada.
 const CATEGORICAL_COLORS = [
-  "#6d88df", // primary (Kennedy)
-  "#2a4ebc", // secondary (Azul Escuro)
-  "#159a6b", // success
-  "#193073", // midnight
-  "#16161c", // ink
-  "#9b97a6", // texto terciário
+  "var(--chart-1)",
+  "var(--chart-2)",
+  "var(--chart-3)",
+  "var(--chart-4)",
+  "var(--chart-5)",
+  "var(--chart-6)",
+  "var(--chart-7)",
+  "var(--chart-8)",
 ];
 const MAX_SLICES = CATEGORICAL_COLORS.length;
 

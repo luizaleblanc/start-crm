@@ -1,5 +1,6 @@
 "use client";
 
+import { LayoutGrid, Table2 } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { FunnelStage, Lead } from "@/modules/crm/domain/entities";
@@ -12,7 +13,10 @@ import {
 import { TemperatureBadge } from "@/modules/crm/presentation/temperature-badge";
 import { Button } from "@/shared/ui/button";
 import { Card, CardContent, CardHeader } from "@/shared/ui/card";
+import { EmptyState } from "@/shared/ui/empty-state";
+import { ErrorState } from "@/shared/ui/error-state";
 import { Select } from "@/shared/ui/select";
+import { Skeleton } from "@/shared/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/shared/ui/table";
 
 type ViewMode = "table" | "kanban";
@@ -47,6 +51,10 @@ export default function LeadsPage() {
     if (sourceFilter && lead.sourceId !== sourceFilter) return false;
     return true;
   });
+
+  if (leadsQuery.isError) {
+    return <ErrorState title="Não foi possível carregar os leads" />;
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -90,6 +98,7 @@ export default function LeadsPage() {
             size="sm"
             onClick={() => setView("table")}
           >
+            <Table2 aria-hidden size={16} />
             Tabela
           </Button>
           <Button
@@ -98,6 +107,7 @@ export default function LeadsPage() {
             size="sm"
             onClick={() => setView("kanban")}
           >
+            <LayoutGrid aria-hidden size={16} />
             Kanban
           </Button>
         </div>
@@ -164,58 +174,58 @@ function LeadsTableView({
         </Button>
       </div>
 
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Nome</TableHead>
-            <TableHead>E-mail</TableHead>
-            <TableHead>Origem</TableHead>
-            <TableHead>Estágio</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {isLoading && (
+      {isLoading ? (
+        <div className="flex flex-col gap-2">
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-10 w-full" />
+        </div>
+      ) : leads.length === 0 ? (
+        <EmptyState
+          title="Nenhum lead encontrado"
+          description="Ajuste os filtros ou aguarde novos leads chegarem."
+        />
+      ) : (
+        <Table>
+          <TableHeader>
             <TableRow>
-              <TableCell colSpan={4} className="text-muted-foreground">
-                Carregando…
-              </TableCell>
+              <TableHead>Nome</TableHead>
+              <TableHead>E-mail</TableHead>
+              <TableHead>Origem</TableHead>
+              <TableHead>Estágio</TableHead>
             </TableRow>
-          )}
-          {!isLoading && leads.length === 0 && (
-            <TableRow>
-              <TableCell colSpan={4} className="text-muted-foreground">
-                Nenhum lead encontrado.
-              </TableCell>
-            </TableRow>
-          )}
-          {leads.map((lead) => {
-            const stage = stageById.get(lead.funnelStageId);
-            const color = stage ? getStageTemperatureColor(stage, funnelStages) : undefined;
-            return (
-              <TableRow key={lead.id}>
-                <TableCell>
-                  <Link
-                    href={`/leads/${lead.id}`}
-                    className="inline-block text-foreground"
-                    style={color ? { borderBottom: `2px solid ${color}` } : undefined}
-                  >
-                    {lead.name}
-                  </Link>
-                </TableCell>
-                <TableCell className="text-muted-foreground">{lead.email}</TableCell>
-                <TableCell>{sourceNameById.get(lead.sourceId) ?? lead.sourceId}</TableCell>
-                <TableCell>
-                  {stage ? (
-                    <TemperatureBadge stage={stage} allStages={funnelStages} />
-                  ) : (
-                    lead.funnelStageId
-                  )}
-                </TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {leads.map((lead) => {
+              const stage = stageById.get(lead.funnelStageId);
+              const color = stage ? getStageTemperatureColor(stage, funnelStages) : undefined;
+              return (
+                <TableRow key={lead.id}>
+                  <TableCell>
+                    <Link
+                      href={`/leads/${lead.id}`}
+                      className="inline-block text-foreground"
+                      style={color ? { borderBottom: `2px solid ${color}` } : undefined}
+                    >
+                      {lead.name}
+                    </Link>
+                  </TableCell>
+                  <TableCell className="text-muted-foreground">{lead.email}</TableCell>
+                  <TableCell>{sourceNameById.get(lead.sourceId) ?? lead.sourceId}</TableCell>
+                  <TableCell>
+                    {stage ? (
+                      <TemperatureBadge stage={stage} allStages={funnelStages} />
+                    ) : (
+                      lead.funnelStageId
+                    )}
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      )}
     </div>
   );
 }

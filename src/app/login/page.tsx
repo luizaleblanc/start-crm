@@ -7,7 +7,7 @@ import type { FormEvent } from "react";
 import { useAuth } from "@/shared/auth/auth-context";
 import { ApiClientError } from "@/shared/infrastructure/http/api-client";
 import { Button, buttonVariants } from "@/shared/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/shared/ui/card";
 import { Input } from "@/shared/ui/input";
 import { LogoMark } from "@/shared/ui/logo-mark";
 
@@ -41,9 +41,10 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-6">
       <Card className="w-full max-w-sm">
-        <CardHeader className="items-center text-center">
-          <LogoMark size={72} className="mb-2 text-foreground" />
-          <CardTitle>Entrar no Start CRM</CardTitle>
+        <CardHeader className="items-center gap-2 text-center">
+          <LogoMark size={64} className="mb-1 text-foreground" />
+          <CardTitle>Bem-vindo de volta</CardTitle>
+          <CardDescription>Acesse sua conta para continuar</CardDescription>
         </CardHeader>
         <CardContent>
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
@@ -54,22 +55,24 @@ export default function LoginPage() {
               onChange={(event) => setEmail(event.target.value)}
               required
             />
-            <Input
-              label="Senha"
-              type="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              required
-            />
-            <Link
-              href="/forgot-password"
-              className="self-end text-caption text-primary underline-offset-4 hover:underline"
-            >
-              Esqueceu a senha?
-            </Link>
-            {error && <p className="text-caption text-red-500">{error}</p>}
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Entrando…" : "Entrar"}
+            <div className="flex flex-col gap-1.5">
+              <Input
+                label="Senha"
+                type="password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                required
+              />
+              <Link
+                href="/forgot-password"
+                className="self-end text-caption text-primary underline-offset-4 hover:underline"
+              >
+                Esqueci a senha
+              </Link>
+            </div>
+            {error && <p className="text-caption text-destructive">{error}</p>}
+            <Button type="submit" isLoading={isSubmitting}>
+              Entrar na plataforma
             </Button>
             <Link href="/register" className={buttonVariants({ variant: "outline" })}>
               Criar conta

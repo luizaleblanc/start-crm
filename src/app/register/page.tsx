@@ -7,7 +7,7 @@ import type { FormEvent } from "react";
 import { useAuth } from "@/shared/auth/auth-context";
 import { ApiClientError } from "@/shared/infrastructure/http/api-client";
 import { Button, buttonVariants } from "@/shared/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/shared/ui/card";
 import { Input } from "@/shared/ui/input";
 import { LogoMark } from "@/shared/ui/logo-mark";
 
@@ -62,9 +62,10 @@ export default function RegisterPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-6">
       <Card className="w-full max-w-sm">
-        <CardHeader className="items-center text-center">
-          <LogoMark size={72} className="mb-2 text-foreground" />
+        <CardHeader className="items-center gap-2 text-center">
+          <LogoMark size={64} className="mb-1 text-foreground" />
           <CardTitle>Criar conta no Start CRM</CardTitle>
+          <CardDescription>Comece agora, é rápido e gratuito para testar</CardDescription>
         </CardHeader>
         <CardContent>
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
@@ -101,9 +102,9 @@ export default function RegisterPage() {
               onChange={(event) => setConfirmPassword(event.target.value)}
               required
             />
-            {error && <p className="text-caption text-red-500">{error}</p>}
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Criando conta…" : "Criar conta"}
+            {error && <p className="text-caption text-destructive">{error}</p>}
+            <Button type="submit" isLoading={isSubmitting}>
+              Criar conta
             </Button>
             <Link href="/login" className={buttonVariants({ variant: "outline" })}>
               Já tenho conta
