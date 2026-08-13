@@ -1,6 +1,6 @@
 "use client";
 
-import { LayoutGrid, Table2 } from "lucide-react";
+import { LayoutGrid, Table2, Upload } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { FunnelStage, Lead } from "@/modules/crm/domain/entities";
@@ -170,6 +170,7 @@ function LeadsTableView({
           onClick={(event) => event.preventDefault()}
           title="Requer integração de back-end com tabelas externas — ainda não implementado"
         >
+          <Upload aria-hidden size={16} />
           Importar minha Tabela
         </Button>
       </div>
