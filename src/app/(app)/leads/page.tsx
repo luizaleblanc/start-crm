@@ -1,9 +1,12 @@
 "use client";
 
-import { LayoutGrid, Table2, Upload } from "lucide-react";
+import { FileSpreadsheet, FileText, FileType, LayoutGrid, Table2, Upload } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { FunnelStage, Lead } from "@/modules/crm/domain/entities";
+import type { ExportFormat } from "@/modules/crm/infrastructure/export/export-leads";
+import { exportLeads } from "@/modules/crm/infrastructure/export/export-leads";
+import { ImportLeadsModal } from "@/modules/crm/presentation/import/import-leads-modal";
 import { useFunnelStages, useSources } from "@/modules/crm/presentation/hooks/use-catalog";
 import { useLeads } from "@/modules/crm/presentation/hooks/use-leads";
 import {
@@ -29,6 +32,8 @@ export default function LeadsPage() {
   const [view, setView] = useState<ViewMode>("table");
   const [stageFilter, setStageFilter] = useState("");
   const [sourceFilter, setSourceFilter] = useState("");
+  const [importOpen, setImportOpen] = useState(false);
+  const [exportingFormat, setExportingFormat] = useState<ExportFormat | null>(null);
 
   const leads = leadsQuery.data?.data ?? [];
   const funnelStages = useMemo(
@@ -45,12 +50,25 @@ export default function LeadsPage() {
     () => new Map((sourcesQuery.data?.data ?? []).map((source) => [source.id, source.name])),
     [sourcesQuery.data],
   );
+  const stageNameById = useMemo(
+    () => new Map(funnelStages.map((stage) => [stage.id, stage.name])),
+    [funnelStages],
+  );
 
   const filteredLeads = leads.filter((lead) => {
     if (stageFilter && lead.funnelStageId !== stageFilter) return false;
     if (sourceFilter && lead.sourceId !== sourceFilter) return false;
     return true;
   });
+
+  async function handleExport(format: ExportFormat) {
+    setExportingFormat(format);
+    try {
+      await exportLeads(format, filteredLeads, { stageNameById, sourceNameById });
+    } finally {
+      setExportingFormat(null);
+    }
+  }
 
   if (leadsQuery.isError) {
     return <ErrorState title="Não foi possível carregar os leads" />;
@@ -133,6 +151,9 @@ export default function LeadsPage() {
           stageById={stageById}
           funnelStages={funnelStages}
           sourceNameById={sourceNameById}
+          onImport={() => setImportOpen(true)}
+          onExport={handleExport}
+          exportingFormat={exportingFormat}
         />
       ) : (
         <LeadsKanbanView
@@ -141,6 +162,13 @@ export default function LeadsPage() {
           sourceNameById={sourceNameById}
         />
       )}
+
+      <ImportLeadsModal
+        open={importOpen}
+        onClose={() => setImportOpen(false)}
+        funnelStages={funnelStages}
+        sources={sources}
+      />
     </div>
   );
 }
@@ -151,6 +179,9 @@ interface LeadsTableViewProps {
   stageById: Map<string, FunnelStage>;
   funnelStages: FunnelStage[];
   sourceNameById: Map<string, string>;
+  onImport: () => void;
+  onExport: (format: ExportFormat) => void;
+  exportingFormat: ExportFormat | null;
 }
 
 function LeadsTableView({
@@ -159,19 +190,49 @@ function LeadsTableView({
   stageById,
   funnelStages,
   sourceNameById,
+  onImport,
+  onExport,
+  exportingFormat,
 }: LeadsTableViewProps) {
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex justify-end">
+      <div className="flex flex-wrap justify-end gap-2">
+        <Button type="button" variant="outline" size="sm" onClick={onImport}>
+          <Upload aria-hidden size={16} />
+          Importar minha Tabela
+        </Button>
         <Button
           type="button"
           variant="outline"
           size="sm"
-          onClick={(event) => event.preventDefault()}
-          title="Requer integração de back-end com tabelas externas — ainda não implementado"
+          disabled={leads.length === 0 || exportingFormat !== null}
+          isLoading={exportingFormat === "xlsx"}
+          onClick={() => onExport("xlsx")}
         >
-          <Upload aria-hidden size={16} />
-          Importar minha Tabela
+          <FileSpreadsheet aria-hidden size={16} />
+          Excel
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          disabled={leads.length === 0 || exportingFormat !== null}
+          isLoading={exportingFormat === "pdf"}
+          onClick={() => onExport("pdf")}
+        >
+          <FileText aria-hidden size={16} />
+          PDF
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          disabled={leads.length === 0 || exportingFormat !== null}
+          isLoading={exportingFormat === "docx"}
+          onClick={() => onExport("docx")}
+        >
+          <FileType aria-hidden size={16} />
+          Word
         </Button>
       </div>
 

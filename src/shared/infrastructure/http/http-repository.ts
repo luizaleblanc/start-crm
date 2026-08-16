@@ -53,6 +53,16 @@ async function request<TResult>(
 }
 
 /**
+ * Formato de paginação que o back-end Nest.js real devolve — chave do
+ * array e do tamanho de página diferentes do contrato interno do BFF
+ * (PaginatedResult), que o InMemoryRepository segue.
+ */
+interface NestPaginatedResult<T> {
+  items: T[];
+  meta: { page: number; limit: number; total: number };
+}
+
+/**
  * Implementação de Repository<T> que fala com o Nest.js real via HTTP,
  * usada quando API_MODE=real. Espelha o mesmo contrato REST do
  * InMemoryRepository (GET|POST /{resource}, GET|PATCH|DELETE
@@ -61,17 +71,23 @@ async function request<TResult>(
 export class HttpRepository<T extends BaseEntity> implements Repository<T> {
   constructor(private readonly resource: string) {}
 
-  list(
+  async list(
     params: PaginationParams,
     filters?: Record<string, string>,
     context?: RequestContext,
   ): Promise<PaginatedResult<T>> {
     const query = new URLSearchParams({
       page: String(params.page),
-      pageSize: String(params.pageSize),
+      limit: String(params.pageSize),
       ...filters,
     });
-    return request<PaginatedResult<T>>(`/${this.resource}?${query.toString()}`, { context });
+    const result = await request<NestPaginatedResult<T>>(`/${this.resource}?${query.toString()}`, {
+      context,
+    });
+    return {
+      data: result.items,
+      meta: { page: result.meta.page, pageSize: result.meta.limit, total: result.meta.total },
+    };
   }
 
   findById(id: string, context?: RequestContext): Promise<T | undefined> {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { cn } from "./cn";
 
 interface ModalProps {
@@ -10,9 +10,10 @@ interface ModalProps {
   title?: string;
   children: ReactNode;
   className?: string;
+  style?: CSSProperties;
 }
 
-export function Modal({ open, onClose, title, children, className }: ModalProps) {
+export function Modal({ open, onClose, title, children, className, style }: ModalProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -34,6 +35,7 @@ export function Modal({ open, onClose, title, children, className }: ModalProps)
         "backdrop:bg-ink/40 w-full max-w-md rounded-md border border-border bg-background p-6 text-foreground shadow-lg",
         className,
       )}
+      style={style}
     >
       {title && <h2 className="mb-4 text-h5">{title}</h2>}
       {children}

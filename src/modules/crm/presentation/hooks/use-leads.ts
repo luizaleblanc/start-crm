@@ -16,6 +16,25 @@ export function useLeads(page = 1, pageSize = 20) {
   });
 }
 
+export interface CreateLeadInput {
+  name: string;
+  email?: string;
+  phone?: string;
+  sourceId?: string;
+  funnelStageId: string;
+}
+
+export function useCreateLead() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (input: CreateLeadInput) =>
+      apiFetch<Lead>("/api/leads", { method: "POST", body: input }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["leads"] });
+    },
+  });
+}
+
 export function useLead(leadId: string) {
   return useQuery({
     queryKey: ["leads", leadId],
