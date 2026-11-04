@@ -6,6 +6,7 @@ interface PieChartDatum {
 interface PieChartProps {
   data: PieChartDatum[];
   ariaLabel: string;
+  innerLabel?: string;
 }
 
 // Paleta categórica de 8 matizes fixos (ver globals.css --chart-1..8),
@@ -31,7 +32,7 @@ function foldToOther(data: PieChartDatum[]): PieChartDatum[] {
   return [...head, { label: "Outras", value: other }];
 }
 
-export function PieChart({ data, ariaLabel }: PieChartProps) {
+export function PieChart({ data, ariaLabel, innerLabel = "Total" }: PieChartProps) {
   const slices = foldToOther(data);
   const total = slices.reduce((sum, datum) => sum + datum.value, 0) || 1;
 
@@ -49,26 +50,53 @@ export function PieChart({ data, ariaLabel }: PieChartProps) {
     .segments.join(", ");
 
   return (
-    <div className="flex flex-wrap items-center gap-6">
+    <div className="flex flex-col items-center gap-8 py-2 sm:flex-row">
       <div
         role="img"
         aria-label={ariaLabel}
-        className="h-40 w-40 shrink-0 rounded-full"
+        className="relative flex h-40 w-40 shrink-0 items-center justify-center rounded-full shadow-inner"
         style={{ background: `conic-gradient(${stops})` }}
-      />
-      <ul className="flex flex-col gap-2">
-        {slices.map((datum, index) => (
-          <li key={datum.label} className="flex items-center gap-2 text-caption">
-            <span
-              className="h-2.5 w-2.5 shrink-0 rounded-full"
-              style={{ backgroundColor: CATEGORICAL_COLORS[index % MAX_SLICES] }}
-            />
-            <span className="text-foreground">{datum.label}</span>
-            <span className="tabular-nums text-muted-foreground">
-              {datum.value} ({Math.round((datum.value / total) * 100)}%)
-            </span>
-          </li>
-        ))}
+      >
+        <div className="shadow-xs flex h-24 w-24 flex-col items-center justify-center rounded-full bg-card">
+          <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+            {innerLabel}
+          </span>
+          <span className="text-h4 font-bold tabular-nums text-foreground">
+            {total.toLocaleString("pt-BR")}
+          </span>
+        </div>
+      </div>
+      <ul className="flex w-full flex-1 flex-col gap-3">
+        {slices.map((datum, index) => {
+          const pct = Math.round((datum.value / total) * 100);
+          return (
+            <li key={datum.label} className="flex flex-col gap-1 text-caption">
+              <div className="flex items-center justify-between gap-2">
+                <span className="flex items-center gap-2 truncate">
+                  <span
+                    aria-hidden
+                    className="h-2.5 w-2.5 shrink-0 rounded-full"
+                    style={{ backgroundColor: CATEGORICAL_COLORS[index % MAX_SLICES] }}
+                  />
+                  <span className="truncate font-medium text-foreground">{datum.label}</span>
+                </span>
+                <span className="shrink-0 font-semibold tabular-nums text-foreground">
+                  {datum.value.toLocaleString("pt-BR")}{" "}
+                  <span className="font-normal text-muted-foreground">({pct}%)</span>
+                </span>
+              </div>
+              <div className="bg-muted/30 h-1.5 w-full overflow-hidden rounded-full">
+                <div
+                  className="h-full rounded-full transition-all duration-500"
+                  style={{
+                    width: `${Math.max(pct, 2)}%`,
+                    backgroundColor: CATEGORICAL_COLORS[index % MAX_SLICES],
+                  }}
+                />
+              </div>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
