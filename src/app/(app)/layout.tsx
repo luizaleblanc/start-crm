@@ -80,9 +80,9 @@ function AppShellWithNav({ children }: { children: ReactNode }) {
       onToggleSidebarCollapse={() => setCollapsed((current) => !current)}
       pageTitle={activeItem?.label}
       sidebarHeader={
-        <div className="flex w-full items-center justify-center">
-          <span className="flex h-12 w-12 shrink-0 items-center justify-center">
-            <LogoMark size={44} className="text-foreground" />
+        <div className="flex w-full items-center justify-center py-2">
+          <span className="flex h-16 w-16 shrink-0 items-center justify-center transition-transform hover:scale-105">
+            <LogoMark size={collapsed ? 38 : 54} className="text-foreground" />
           </span>
         </div>
       }

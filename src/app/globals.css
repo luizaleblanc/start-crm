@@ -5,74 +5,67 @@
 :root {
   color-scheme: light;
 
-  --color-ink: #16161c;
-  --color-paper: #f6f5f8;
-  --color-midnight: #193073;
-  --color-kennedy: #6d88df;
-  --color-deep-blue: #2a4ebc;
+  --color-ink: #0f1017;
+  --color-paper: #f4f5f9;
+  --color-midnight: #13141d;
+  --color-kennedy: #2563eb;
+  --color-deep-blue: #1d4ed8;
 
-  --color-text-primary: #1c1b22;
-  --color-text-secondary: #6a6678;
-  --color-text-tertiary: #9b97a6;
-  --color-text-quaternary: #bdb9c8;
+  --color-text-primary: #0f1017;
+  --color-text-secondary: #64748b;
+  --color-text-tertiary: #94a3b8;
+  --color-text-quaternary: #cbd5e1;
 
-  --color-border: #efedf2;
-  --color-success: #159a6b;
-  --color-destructive: #dc2626;
-  --color-warning: #d97706;
+  --color-border: #e2e5ec;
+  --color-success: #10b981;
+  --color-destructive: #ef4444;
+  --color-warning: #f59e0b;
 
-  --background: var(--color-paper);
-  --foreground: var(--color-text-primary);
-  --muted-foreground: var(--color-text-secondary);
-  --border: var(--color-border);
+  --background: #f4f5f9;
+  --foreground: #0f1017;
+  --muted-foreground: #64748b;
+  --border: #e2e5ec;
   --card: #ffffff;
-  --primary: var(--color-kennedy);
-  --primary-foreground: var(--color-paper);
-  --secondary: var(--color-deep-blue);
-  --secondary-foreground: var(--color-paper);
-  --success: var(--color-success);
-  --destructive: var(--color-destructive);
-  --warning: var(--color-warning);
+  --primary: #2563eb;
+  --primary-foreground: #ffffff;
+  --secondary: #1d4ed8;
+  --secondary-foreground: #ffffff;
+  --success: #10b981;
+  --destructive: #ef4444;
+  --warning: #f59e0b;
 
-  /* Paleta categórica (identidade/séries) — validada com o skill de dataviz
-     (6 checks: banda de luminosidade, chroma, separação CVD, piso de visão
-     normal, contraste) contra a superfície de card clara. Ordem fixa, nunca
-     ciclada nem reordenada por chart. */
-  --chart-1: #2a78d6;
-  --chart-2: #eb6834;
-  --chart-3: #1baf7a;
-  --chart-4: #eda100;
-  --chart-5: #e87ba4;
-  --chart-6: #008300;
-  --chart-7: #4a3aa7;
-  --chart-8: #e34948;
+  --chart-1: #3b82f6;
+  --chart-2: #fb923c;
+  --chart-3: #10b981;
+  --chart-4: #fbbf24;
+  --chart-5: #f43f5e;
+  --chart-6: #8b5cf6;
+  --chart-7: #06b6d4;
+  --chart-8: #ec4899;
 }
 
 :root[data-theme="dark"] {
   color-scheme: dark;
 
-  --background: color-mix(in srgb, var(--color-midnight) 100%, black 55%);
-  --foreground: var(--color-paper);
-  --muted-foreground: var(--color-text-tertiary);
-  --border: rgb(255 255 255 / 12%);
-  --card: var(--color-midnight);
-  --primary: var(--color-kennedy);
-  --primary-foreground: var(--color-paper);
-  --secondary: var(--color-deep-blue);
-  --secondary-foreground: var(--color-paper);
-  --success: var(--color-success);
+  --background: #090a0f;
+  --foreground: #f8fafc;
+  --muted-foreground: #94a3b8;
+  --border: rgba(255, 255, 255, 0.08);
+  --card: #13141d;
+  --primary: #3b82f6;
+  --primary-foreground: #ffffff;
+  --secondary: #60a5fa;
+  --secondary-foreground: #090a0f;
+  --success: #10b981;
   --destructive: #f87171;
   --warning: #fbbf24;
 
-  /* Mesmas 8 famílias de matiz, escalonadas para a superfície escura do
-     card (--color-midnight, #193073) — validado separadamente com o mesmo
-     script. */
-  --chart-1: #3987e5;
-  --chart-2: #d95926;
-  --chart-3: #199e70;
-  --chart-4: #c98500;
-  --chart-5: #d55181;
-  --chart-6: #008300;
-  --chart-7: #9085e9;
-  --chart-8: #e66767;
+  --chart-1: #3b82f6;
+  --chart-2: #fb923c;
+  --chart-3: #10b981;
+  --chart-4: #fbbf24;
+  --chart-5: #f43f5e;
+  --chart-6: #8b5cf6;
+  --chart-7: #06b6d4;
+  --chart-8: #ec4899;
 }

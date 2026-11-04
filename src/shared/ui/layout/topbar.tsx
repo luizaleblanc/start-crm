@@ -1,8 +1,9 @@
 "use client";
 
-import { Bell, Search, X } from "lucide-react";
+import { Bell, Calendar, Search, Settings, X } from "lucide-react";
 import type { FormEvent, ReactNode } from "react";
 import { useState } from "react";
+import { ThemeToggle } from "@/shared/theme/theme-toggle";
 
 interface TopbarProps {
   title?: string;
@@ -20,15 +21,21 @@ export function Topbar({
   title,
   subtitle,
   actions,
-  search,
+  search = true,
   searchValue,
   onSearchChange,
   onSearchSubmit,
   searchPlaceholder,
-  notifications,
+  notifications = true,
 }: TopbarProps) {
   const [internalValue, setInternalValue] = useState("");
   const currentQuery = searchValue !== undefined ? searchValue : internalValue;
+
+  const todayFormatted = new Intl.DateTimeFormat("pt-BR", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+  }).format(new Date());
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -46,50 +53,61 @@ export function Topbar({
   }
 
   return (
-    <header className="flex h-16 shrink-0 items-center justify-between gap-4 border-b border-border bg-background pl-6 pr-6">
-      <div className="flex min-w-0 flex-col justify-center">
-        {title && <h1 className="text-h5 text-foreground">{title}</h1>}
-        {subtitle && <p className="text-caption text-muted-foreground">{subtitle}</p>}
-      </div>
-      <div className="flex items-center gap-3">
+    <header className="h-18 border-border/80 bg-background/90 flex shrink-0 items-center justify-between gap-4 border-b px-6 backdrop-blur-sm">
+      {/* Lado Esquerdo: Busca e Data no estilo do Dashboard de Referência */}
+      <div className="flex items-center gap-4">
         {search && (
-          <form onSubmit={handleSubmit} className="relative hidden sm:block">
+          <form onSubmit={handleSubmit} className="relative w-64 sm:w-80">
             <Search
               aria-hidden
-              size={16}
-              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+              size={15}
+              className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground"
             />
             <input
               type="search"
               value={currentQuery}
               onChange={(e) => handleChange(e.target.value)}
-              placeholder={searchPlaceholder ?? "Buscar lead…"}
-              className="h-9 w-64 rounded-md border border-border bg-background pl-9 pr-8 text-body text-foreground transition-colors placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+              placeholder={searchPlaceholder ?? "Buscar no CRM..."}
+              className="border-border/80 bg-card/60 shadow-xs h-10 w-full rounded-full border pl-9 pr-8 text-caption text-foreground transition-colors placeholder:text-muted-foreground focus:border-primary focus:bg-card focus:outline-none focus:ring-1 focus:ring-primary"
             />
             {currentQuery && (
               <button
                 type="button"
                 onClick={handleClear}
                 aria-label="Limpar busca"
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
               >
-                <X size={14} />
+                <X size={13} />
               </button>
             )}
           </form>
         )}
+
+        <div className="border-border/60 bg-card/40 hidden items-center gap-1.5 rounded-full border px-3 py-1.5 text-caption font-medium text-muted-foreground lg:flex">
+          <Calendar size={13} className="text-primary" />
+          <span className="capitalize">{todayFormatted}</span>
+        </div>
+      </div>
+
+      {/* Lado Direito: Ações, Tema, Notificações - Perfeitamente alinhados e espaçados */}
+      <div className="flex items-center gap-3">
+        {actions && <div className="flex items-center gap-2">{actions}</div>}
+
+        {/* Botão de Alternância de Tema (Light / Dark) */}
+        <ThemeToggle />
+
+        {/* Botão de Notificações com Ping */}
         {notifications && (
           <button
             type="button"
-            disabled
             aria-label="Notificações"
-            className="relative flex h-9 w-9 shrink-0 cursor-not-allowed items-center justify-center rounded-full border border-border text-muted-foreground"
+            title="Notificações"
+            className="border-border/80 shadow-xs hover:bg-muted relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full border bg-card text-muted-foreground transition-colors hover:text-foreground"
           >
             <Bell aria-hidden size={16} />
-            <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-destructive" />
+            <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-rose-500 ring-2 ring-card" />
           </button>
         )}
-        {actions && <div className="flex items-center gap-3">{actions}</div>}
       </div>
     </header>
   );

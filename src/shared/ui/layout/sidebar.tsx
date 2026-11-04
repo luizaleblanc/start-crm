@@ -1,3 +1,5 @@
+"use client";
+
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
@@ -43,8 +45,8 @@ export function Sidebar({
   return (
     <aside
       className={cn(
-        "relative flex h-full shrink-0 flex-col border-r border-border bg-background transition-[width] duration-200",
-        collapsed ? "w-20" : "w-60",
+        "border-border/80 relative flex h-full shrink-0 flex-col border-r bg-background transition-[width] duration-300",
+        collapsed ? "w-20" : "w-64",
       )}
     >
       {onToggleCollapse && (
@@ -52,7 +54,7 @@ export function Sidebar({
           type="button"
           onClick={onToggleCollapse}
           aria-label={collapsed ? "Expandir menu" : "Recolher menu"}
-          className="absolute -right-3 top-16 z-10 flex h-6 w-6 items-center justify-center rounded-full border border-border bg-background text-muted-foreground shadow-sm transition-colors hover:text-foreground"
+          className="border-border/80 hover:bg-muted absolute -right-3.5 top-24 z-20 flex h-7 w-7 items-center justify-center rounded-full border bg-card text-muted-foreground shadow-md transition-all hover:text-foreground"
         >
           {collapsed ? (
             <ChevronRight aria-hidden size={14} />
@@ -62,9 +64,15 @@ export function Sidebar({
         </button>
       )}
 
-      {header && <div className="flex h-16 items-center justify-center px-3">{header}</div>}
+      {/* Cabeçalho da Logo com Respiro Generoso e Altura Ampla */}
+      {header && (
+        <div className="border-border/40 flex h-28 shrink-0 items-center justify-center border-b px-4">
+          {header}
+        </div>
+      )}
 
-      <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-3 py-4">
+      {/* Navegação Principal - Espaçamento pt-10 para descer os tópicos */}
+      <nav className="flex flex-1 flex-col gap-2 overflow-y-auto px-4 pb-6 pt-10">
         {items.map((item) => {
           const Icon = item.icon;
 
@@ -75,15 +83,15 @@ export function Sidebar({
                 type="button"
                 disabled
                 title={collapsed ? item.label : undefined}
-                className="flex cursor-not-allowed items-center gap-2.5 rounded-md px-3 py-2 text-left text-body text-muted-foreground opacity-70"
+                className="flex cursor-not-allowed items-center gap-3.5 rounded-xl px-3.5 py-3 text-left text-body text-muted-foreground opacity-50"
               >
                 <span className="flex h-6 w-6 shrink-0 items-center justify-center">
-                  {Icon && <Icon aria-hidden size={18} />}
+                  {Icon && <Icon aria-hidden size={20} />}
                 </span>
                 {!collapsed && (
                   <>
-                    <span className="flex-1">{item.label}</span>
-                    <span className="bg-muted-foreground/10 rounded-full px-2 py-0.5 text-caption">
+                    <span className="flex-1 font-medium">{item.label}</span>
+                    <span className="bg-muted/60 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
                       breve
                     </span>
                   </>
@@ -98,21 +106,35 @@ export function Sidebar({
               href={item.href}
               title={collapsed ? item.label : undefined}
               className={cn(
-                "hover:bg-foreground/5 flex items-center gap-2.5 rounded-md px-3 py-2 text-body text-foreground transition-colors",
-                item.active && "bg-primary/10 hover:bg-primary/10 font-medium text-primary",
+                "group flex items-center gap-3.5 rounded-xl px-3.5 py-3 text-body font-medium transition-all duration-150",
+                item.active
+                  ? "bg-foreground font-semibold text-background shadow-sm dark:bg-white dark:text-zinc-950"
+                  : "hover:bg-card/70 text-muted-foreground hover:text-foreground",
               )}
             >
               <span className="flex h-6 w-6 shrink-0 items-center justify-center">
-                {Icon && <Icon aria-hidden size={18} />}
+                {Icon && (
+                  <Icon
+                    aria-hidden
+                    size={20}
+                    className={cn(
+                      "transition-colors",
+                      item.active
+                        ? "text-inherit"
+                        : "text-muted-foreground group-hover:text-foreground",
+                    )}
+                  />
+                )}
               </span>
-              {!collapsed && item.label}
+              {!collapsed && <span>{item.label}</span>}
             </Link>
           );
         })}
 
+        {/* Seção Secundária (Integrações) */}
         {secondarySection && !collapsed && (
-          <div className="mt-4 flex flex-col gap-1">
-            <span className="px-3 text-h6 uppercase text-muted-foreground">
+          <div className="border-border/40 mt-10 flex flex-col gap-2 border-t pt-8">
+            <span className="text-muted-foreground/60 px-3.5 text-[11px] font-bold uppercase tracking-wider">
               {secondarySection.label}
             </span>
             {secondarySection.items.map((item) => {
@@ -122,14 +144,14 @@ export function Sidebar({
                   key={item.label}
                   type="button"
                   disabled
-                  className="flex cursor-not-allowed items-center gap-2.5 rounded-md px-3 py-2 text-left text-body text-muted-foreground opacity-70"
+                  className="flex cursor-not-allowed items-center gap-3.5 rounded-xl px-3.5 py-2.5 text-left text-body text-muted-foreground opacity-50"
                 >
                   <span className="flex h-6 w-6 shrink-0 items-center justify-center">
                     {Icon && <Icon aria-hidden size={18} />}
                   </span>
-                  <span className="flex-1">{item.label}</span>
+                  <span className="flex-1 text-caption font-medium">{item.label}</span>
                   {item.badge && (
-                    <span className="bg-muted-foreground/10 rounded-full px-2 py-0.5 text-caption">
+                    <span className="bg-muted/60 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
                       {item.badge}
                     </span>
                   )}
@@ -139,7 +161,9 @@ export function Sidebar({
           </div>
         )}
       </nav>
-      {footer && <div className="mt-auto border-t border-border px-3 py-3">{footer}</div>}
+
+      {/* Rodapé com Perfil do Usuário */}
+      {footer && <div className="border-border/50 mt-auto border-t px-4 py-4">{footer}</div>}
     </aside>
   );
 }
