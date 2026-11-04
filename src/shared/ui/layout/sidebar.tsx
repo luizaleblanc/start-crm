@@ -45,7 +45,7 @@ export function Sidebar({
   return (
     <aside
       className={cn(
-        "border-border/80 relative flex h-full shrink-0 flex-col border-r bg-background transition-[width] duration-300",
+        "relative flex h-full shrink-0 flex-col bg-background transition-[width] duration-300",
         collapsed ? "w-20" : "w-64",
       )}
     >
@@ -54,7 +54,7 @@ export function Sidebar({
           type="button"
           onClick={onToggleCollapse}
           aria-label={collapsed ? "Expandir menu" : "Recolher menu"}
-          className="border-border/80 hover:bg-muted absolute -right-3.5 top-24 z-20 flex h-7 w-7 items-center justify-center rounded-full border bg-card text-muted-foreground shadow-md transition-all hover:text-foreground"
+          className="border-border/80 hover:bg-muted absolute -right-3.5 top-40 z-20 flex h-7 w-7 items-center justify-center rounded-full border bg-card text-muted-foreground shadow-md transition-all hover:text-foreground"
         >
           {collapsed ? (
             <ChevronRight aria-hidden size={14} />
@@ -66,9 +66,7 @@ export function Sidebar({
 
       {/* Cabeçalho da Logo com Respiro Generoso e Altura Ampla */}
       {header && (
-        <div className="border-border/40 flex h-28 shrink-0 items-center justify-center border-b px-4">
-          {header}
-        </div>
+        <div className="flex h-36 shrink-0 items-center justify-center px-4">{header}</div>
       )}
 
       {/* Navegação Principal - Espaçamento pt-10 para descer os tópicos */}
@@ -133,7 +131,7 @@ export function Sidebar({
 
         {/* Seção Secundária (Integrações) */}
         {secondarySection && !collapsed && (
-          <div className="border-border/40 mt-10 flex flex-col gap-2 border-t pt-8">
+          <div className="mt-10 flex flex-col gap-2 pt-4">
             <span className="text-muted-foreground/60 px-3.5 text-[11px] font-bold uppercase tracking-wider">
               {secondarySection.label}
             </span>
@@ -163,7 +161,7 @@ export function Sidebar({
       </nav>
 
       {/* Rodapé com Perfil do Usuário */}
-      {footer && <div className="border-border/50 mt-auto border-t px-4 py-4">{footer}</div>}
+      {footer && <div className="mt-auto px-4 py-4">{footer}</div>}
     </aside>
   );
 }

@@ -53,7 +53,7 @@ export function Topbar({
   }
 
   return (
-    <header className="h-18 border-border/80 bg-background/90 flex shrink-0 items-center justify-between gap-4 border-b px-6 backdrop-blur-sm">
+    <header className="h-20 mt-3 border-border/80 bg-background/90 flex shrink-0 items-center justify-between gap-4 px-8 backdrop-blur-sm">
       {/* Lado Esquerdo: Busca e Data no estilo do Dashboard de Referência */}
       <div className="flex items-center gap-4">
         {search && (

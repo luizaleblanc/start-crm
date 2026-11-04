@@ -62,7 +62,7 @@ export function AppShell({
           searchPlaceholder={searchPlaceholder}
           notifications={notifications}
         />
-        <main className="flex-1 overflow-y-auto overflow-x-hidden p-6">{children}</main>
+        <main className="flex-1 overflow-y-auto overflow-x-hidden px-8 pb-8 pt-8">{children}</main>
       </div>
     </div>
   );

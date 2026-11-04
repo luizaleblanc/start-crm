@@ -81,8 +81,8 @@ function AppShellWithNav({ children }: { children: ReactNode }) {
       pageTitle={activeItem?.label}
       sidebarHeader={
         <div className="flex w-full items-center justify-center py-2">
-          <span className="flex h-16 w-16 shrink-0 items-center justify-center transition-transform hover:scale-105">
-            <LogoMark size={collapsed ? 38 : 54} className="text-foreground" />
+          <span className="flex h-24 w-24 shrink-0 items-center justify-center transition-transform hover:scale-105">
+            <LogoMark size={collapsed ? 48 : 80} className="text-foreground" />
           </span>
         </div>
       }
