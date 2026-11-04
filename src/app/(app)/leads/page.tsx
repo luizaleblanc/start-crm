@@ -1,10 +1,14 @@
 "use client";
 
 import {
+  ChevronLeft,
+  ChevronRight,
   FileSpreadsheet,
   FileText,
   FileType,
   LayoutGrid,
+  Mail,
+  Phone,
   Search,
   Table2,
   Upload,
@@ -17,7 +21,7 @@ import type { ExportFormat } from "@/modules/crm/infrastructure/export/export-le
 import { exportLeads } from "@/modules/crm/infrastructure/export/export-leads";
 import { ImportLeadsModal } from "@/modules/crm/presentation/import/import-leads-modal";
 import { useFunnelStages, useSources } from "@/modules/crm/presentation/hooks/use-catalog";
-import { useLeads } from "@/modules/crm/presentation/hooks/use-leads";
+import { useLeads, useUpdateLeadStage } from "@/modules/crm/presentation/hooks/use-leads";
 import {
   getStageTemperatureColor,
   getStageTemperatureColorAlpha,
@@ -31,13 +35,15 @@ import { ErrorState } from "@/shared/ui/error-state";
 import { Select } from "@/shared/ui/select";
 import { Skeleton } from "@/shared/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/shared/ui/table";
+import { cn } from "@/shared/ui/cn";
 
 type ViewMode = "table" | "kanban";
 
 export default function LeadsPage() {
-  const leadsQuery = useLeads(1, 1000);
+  const leadsQuery = useLeads(1, 1500);
   const funnelStagesQuery = useFunnelStages();
   const sourcesQuery = useSources();
+  const updateLeadStage = useUpdateLeadStage();
 
   const { searchTerm, setSearchTerm } = useSearch();
 
@@ -176,18 +182,60 @@ export default function LeadsPage() {
         </div>
       </div>
 
-      <p className="flex items-center gap-2 text-caption text-muted-foreground">
-        Temperatura do lead:
-        <span className="inline-flex items-center gap-1">
-          <span aria-hidden className="h-2 w-2 rounded-full bg-[#3b82f6]" />
-          Frio
-        </span>
-        <span aria-hidden>→</span>
-        <span className="inline-flex items-center gap-1">
-          <span aria-hidden className="h-2 w-2 rounded-full bg-[#ef4444]" />
-          Quente
-        </span>
-      </p>
+      <div className="border-border/60 flex flex-wrap items-center justify-between gap-3 border-y py-3">
+        <p className="flex items-center gap-2 text-caption text-muted-foreground">
+          Temperatura do lead:
+          <span className="inline-flex items-center gap-1">
+            <span aria-hidden className="h-2 w-2 rounded-full bg-[#3b82f6]" />
+            Frio
+          </span>
+          <span aria-hidden>→</span>
+          <span className="inline-flex items-center gap-1">
+            <span aria-hidden className="h-2 w-2 rounded-full bg-[#ef4444]" />
+            Quente
+          </span>
+        </p>
+
+        <div className="flex flex-wrap items-center gap-2">
+          <Button type="button" variant="outline" size="sm" onClick={() => setImportOpen(true)}>
+            <Upload aria-hidden size={16} />
+            Importar minha Tabela
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            disabled={filteredLeads.length === 0 || exportingFormat !== null}
+            isLoading={exportingFormat === "xlsx"}
+            onClick={() => handleExport("xlsx")}
+          >
+            <FileSpreadsheet aria-hidden size={16} />
+            Excel
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            disabled={filteredLeads.length === 0 || exportingFormat !== null}
+            isLoading={exportingFormat === "pdf"}
+            onClick={() => handleExport("pdf")}
+          >
+            <FileText aria-hidden size={16} />
+            PDF
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            disabled={filteredLeads.length === 0 || exportingFormat !== null}
+            isLoading={exportingFormat === "docx"}
+            onClick={() => handleExport("docx")}
+          >
+            <FileType aria-hidden size={16} />
+            Word
+          </Button>
+        </div>
+      </div>
 
       {view === "table" ? (
         <LeadsTableView
@@ -196,15 +244,16 @@ export default function LeadsPage() {
           stageById={stageById}
           funnelStages={funnelStages}
           sourceNameById={sourceNameById}
-          onImport={() => setImportOpen(true)}
-          onExport={handleExport}
-          exportingFormat={exportingFormat}
         />
       ) : (
         <LeadsKanbanView
           leads={filteredLeads}
           funnelStages={funnelStages}
           sourceNameById={sourceNameById}
+          onMoveStage={(leadId, stageId) =>
+            updateLeadStage.mutate({ leadId, funnelStageId: stageId })
+          }
+          isMoving={updateLeadStage.isPending}
         />
       )}
 
@@ -224,9 +273,6 @@ interface LeadsTableViewProps {
   stageById: Map<string, FunnelStage>;
   funnelStages: FunnelStage[];
   sourceNameById: Map<string, string>;
-  onImport: () => void;
-  onExport: (format: ExportFormat) => void;
-  exportingFormat: ExportFormat | null;
 }
 
 function LeadsTableView({
@@ -235,52 +281,9 @@ function LeadsTableView({
   stageById,
   funnelStages,
   sourceNameById,
-  onImport,
-  onExport,
-  exportingFormat,
 }: LeadsTableViewProps) {
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex flex-wrap justify-end gap-2">
-        <Button type="button" variant="outline" size="sm" onClick={onImport}>
-          <Upload aria-hidden size={16} />
-          Importar minha Tabela
-        </Button>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          disabled={leads.length === 0 || exportingFormat !== null}
-          isLoading={exportingFormat === "xlsx"}
-          onClick={() => onExport("xlsx")}
-        >
-          <FileSpreadsheet aria-hidden size={16} />
-          Excel
-        </Button>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          disabled={leads.length === 0 || exportingFormat !== null}
-          isLoading={exportingFormat === "pdf"}
-          onClick={() => onExport("pdf")}
-        >
-          <FileText aria-hidden size={16} />
-          PDF
-        </Button>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          disabled={leads.length === 0 || exportingFormat !== null}
-          isLoading={exportingFormat === "docx"}
-          onClick={() => onExport("docx")}
-        >
-          <FileType aria-hidden size={16} />
-          Word
-        </Button>
-      </div>
-
       {isLoading ? (
         <div className="flex flex-col gap-2">
           <Skeleton className="h-10 w-full" />
@@ -341,18 +344,64 @@ interface LeadsKanbanViewProps {
   leads: Lead[];
   funnelStages: FunnelStage[];
   sourceNameById: Map<string, string>;
+  onMoveStage: (leadId: string, stageId: string) => void;
+  isMoving?: boolean;
 }
 
-function LeadsKanbanView({ leads, funnelStages, sourceNameById }: LeadsKanbanViewProps) {
+function LeadsKanbanView({
+  leads,
+  funnelStages,
+  sourceNameById,
+  onMoveStage,
+  isMoving,
+}: LeadsKanbanViewProps) {
+  const [draggedLeadId, setDraggedLeadId] = useState<string | null>(null);
+  const [dragOverStageId, setDragOverStageId] = useState<string | null>(null);
+
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-      {funnelStages.map((stage) => {
+      {funnelStages.map((stage, stageIndex) => {
         const color = getStageTemperatureColor(stage, funnelStages);
         const backgroundTint = getStageTemperatureColorAlpha(stage, funnelStages, 0.1);
         const stageLeads = leads.filter((lead) => lead.funnelStageId === stage.id);
+        const isTarget = dragOverStageId === stage.id;
+
+        const prevStage = stageIndex > 0 ? funnelStages[stageIndex - 1] : null;
+        const nextStage =
+          stageIndex < funnelStages.length - 1 ? funnelStages[stageIndex + 1] : null;
 
         return (
-          <div key={stage.id} className="flex flex-col gap-3">
+          <div
+            key={stage.id}
+            onDragOver={(e) => {
+              e.preventDefault();
+              e.dataTransfer.dropEffect = "move";
+            }}
+            onDragEnter={(e) => {
+              e.preventDefault();
+              setDragOverStageId(stage.id);
+            }}
+            onDragLeave={(e) => {
+              if (e.currentTarget.contains(e.relatedTarget as Node)) return;
+              if (dragOverStageId === stage.id) setDragOverStageId(null);
+            }}
+            onDrop={(e) => {
+              e.preventDefault();
+              setDragOverStageId(null);
+              const leadId = e.dataTransfer.getData("text/plain") || draggedLeadId;
+              if (leadId) {
+                const lead = leads.find((l) => l.id === leadId);
+                if (lead && lead.funnelStageId !== stage.id) {
+                  onMoveStage(leadId, stage.id);
+                }
+              }
+              setDraggedLeadId(null);
+            }}
+            className={cn(
+              "border-border/80 bg-background/50 flex flex-col gap-3 rounded-lg border p-2.5 transition-colors",
+              isTarget && "ring-primary/80 bg-primary/5 ring-2",
+            )}
+          >
             <div
               className="flex items-center justify-between rounded-md px-3 py-2"
               style={{ backgroundColor: backgroundTint }}
@@ -363,33 +412,98 @@ function LeadsKanbanView({ leads, funnelStages, sourceNameById }: LeadsKanbanVie
                   className="h-2.5 w-2.5 shrink-0 rounded-full"
                   style={{ backgroundColor: color }}
                 />
-                <span className="text-caption font-medium text-foreground">{stage.name}</span>
+                <span className="text-caption font-semibold text-foreground">{stage.name}</span>
               </div>
-              <span className="text-caption text-muted-foreground">{stageLeads.length}</span>
+              <span className="bg-background/80 shadow-xs rounded-full px-2 py-0.5 text-caption font-semibold text-foreground">
+                {stageLeads.length}
+              </span>
             </div>
 
-            {stageLeads.length === 0 && (
-              <p className="text-caption text-muted-foreground">Nenhum lead.</p>
-            )}
+            <div className="flex max-h-[calc(100vh-270px)] flex-col gap-2.5 overflow-y-auto pr-1">
+              {stageLeads.length === 0 ? (
+                <p className="rounded-md border border-dashed border-border px-3 py-8 text-center text-caption text-muted-foreground">
+                  Arraste um lead para este estágio.
+                </p>
+              ) : (
+                stageLeads.map((lead) => (
+                  <div
+                    key={lead.id}
+                    draggable
+                    onDragStart={(e) => {
+                      e.dataTransfer.setData("text/plain", lead.id);
+                      setDraggedLeadId(lead.id);
+                    }}
+                    onDragEnd={() => setDraggedLeadId(null)}
+                    className={cn(
+                      "shadow-xs group relative cursor-grab rounded-lg border border-border bg-card p-3 transition-all hover:shadow-md active:cursor-grabbing",
+                      draggedLeadId === lead.id && "border-dashed border-primary opacity-50",
+                    )}
+                    style={{ borderLeft: `4px solid ${color}` }}
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <Link
+                        href={`/leads/${lead.id}`}
+                        className="text-body font-semibold text-foreground transition-colors hover:text-primary hover:underline"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {lead.name}
+                      </Link>
+                    </div>
 
-            {stageLeads.map((lead) => (
-              <Link key={lead.id} href={`/leads/${lead.id}`}>
-                <Card
-                  className="transition-shadow hover:shadow-md"
-                  style={{ borderLeft: `3px solid ${color}` }}
-                >
-                  <CardHeader>
-                    <p className="text-body font-semibold text-foreground">{lead.name}</p>
-                    <p className="text-caption text-muted-foreground">{lead.email}</p>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-caption text-muted-foreground">
-                      {sourceNameById.get(lead.sourceId) ?? lead.sourceId}
-                    </p>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
+                    {lead.email && (
+                      <p className="mt-1 flex items-center gap-1.5 truncate text-caption text-muted-foreground">
+                        <Mail size={12} className="shrink-0" />
+                        <span className="truncate">{lead.email}</span>
+                      </p>
+                    )}
+
+                    {lead.phone && (
+                      <p className="mt-0.5 flex items-center gap-1.5 text-caption text-muted-foreground">
+                        <Phone size={12} className="shrink-0" />
+                        <span>{lead.phone}</span>
+                      </p>
+                    )}
+
+                    <div className="border-border/50 mt-2.5 flex items-center justify-between border-t pt-2 text-caption">
+                      <span className="bg-muted/60 max-w-[140px] truncate rounded px-1.5 py-0.5 text-[11px] text-muted-foreground">
+                        {sourceNameById.get(lead.sourceId) ?? "Origem padrão"}
+                      </span>
+
+                      <div className="flex items-center gap-1">
+                        {prevStage && (
+                          <button
+                            type="button"
+                            title={`Mover para ${prevStage.name}`}
+                            disabled={isMoving}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onMoveStage(lead.id, prevStage.id);
+                            }}
+                            className="hover:bg-muted flex h-6 w-6 items-center justify-center rounded border border-border bg-background text-muted-foreground transition-colors hover:text-foreground disabled:opacity-50"
+                          >
+                            <ChevronLeft size={13} />
+                          </button>
+                        )}
+                        {nextStage && (
+                          <button
+                            type="button"
+                            title={`Avançar para ${nextStage.name}`}
+                            disabled={isMoving}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onMoveStage(lead.id, nextStage.id);
+                            }}
+                            className="hover:bg-muted flex h-6 w-6 items-center justify-center rounded border border-border bg-background text-muted-foreground transition-colors hover:text-foreground disabled:opacity-50"
+                          >
+                            <ChevronRight size={13} />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
           </div>
         );
       })}

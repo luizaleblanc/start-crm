@@ -88,6 +88,20 @@ export function useChangeLeadStage(leadId: string) {
   });
 }
 
+export function useUpdateLeadStage() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ leadId, funnelStageId }: { leadId: string; funnelStageId: string }) =>
+      apiFetch<Lead>(`/api/crm/leads/${leadId}/stage`, {
+        method: "PATCH",
+        body: { funnelStageId },
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["leads"] });
+    },
+  });
+}
+
 export function useAssignLead(leadId: string) {
   const queryClient = useQueryClient();
   return useMutation({

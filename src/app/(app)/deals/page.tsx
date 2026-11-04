@@ -19,7 +19,7 @@ const COLUMNS: Array<{ status: DealStatus; label: string }> = [
 
 export default function DealsPage() {
   const dealsQuery = useDeals();
-  const leadsQuery = useLeads(1, 100);
+  const leadsQuery = useLeads(1, 1000);
   const closeDeal = useCloseDeal();
 
   const deals = dealsQuery.data?.data ?? [];

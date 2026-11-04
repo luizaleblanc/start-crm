@@ -9,9 +9,12 @@ interface CloseDealInput {
 }
 
 export async function closeDeal({ dealId, status }: CloseDealInput, context?: RequestContext) {
+  const backendStatus = status === "won" ? "ganho" : "perdido";
+  const statusToSave = process.env.API_MODE === "real" ? (backendStatus as any) : status;
+
   const deal = await dealsRepository.update(
     dealId,
-    { status, closedAt: new Date().toISOString() },
+    { status: statusToSave, closedAt: new Date().toISOString() },
     context,
   );
   if (!deal) throw new ApiError(404, "Negócio não encontrado");

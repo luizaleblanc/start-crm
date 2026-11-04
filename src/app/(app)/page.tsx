@@ -29,10 +29,13 @@ export default function DashboardPage() {
   const wonDeals = deals.filter((deal) => deal.status === "won");
   const pipelineValue = openDeals.reduce((total, deal) => total + deal.value, 0);
 
-  const leadsBySource = sources.map((source) => ({
-    source,
-    count: leads.filter((lead) => lead.sourceId === source.id).length,
-  }));
+  const leadsBySource = sources
+    .map((source) => ({
+      source,
+      count: leads.filter((lead) => lead.sourceId === source.id).length,
+    }))
+    .filter((item) => item.count > 0)
+    .sort((a, b) => b.count - a.count);
 
   const recentLeads = [...leads]
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
