@@ -1,21 +1,25 @@
 "use client";
 
 import {
+  ArrowDownUp,
   ChevronLeft,
   ChevronRight,
   FileSpreadsheet,
   FileText,
   FileType,
+  Filter,
   LayoutGrid,
   Mail,
   Phone,
   Search,
   Table2,
   Upload,
+  UserCheck,
+  Users,
   X,
 } from "lucide-react";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { FunnelStage, Lead } from "@/modules/crm/domain/entities";
 import type { ExportFormat } from "@/modules/crm/infrastructure/export/export-leads";
 import { exportLeads } from "@/modules/crm/infrastructure/export/export-leads";
@@ -29,7 +33,6 @@ import {
 import { TemperatureBadge } from "@/modules/crm/presentation/temperature-badge";
 import { useSearch } from "@/shared/search/search-context";
 import { Button } from "@/shared/ui/button";
-import { Card, CardContent, CardHeader } from "@/shared/ui/card";
 import { EmptyState } from "@/shared/ui/empty-state";
 import { ErrorState } from "@/shared/ui/error-state";
 import { Select } from "@/shared/ui/select";
@@ -38,6 +41,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { cn } from "@/shared/ui/cn";
 
 type ViewMode = "table" | "kanban";
+
+const PAGE_SIZE = 25;
 
 export default function LeadsPage() {
   const leadsQuery = useLeads(1, 1500);
@@ -50,10 +55,11 @@ export default function LeadsPage() {
   const [view, setView] = useState<ViewMode>("table");
   const [stageFilter, setStageFilter] = useState("");
   const [sourceFilter, setSourceFilter] = useState("");
+  const [page, setPage] = useState(1);
   const [importOpen, setImportOpen] = useState(false);
   const [exportingFormat, setExportingFormat] = useState<ExportFormat | null>(null);
 
-  const leads = leadsQuery.data?.data ?? [];
+  const leads = useMemo(() => leadsQuery.data?.data ?? [], [leadsQuery.data?.data]);
   const funnelStages = useMemo(
     () => [...(funnelStagesQuery.data?.data ?? [])].sort((a, b) => a.order - b.order),
     [funnelStagesQuery.data],
@@ -73,18 +79,71 @@ export default function LeadsPage() {
     [funnelStages],
   );
 
-  const filteredLeads = leads.filter((lead) => {
-    if (stageFilter && lead.funnelStageId !== stageFilter) return false;
-    if (sourceFilter && lead.sourceId !== sourceFilter) return false;
-    if (searchTerm) {
-      const term = searchTerm.toLowerCase().trim();
-      const matchesName = lead.name?.toLowerCase().includes(term);
-      const matchesEmail = lead.email?.toLowerCase().includes(term);
-      const matchesPhone = lead.phone?.toLowerCase().includes(term);
-      if (!matchesName && !matchesEmail && !matchesPhone) return false;
-    }
-    return true;
-  });
+  // Status pills calculados dinamicamente com base nos 1.005 leads
+  const stageStats = useMemo(() => {
+    return funnelStages.map((stage, idx) => {
+      const count = leads.filter((lead) => lead.funnelStageId === stage.id).length;
+      const pct = leads.length > 0 ? ((count / leads.length) * 100).toFixed(1) : "0";
+
+      // Cores refinadas para o Dark Mode estilo Bento
+      const colorSchemes = [
+        {
+          border: "border-blue-500/30",
+          bg: "bg-blue-500/10",
+          text: "text-blue-500 dark:text-blue-400",
+          badgeBg: "bg-blue-500/15",
+        },
+        {
+          border: "border-orange-500/30",
+          bg: "bg-orange-500/10",
+          text: "text-orange-500 dark:text-orange-400",
+          badgeBg: "bg-orange-500/15",
+        },
+        {
+          border: "border-amber-500/30",
+          bg: "bg-amber-500/10",
+          text: "text-amber-500 dark:text-amber-400",
+          badgeBg: "bg-amber-500/15",
+        },
+        {
+          border: "border-emerald-500/30",
+          bg: "bg-emerald-500/10",
+          text: "text-emerald-500 dark:text-emerald-400",
+          badgeBg: "bg-emerald-500/15",
+        },
+      ];
+
+      const scheme = colorSchemes[idx % colorSchemes.length] ?? colorSchemes[0]!;
+
+      return {
+        stage,
+        count,
+        pct,
+        scheme,
+      };
+    });
+  }, [funnelStages, leads]);
+
+  const filteredLeads = useMemo(() => {
+    return leads.filter((lead) => {
+      if (stageFilter && lead.funnelStageId !== stageFilter) return false;
+      if (sourceFilter && lead.sourceId !== sourceFilter) return false;
+      if (searchTerm) {
+        const term = searchTerm.toLowerCase().trim();
+        const matchesName = lead.name?.toLowerCase().includes(term);
+        const matchesEmail = lead.email?.toLowerCase().includes(term);
+        const matchesPhone = lead.phone?.toLowerCase().includes(term);
+        if (!matchesName && !matchesEmail && !matchesPhone) return false;
+      }
+      return true;
+    });
+  }, [leads, stageFilter, sourceFilter, searchTerm]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredLeads.length / PAGE_SIZE));
+  const paginatedLeads = useMemo(() => {
+    const start = (page - 1) * PAGE_SIZE;
+    return filteredLeads.slice(start, start + PAGE_SIZE);
+  }, [filteredLeads, page]);
 
   async function handleExport(format: ExportFormat) {
     setExportingFormat(format);
@@ -99,108 +158,193 @@ export default function LeadsPage() {
     return <ErrorState title="Não foi possível carregar os leads" />;
   }
 
+  const totalLeadsCount = leadsQuery.data?.meta?.total ?? leads.length;
+
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div className="flex flex-wrap items-end gap-4">
-          <div className="relative w-72">
-            <span className="mb-1 block text-caption font-medium text-muted-foreground">
-              Buscar lead
-            </span>
-            <div className="relative">
-              <Search
-                aria-hidden
-                size={16}
-                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-              />
-              <input
-                type="text"
-                placeholder="Nome, e-mail ou telefone..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="h-10 w-full rounded-md border border-border bg-background pl-9 pr-8 text-body text-foreground transition-colors placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-              />
-              {searchTerm && (
-                <button
-                  type="button"
-                  onClick={() => setSearchTerm("")}
-                  aria-label="Limpar busca"
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                >
-                  <X size={14} />
-                </button>
-              )}
-            </div>
-          </div>
-          <Select
-            label="Estágio"
-            value={stageFilter}
-            onChange={(event) => setStageFilter(event.target.value)}
-            className="w-48"
+      {/* 1. Header com Título e Estatísticas Gerais */}
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+            Leads da Operação
+          </h1>
+          <p className="text-caption text-muted-foreground sm:text-body">
+            Gerencie e acompanhe todos os {totalLeadsCount.toLocaleString("pt-BR")} leads do funil
+            de vendas.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => setImportOpen(true)}
+            className="shadow-xs rounded-full"
           >
-            <option value="">Todos</option>
+            <Upload aria-hidden size={15} />
+            Importar Tabela
+          </Button>
+          <div className="shadow-xs flex rounded-full bg-card p-1">
+            <button
+              type="button"
+              onClick={() => setView("table")}
+              className={cn(
+                "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-caption font-semibold transition-colors",
+                view === "table"
+                  ? "shadow-xs bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:text-foreground",
+              )}
+            >
+              <Table2 aria-hidden size={15} />
+              Tabela
+            </button>
+            <button
+              type="button"
+              onClick={() => setView("kanban")}
+              className={cn(
+                "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-caption font-semibold transition-colors",
+                view === "kanban"
+                  ? "shadow-xs bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:text-foreground",
+              )}
+            >
+              <LayoutGrid aria-hidden size={15} />
+              Kanban
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* 2. Bloco Bento: 4 Status Cards (Inspirado no Screenshot do Dashboard de Ordens) */}
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:gap-4">
+        {stageStats.map(({ stage, count, pct, scheme }) => {
+          const isSelected = stageFilter === stage.id;
+          return (
+            <button
+              key={stage.id}
+              type="button"
+              onClick={() => {
+                setStageFilter(isSelected ? "" : stage.id);
+                setPage(1);
+              }}
+              className={cn(
+                "shadow-xs group relative flex flex-col justify-between rounded-2xl p-4 text-left transition-all",
+                scheme.bg,
+                isSelected
+                  ? "scale-[1.02] shadow-md ring-2 ring-primary"
+                  : "hover:scale-[1.01] hover:shadow-md",
+              )}
+            >
+              <div className="flex items-center justify-between gap-2">
+                <span className={cn("text-[12px] font-bold uppercase tracking-wider", scheme.text)}>
+                  {stage.name}
+                </span>
+                <span
+                  className={cn(
+                    "rounded-full px-2 py-0.5 text-[10px] font-bold",
+                    scheme.text,
+                    scheme.badgeBg,
+                  )}
+                >
+                  {pct}%
+                </span>
+              </div>
+              <div className="mt-3 flex items-baseline gap-2">
+                <span className="text-2xl font-black tabular-nums tracking-tight text-foreground sm:text-3xl">
+                  {count.toLocaleString("pt-BR")}
+                </span>
+                <span className="text-[11px] text-muted-foreground">leads</span>
+              </div>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* 3. Barra de Filtros, Busca e Exportação */}
+      <div className="shadow-xs flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-card p-4">
+        <div className="flex min-w-[280px] flex-1 flex-wrap items-center gap-3">
+          <div className="relative min-w-[220px] flex-1">
+            <Search
+              aria-hidden
+              size={15}
+              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+            />
+            <input
+              type="text"
+              placeholder="Buscar por nome, e-mail ou telefone..."
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setPage(1);
+              }}
+              className="h-9 w-full rounded-full bg-background pl-9 pr-8 text-caption text-foreground shadow-inner placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+            />
+            {searchTerm && (
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchTerm("");
+                  setPage(1);
+                }}
+                aria-label="Limpar busca"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              >
+                <X size={14} />
+              </button>
+            )}
+          </div>
+
+          <Select
+            aria-label="Filtrar por estágio"
+            value={stageFilter}
+            onChange={(event) => {
+              setStageFilter(event.target.value);
+              setPage(1);
+            }}
+            className="h-9 w-40 rounded-full text-caption"
+          >
+            <option value="">Todos estágios</option>
             {funnelStages.map((stage) => (
               <option key={stage.id} value={stage.id}>
                 {stage.name}
               </option>
             ))}
           </Select>
+
           <Select
-            label="Origem"
+            aria-label="Filtrar por origem"
             value={sourceFilter}
-            onChange={(event) => setSourceFilter(event.target.value)}
-            className="w-48"
+            onChange={(event) => {
+              setSourceFilter(event.target.value);
+              setPage(1);
+            }}
+            className="h-9 w-48 rounded-full text-caption"
           >
-            <option value="">Todas</option>
+            <option value="">Todas as origens</option>
             {sources.map((source) => (
               <option key={source.id} value={source.id}>
                 {source.name}
               </option>
             ))}
           </Select>
+
+          {(stageFilter || sourceFilter || searchTerm) && (
+            <button
+              type="button"
+              onClick={() => {
+                setStageFilter("");
+                setSourceFilter("");
+                setSearchTerm("");
+              }}
+              className="text-caption font-semibold text-primary hover:underline"
+            >
+              Limpar filtros
+            </button>
+          )}
         </div>
 
-        <div className="flex gap-2">
-          <Button
-            type="button"
-            variant={view === "table" ? "primary" : "outline"}
-            size="sm"
-            onClick={() => setView("table")}
-          >
-            <Table2 aria-hidden size={16} />
-            Tabela
-          </Button>
-          <Button
-            type="button"
-            variant={view === "kanban" ? "primary" : "outline"}
-            size="sm"
-            onClick={() => setView("kanban")}
-          >
-            <LayoutGrid aria-hidden size={16} />
-            Kanban
-          </Button>
-        </div>
-      </div>
-
-      <div className="border-border/60 flex flex-wrap items-center justify-between gap-3 border-y py-3">
-        <p className="flex items-center gap-2 text-caption text-muted-foreground">
-          Temperatura do lead:
-          <span className="inline-flex items-center gap-1">
-            <span aria-hidden className="h-2 w-2 rounded-full bg-[#3b82f6]" />
-            Frio
-          </span>
-          <span aria-hidden>→</span>
-          <span className="inline-flex items-center gap-1">
-            <span aria-hidden className="h-2 w-2 rounded-full bg-[#ef4444]" />
-            Quente
-          </span>
-        </p>
-
-        <div className="flex flex-wrap items-center gap-2">
-          <Button type="button" variant="outline" size="sm" onClick={() => setImportOpen(true)}>
-            <Upload aria-hidden size={16} />
-            Importar minha Tabela
-          </Button>
+        <div className="flex items-center gap-2">
           <Button
             type="button"
             variant="outline"
@@ -208,8 +352,9 @@ export default function LeadsPage() {
             disabled={filteredLeads.length === 0 || exportingFormat !== null}
             isLoading={exportingFormat === "xlsx"}
             onClick={() => handleExport("xlsx")}
+            className="shadow-xs rounded-full"
           >
-            <FileSpreadsheet aria-hidden size={16} />
+            <FileSpreadsheet aria-hidden size={14} />
             Excel
           </Button>
           <Button
@@ -219,8 +364,9 @@ export default function LeadsPage() {
             disabled={filteredLeads.length === 0 || exportingFormat !== null}
             isLoading={exportingFormat === "pdf"}
             onClick={() => handleExport("pdf")}
+            className="shadow-xs rounded-full"
           >
-            <FileText aria-hidden size={16} />
+            <FileText aria-hidden size={14} />
             PDF
           </Button>
           <Button
@@ -230,21 +376,69 @@ export default function LeadsPage() {
             disabled={filteredLeads.length === 0 || exportingFormat !== null}
             isLoading={exportingFormat === "docx"}
             onClick={() => handleExport("docx")}
+            className="shadow-xs rounded-full"
           >
-            <FileType aria-hidden size={16} />
+            <FileType aria-hidden size={14} />
             Word
           </Button>
         </div>
       </div>
 
+      {/* 4. Visualização: Tabela com Paginação ou Kanban */}
       {view === "table" ? (
-        <LeadsTableView
-          leads={filteredLeads}
-          isLoading={leadsQuery.isLoading}
-          stageById={stageById}
-          funnelStages={funnelStages}
-          sourceNameById={sourceNameById}
-        />
+        <div className="flex flex-col gap-4">
+          <div className="shadow-xs overflow-hidden rounded-2xl bg-card">
+            <LeadsTableView
+              leads={paginatedLeads}
+              isLoading={leadsQuery.isLoading}
+              stageById={stageById}
+              funnelStages={funnelStages}
+              sourceNameById={sourceNameById}
+            />
+          </div>
+
+          {/* Paginação Estilo Minimalista e Direta */}
+          {filteredLeads.length > 0 && (
+            <div className="flex flex-wrap items-center justify-between gap-4 px-2 py-1 text-caption text-muted-foreground">
+              <span>
+                Mostrando <strong className="text-foreground">{(page - 1) * PAGE_SIZE + 1}</strong>{" "}
+                a{" "}
+                <strong className="text-foreground">
+                  {Math.min(page * PAGE_SIZE, filteredLeads.length)}
+                </strong>{" "}
+                de{" "}
+                <strong className="text-foreground">
+                  {filteredLeads.length.toLocaleString("pt-BR")}
+                </strong>{" "}
+                leads
+              </span>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={page === 1}
+                  className="shadow-xs hover:bg-muted flex h-8 items-center gap-1 rounded-full bg-card px-3 text-caption font-semibold text-foreground transition-colors disabled:opacity-40 disabled:hover:bg-card"
+                >
+                  <ChevronLeft size={14} />
+                  Anterior
+                </button>
+                <span className="px-2 font-medium">
+                  {page} de {totalPages}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={page >= totalPages}
+                  className="shadow-xs hover:bg-muted flex h-8 items-center gap-1 rounded-full bg-card px-3 text-caption font-semibold text-foreground transition-colors disabled:opacity-40 disabled:hover:bg-card"
+                >
+                  Próxima
+                  <ChevronRight size={14} />
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
       ) : (
         <LeadsKanbanView
           leads={filteredLeads}
@@ -282,60 +476,87 @@ function LeadsTableView({
   funnelStages,
   sourceNameById,
 }: LeadsTableViewProps) {
-  return (
-    <div className="flex flex-col gap-3">
-      {isLoading ? (
-        <div className="flex flex-col gap-2">
-          <Skeleton className="h-10 w-full" />
-          <Skeleton className="h-10 w-full" />
-          <Skeleton className="h-10 w-full" />
-          <Skeleton className="h-10 w-full" />
-        </div>
-      ) : leads.length === 0 ? (
+  if (isLoading) {
+    return (
+      <div className="flex flex-col gap-2 p-6">
+        <Skeleton className="h-10 w-full rounded-lg" />
+        <Skeleton className="h-10 w-full rounded-lg" />
+        <Skeleton className="h-10 w-full rounded-lg" />
+        <Skeleton className="h-10 w-full rounded-lg" />
+      </div>
+    );
+  }
+
+  if (leads.length === 0) {
+    return (
+      <div className="p-8">
         <EmptyState
           title="Nenhum lead encontrado"
-          description="Ajuste os filtros ou aguarde novos leads chegarem."
+          description="Ajuste os filtros de busca ou aguarde novos cadastros."
         />
-      ) : (
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Nome</TableHead>
-              <TableHead>E-mail</TableHead>
-              <TableHead>Origem</TableHead>
-              <TableHead>Estágio</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {leads.map((lead) => {
-              const stage = stageById.get(lead.funnelStageId);
-              const color = stage ? getStageTemperatureColor(stage, funnelStages) : undefined;
-              return (
-                <TableRow key={lead.id}>
-                  <TableCell>
-                    <Link
-                      href={`/leads/${lead.id}`}
-                      className="inline-block text-foreground"
-                      style={color ? { borderBottom: `2px solid ${color}` } : undefined}
-                    >
-                      {lead.name}
-                    </Link>
-                  </TableCell>
-                  <TableCell className="text-muted-foreground">{lead.email}</TableCell>
-                  <TableCell>{sourceNameById.get(lead.sourceId) ?? lead.sourceId}</TableCell>
-                  <TableCell>
-                    {stage ? (
-                      <TemperatureBadge stage={stage} allStages={funnelStages} />
-                    ) : (
-                      lead.funnelStageId
-                    )}
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="overflow-x-auto">
+      <Table>
+        <TableHeader>
+          <TableRow className="border-border/40 hover:bg-transparent">
+            <TableHead className="font-semibold text-muted-foreground">Nome do Lead</TableHead>
+            <TableHead className="font-semibold text-muted-foreground">E-mail</TableHead>
+            <TableHead className="font-semibold text-muted-foreground">Telefone</TableHead>
+            <TableHead className="font-semibold text-muted-foreground">
+              Origem da Captação
+            </TableHead>
+            <TableHead className="font-semibold text-muted-foreground">Estágio Atual</TableHead>
+            <TableHead className="text-right font-semibold text-muted-foreground">Data</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {leads.map((lead) => {
+            const stage = stageById.get(lead.funnelStageId);
+            return (
+              <TableRow
+                key={lead.id}
+                className="border-border/30 hover:bg-muted/40 transition-colors"
+              >
+                <TableCell className="py-3.5">
+                  <Link
+                    href={`/leads/${lead.id}`}
+                    className="font-semibold text-foreground hover:text-primary hover:underline"
+                  >
+                    {lead.name}
+                  </Link>
+                </TableCell>
+                <TableCell className="text-muted-foreground">{lead.email ?? "—"}</TableCell>
+                <TableCell className="text-caption tabular-nums text-muted-foreground">
+                  {lead.phone ?? "—"}
+                </TableCell>
+                <TableCell>
+                  <span className="bg-muted/60 rounded-full px-2.5 py-1 text-[11px] font-medium text-foreground">
+                    {sourceNameById.get(lead.sourceId) ?? "—"}
+                  </span>
+                </TableCell>
+                <TableCell>
+                  {stage ? (
+                    <TemperatureBadge stage={stage} allStages={funnelStages} />
+                  ) : (
+                    <span className="text-caption text-muted-foreground">{lead.funnelStageId}</span>
+                  )}
+                </TableCell>
+                <TableCell className="text-right text-caption tabular-nums text-muted-foreground">
+                  {new Date(lead.createdAt).toLocaleDateString("pt-BR", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                  })}
+                </TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
     </div>
   );
 }
@@ -398,12 +619,12 @@ function LeadsKanbanView({
               setDraggedLeadId(null);
             }}
             className={cn(
-              "border-border/80 bg-background/50 flex flex-col gap-3 rounded-lg border p-2.5 transition-colors",
-              isTarget && "ring-primary/80 bg-primary/5 ring-2",
+              "shadow-xs flex flex-col gap-3 rounded-2xl bg-card p-3 transition-colors",
+              isTarget && "bg-primary/5 ring-2 ring-primary",
             )}
           >
             <div
-              className="flex items-center justify-between rounded-md px-3 py-2"
+              className="flex items-center justify-between rounded-xl px-3 py-2"
               style={{ backgroundColor: backgroundTint }}
             >
               <div className="flex items-center gap-2">
@@ -421,11 +642,11 @@ function LeadsKanbanView({
 
             <div className="flex max-h-[calc(100vh-270px)] flex-col gap-2.5 overflow-y-auto pr-1">
               {stageLeads.length === 0 ? (
-                <p className="rounded-md border border-dashed border-border px-3 py-8 text-center text-caption text-muted-foreground">
-                  Arraste um lead para este estágio.
+                <p className="border-border/60 rounded-xl border border-dashed px-3 py-8 text-center text-caption text-muted-foreground">
+                  Nenhum lead neste estágio.
                 </p>
               ) : (
-                stageLeads.map((lead) => (
+                stageLeads.slice(0, 100).map((lead) => (
                   <div
                     key={lead.id}
                     draggable
@@ -435,10 +656,10 @@ function LeadsKanbanView({
                     }}
                     onDragEnd={() => setDraggedLeadId(null)}
                     className={cn(
-                      "shadow-xs group relative cursor-grab rounded-lg border border-border bg-card p-3 transition-all hover:shadow-md active:cursor-grabbing",
+                      "shadow-xs group relative cursor-grab rounded-xl bg-background p-3 transition-all hover:shadow-md active:cursor-grabbing",
                       draggedLeadId === lead.id && "border-dashed border-primary opacity-50",
                     )}
-                    style={{ borderLeft: `4px solid ${color}` }}
+                    style={{ borderLeft: `3px solid ${color}` }}
                   >
                     <div className="flex items-start justify-between gap-2">
                       <Link
@@ -464,7 +685,7 @@ function LeadsKanbanView({
                       </p>
                     )}
 
-                    <div className="border-border/50 mt-2.5 flex items-center justify-between border-t pt-2 text-caption">
+                    <div className="border-border/30 mt-2.5 flex items-center justify-between border-t pt-2 text-caption">
                       <span className="bg-muted/60 max-w-[140px] truncate rounded px-1.5 py-0.5 text-[11px] text-muted-foreground">
                         {sourceNameById.get(lead.sourceId) ?? "Origem padrão"}
                       </span>
@@ -479,7 +700,7 @@ function LeadsKanbanView({
                               e.stopPropagation();
                               onMoveStage(lead.id, prevStage.id);
                             }}
-                            className="hover:bg-muted flex h-6 w-6 items-center justify-center rounded border border-border bg-background text-muted-foreground transition-colors hover:text-foreground disabled:opacity-50"
+                            className="shadow-xs flex h-6 w-6 items-center justify-center rounded bg-card text-muted-foreground transition-colors hover:text-foreground disabled:opacity-50"
                           >
                             <ChevronLeft size={13} />
                           </button>
@@ -493,7 +714,7 @@ function LeadsKanbanView({
                               e.stopPropagation();
                               onMoveStage(lead.id, nextStage.id);
                             }}
-                            className="hover:bg-muted flex h-6 w-6 items-center justify-center rounded border border-border bg-background text-muted-foreground transition-colors hover:text-foreground disabled:opacity-50"
+                            className="shadow-xs flex h-6 w-6 items-center justify-center rounded bg-card text-muted-foreground transition-colors hover:text-foreground disabled:opacity-50"
                           >
                             <ChevronRight size={13} />
                           </button>
