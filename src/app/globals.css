@@ -69,3 +69,10 @@
   --chart-7: #06b6d4;
   --chart-8: #ec4899;
 }
+
+/* Sem bordas vis�veis: a separa��o � feita por superf�cies (bg-card vs bg-background). */
+*,
+::before,
+::after {
+  border-color: transparent !important;
+}
