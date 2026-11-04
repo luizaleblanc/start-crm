@@ -9,8 +9,8 @@ export const POST = handleRoute(async (request) => {
   };
 
   if (!token) throw new ApiError(400, "Token é obrigatório");
-  if (!newPassword || newPassword.length < 6) {
-    throw new ApiError(400, "A nova senha deve ter no mínimo 6 caracteres");
+  if (!newPassword || newPassword.length < 8) {
+    throw new ApiError(400, "A nova senha deve ter no mínimo 8 caracteres");
   }
 
   if (process.env.API_MODE === "real") {
