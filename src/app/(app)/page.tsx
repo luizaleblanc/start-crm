@@ -14,7 +14,7 @@ import { Skeleton } from "@/shared/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/shared/ui/table";
 
 export default function DashboardPage() {
-  const leadsQuery = useLeads(1, 100);
+  const leadsQuery = useLeads(1, 1000);
   const dealsQuery = useDeals();
   const sourcesQuery = useSources();
   const funnelStagesQuery = useFunnelStages();

@@ -72,7 +72,6 @@ function AppShellWithNav({ children }: { children: ReactNode }) {
           <span className="flex h-6 w-6 shrink-0 items-center justify-center">
             <LogoMark size={22} className="text-foreground" />
           </span>
-          {!collapsed && <span className="text-h5 font-bold text-foreground">StartCRM</span>}
         </div>
       }
       sidebarFooter={

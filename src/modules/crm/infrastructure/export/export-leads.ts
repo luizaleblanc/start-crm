@@ -10,13 +10,22 @@ export interface ExportLookup {
 
 const HEADERS = ["Nome", "E-mail", "Telefone", "Origem", "Estágio"];
 
+function sanitizeSpreadsheetCell(value: string): string {
+  if (!value) return "";
+  const trimmed = value.trimStart();
+  if (/^[=@+\-\t\r]/.test(trimmed)) {
+    return `'${value}`;
+  }
+  return value;
+}
+
 function leadsToRows(leads: Lead[], lookup: ExportLookup): string[][] {
   return leads.map((lead) => [
-    lead.name,
-    lead.email ?? "",
-    lead.phone ?? "",
-    lookup.sourceNameById.get(lead.sourceId) ?? "",
-    lookup.stageNameById.get(lead.funnelStageId) ?? "",
+    sanitizeSpreadsheetCell(lead.name),
+    sanitizeSpreadsheetCell(lead.email ?? ""),
+    sanitizeSpreadsheetCell(lead.phone ?? ""),
+    sanitizeSpreadsheetCell(lookup.sourceNameById.get(lead.sourceId) ?? ""),
+    sanitizeSpreadsheetCell(lookup.stageNameById.get(lead.funnelStageId) ?? ""),
   ]);
 }
 

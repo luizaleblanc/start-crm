@@ -25,7 +25,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 type ViewMode = "table" | "kanban";
 
 export default function LeadsPage() {
-  const leadsQuery = useLeads(1, 100);
+  const leadsQuery = useLeads(1, 1000);
   const funnelStagesQuery = useFunnelStages();
   const sourcesQuery = useSources();
 

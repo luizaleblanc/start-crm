@@ -6,7 +6,7 @@ import { apiFetch } from "@/shared/infrastructure/http/api-client";
 export function useDeals() {
   return useQuery({
     queryKey: ["deals"],
-    queryFn: () => apiFetch<PaginatedResult<Deal>>("/api/deals?pageSize=100"),
+    queryFn: () => apiFetch<PaginatedResult<Deal>>("/api/deals?pageSize=1000"),
   });
 }
 
