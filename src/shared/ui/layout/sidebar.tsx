@@ -62,7 +62,7 @@ export function Sidebar({
         </button>
       )}
 
-      {header && <div className="flex h-16 items-center px-6">{header}</div>}
+      {header && <div className="flex h-16 items-center justify-center px-3">{header}</div>}
 
       <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-3 py-4">
         {items.map((item) => {

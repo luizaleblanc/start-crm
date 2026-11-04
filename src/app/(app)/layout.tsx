@@ -10,7 +10,7 @@ import {
   Settings,
   Users,
 } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import type { ReactNode } from "react";
 import { useAuth } from "@/shared/auth/auth-context";
@@ -19,6 +19,7 @@ import { Avatar } from "@/shared/ui/avatar";
 import { AppShell } from "@/shared/ui/layout/app-shell";
 import type { SidebarItem } from "@/shared/ui/layout/sidebar";
 import { LogoMark } from "@/shared/ui/logo-mark";
+import { SearchProvider, useSearch } from "@/shared/search/search-context";
 
 const NAV_ITEMS: Array<Omit<SidebarItem, "active">> = [
   { label: "Painel", href: "/", icon: LayoutDashboard },
@@ -39,14 +40,18 @@ const INTEGRATIONS_SECTION = {
 export default function AppLayout({ children }: { children: ReactNode }) {
   return (
     <AuthGuard>
-      <AppShellWithNav>{children}</AppShellWithNav>
+      <SearchProvider>
+        <AppShellWithNav>{children}</AppShellWithNav>
+      </SearchProvider>
     </AuthGuard>
   );
 }
 
 function AppShellWithNav({ children }: { children: ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
   const { user, logout } = useAuth();
+  const { searchTerm, setSearchTerm } = useSearch();
   const [collapsed, setCollapsed] = useState(false);
 
   const items: SidebarItem[] = NAV_ITEMS.map((item) => ({
@@ -60,6 +65,13 @@ function AppShellWithNav({ children }: { children: ReactNode }) {
 
   const activeItem = items.find((item) => item.active);
 
+  function handleSearch(term: string) {
+    setSearchTerm(term);
+    if (pathname !== "/leads" && term.trim()) {
+      router.push("/leads");
+    }
+  }
+
   return (
     <AppShell
       sidebarItems={items}
@@ -68,9 +80,9 @@ function AppShellWithNav({ children }: { children: ReactNode }) {
       onToggleSidebarCollapse={() => setCollapsed((current) => !current)}
       pageTitle={activeItem?.label}
       sidebarHeader={
-        <div className="flex items-center gap-2">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center">
-            <LogoMark size={38} className="text-foreground" />
+        <div className="flex w-full items-center justify-center">
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center">
+            <LogoMark size={44} className="text-foreground" />
           </span>
         </div>
       }
@@ -109,6 +121,10 @@ function AppShellWithNav({ children }: { children: ReactNode }) {
         ))
       }
       search
+      searchValue={searchTerm}
+      onSearchChange={handleSearch}
+      onSearchSubmit={handleSearch}
+      searchPlaceholder="Buscar lead por nome, email ou telefone…"
       notifications
     >
       {children}

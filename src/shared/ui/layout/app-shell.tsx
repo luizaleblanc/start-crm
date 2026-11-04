@@ -14,6 +14,10 @@ interface AppShellProps {
   pageSubtitle?: string;
   pageActions?: ReactNode;
   search?: boolean;
+  searchValue?: string;
+  onSearchChange?: (value: string) => void;
+  onSearchSubmit?: (value: string) => void;
+  searchPlaceholder?: string;
   notifications?: boolean;
   children: ReactNode;
 }
@@ -29,6 +33,10 @@ export function AppShell({
   pageSubtitle,
   pageActions,
   search,
+  searchValue,
+  onSearchChange,
+  onSearchSubmit,
+  searchPlaceholder,
   notifications,
   children,
 }: AppShellProps) {
@@ -48,6 +56,10 @@ export function AppShell({
           subtitle={pageSubtitle}
           actions={pageActions}
           search={search}
+          searchValue={searchValue}
+          onSearchChange={onSearchChange}
+          onSearchSubmit={onSearchSubmit}
+          searchPlaceholder={searchPlaceholder}
           notifications={notifications}
         />
         <main className="flex-1 overflow-y-auto overflow-x-hidden p-6">{children}</main>

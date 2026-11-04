@@ -1,6 +1,15 @@
 "use client";
 
-import { FileSpreadsheet, FileText, FileType, LayoutGrid, Table2, Upload } from "lucide-react";
+import {
+  FileSpreadsheet,
+  FileText,
+  FileType,
+  LayoutGrid,
+  Search,
+  Table2,
+  Upload,
+  X,
+} from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { FunnelStage, Lead } from "@/modules/crm/domain/entities";
@@ -14,6 +23,7 @@ import {
   getStageTemperatureColorAlpha,
 } from "@/modules/crm/presentation/lead-temperature";
 import { TemperatureBadge } from "@/modules/crm/presentation/temperature-badge";
+import { useSearch } from "@/shared/search/search-context";
 import { Button } from "@/shared/ui/button";
 import { Card, CardContent, CardHeader } from "@/shared/ui/card";
 import { EmptyState } from "@/shared/ui/empty-state";
@@ -28,6 +38,8 @@ export default function LeadsPage() {
   const leadsQuery = useLeads(1, 1000);
   const funnelStagesQuery = useFunnelStages();
   const sourcesQuery = useSources();
+
+  const { searchTerm, setSearchTerm } = useSearch();
 
   const [view, setView] = useState<ViewMode>("table");
   const [stageFilter, setStageFilter] = useState("");
@@ -58,6 +70,13 @@ export default function LeadsPage() {
   const filteredLeads = leads.filter((lead) => {
     if (stageFilter && lead.funnelStageId !== stageFilter) return false;
     if (sourceFilter && lead.sourceId !== sourceFilter) return false;
+    if (searchTerm) {
+      const term = searchTerm.toLowerCase().trim();
+      const matchesName = lead.name?.toLowerCase().includes(term);
+      const matchesEmail = lead.email?.toLowerCase().includes(term);
+      const matchesPhone = lead.phone?.toLowerCase().includes(term);
+      if (!matchesName && !matchesEmail && !matchesPhone) return false;
+    }
     return true;
   });
 
@@ -78,9 +97,35 @@ export default function LeadsPage() {
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-wrap items-end gap-4">
-          <span className="self-center text-caption font-medium text-muted-foreground">
-            Filtrar por
-          </span>
+          <div className="relative w-72">
+            <span className="mb-1 block text-caption font-medium text-muted-foreground">
+              Buscar lead
+            </span>
+            <div className="relative">
+              <Search
+                aria-hidden
+                size={16}
+                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+              />
+              <input
+                type="text"
+                placeholder="Nome, e-mail ou telefone..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="h-10 w-full rounded-md border border-border bg-background pl-9 pr-8 text-body text-foreground transition-colors placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+              />
+              {searchTerm && (
+                <button
+                  type="button"
+                  onClick={() => setSearchTerm("")}
+                  aria-label="Limpar busca"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  <X size={14} />
+                </button>
+              )}
+            </div>
+          </div>
           <Select
             label="Estágio"
             value={stageFilter}
