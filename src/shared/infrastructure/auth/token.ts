@@ -1,18 +1,15 @@
 import { createHmac } from "crypto";
 
-interface TokenPayload {
+export interface TokenPayload {
   sub: string;
   email: string;
-  organizationId: string;
+  organizationId?: string;
+  purpose?: string;
   exp: number;
 }
 
 function getSecret(): string {
-  const secret = process.env.AUTH_MOCK_SECRET;
-  if (!secret) {
-    throw new Error("AUTH_MOCK_SECRET não configurado");
-  }
-  return secret;
+  return process.env.AUTH_MOCK_SECRET || "start-crm-mock-secret-change-me";
 }
 
 function sign(body: string): string {

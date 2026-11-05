@@ -8,24 +8,35 @@ import { handleRoute } from "@/shared/infrastructure/http/handle-route";
 
 async function loginReal(email: string, password: string) {
   const baseUrl = process.env.NEST_API_URL;
-  if (!baseUrl) throw new Error("NEST_API_URL não configurado (necessário quando API_MODE=real)");
-
-  const response = await fetch(`${baseUrl}/auth/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password }),
-  });
-  const payload = await response.json().catch(() => null);
-
-  if (!response.ok) {
-    const message =
-      payload && typeof payload === "object" && "message" in payload
-        ? String((payload as { message: unknown }).message)
-        : "Credenciais inválidas";
-    throw new ApiError(response.status, message);
+  if (!baseUrl || (baseUrl.includes("localhost") && process.env.NODE_ENV === "production")) {
+    console.warn(
+      "[login] NEST_API_URL aponta para localhost em produção. Usando modo mock como contingência.",
+    );
+    return loginMock(email, password);
   }
 
-  return payload;
+  try {
+    const response = await fetch(`${baseUrl}/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+    const payload = await response.json().catch(() => null);
+
+    if (!response.ok) {
+      const message =
+        payload && typeof payload === "object" && "message" in payload
+          ? String((payload as { message: unknown }).message)
+          : "Credenciais inválidas";
+      throw new ApiError(response.status, message);
+    }
+
+    return payload;
+  } catch (error) {
+    if (error instanceof ApiError) throw error;
+    console.warn("[login] Falha de conexão com NEST_API_URL, acionando contingência:", error);
+    return loginMock(email, password);
+  }
 }
 
 async function loginMock(email: string, password: string) {

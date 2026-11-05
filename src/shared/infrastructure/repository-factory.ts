@@ -14,7 +14,19 @@ export function createResourceRepository<T extends BaseEntity>({
   seed,
   softDelete,
 }: CreateResourceRepositoryOptions<T>): Repository<T> {
-  if (process.env.API_MODE === "real") {
+  const isReal = process.env.API_MODE === "real";
+  const nestUrl = process.env.NEST_API_URL;
+
+  // Se estiver em produção e NEST_API_URL não estiver configurado ou apontar para localhost,
+  // faz fallback automático para InMemoryRepository para evitar que a aplicação quebre
+  if (
+    isReal &&
+    (!nestUrl || (nestUrl.includes("localhost") && process.env.NODE_ENV === "production"))
+  ) {
+    return new InMemoryRepository<T>(seed, { softDelete });
+  }
+
+  if (isReal) {
     return new HttpRepository<T>(resource);
   }
   return new InMemoryRepository<T>(seed, { softDelete });

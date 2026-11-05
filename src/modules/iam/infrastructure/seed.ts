@@ -30,6 +30,15 @@ export const usersSeed: User[] = [
     createdAt: now,
     updatedAt: now,
   },
+  {
+    id: "user_luiza",
+    organizationId: "org_1",
+    name: "Luiza",
+    email: "luizaa.fq@gmail.com",
+    ativo: true,
+    createdAt: now,
+    updatedAt: now,
+  },
 ];
 
 export const rolesSeed: Role[] = [
@@ -60,4 +69,5 @@ export const rolePermissionsSeed: RolePermission[] = [
 
 export const userRolesSeed: UserRole[] = [
   { id: "ur_1", userId: "user_admin", roleId: "role_admin", createdAt: now, updatedAt: now },
+  { id: "ur_2", userId: "user_luiza", roleId: "role_admin", createdAt: now, updatedAt: now },
 ];

@@ -1,31 +1,78 @@
 import { NextResponse } from "next/server";
+import { usersSeed } from "@/modules/iam/infrastructure/seed";
+import { signMockToken } from "@/shared/infrastructure/auth/token";
 import { ApiError } from "@/shared/infrastructure/http/api-error";
 import { handleRoute } from "@/shared/infrastructure/http/handle-route";
+import { sendPasswordResetEmail } from "@/shared/infrastructure/mail/mail-service";
 
 export const POST = handleRoute(async (request) => {
   const { email } = (await request.json()) as { email?: string };
   if (!email) throw new ApiError(400, "E-mail é obrigatório");
 
-  if (process.env.API_MODE === "real") {
-    const baseUrl = process.env.NEST_API_URL || "http://localhost:3001";
-    const response = await fetch(`${baseUrl}/auth/forgot-password`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
-    });
+  const normalizedEmail = email.trim().toLowerCase();
 
-    const payload = await response.json().catch(() => null);
-    if (!response.ok) {
-      const message =
-        payload && typeof payload === "object" && "message" in payload
-          ? String((payload as { message: unknown }).message)
-          : "Erro ao processar solicitação";
-      throw new ApiError(response.status, message);
+  // Se o NestJS estiver configurado com uma URL externa (não localhost), tenta enviar para o backend
+  const nestUrl = process.env.NEST_API_URL;
+  const isExternalBackend =
+    process.env.API_MODE === "real" &&
+    nestUrl &&
+    !nestUrl.includes("localhost") &&
+    !nestUrl.includes("127.0.0.1");
+
+  if (isExternalBackend) {
+    try {
+      const response = await fetch(`${nestUrl}/auth/forgot-password`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: normalizedEmail }),
+      });
+
+      const payload = await response.json().catch(() => null);
+      if (response.ok) {
+        return NextResponse.json(payload);
+      }
+    } catch (err) {
+      console.warn(
+        "[forgot-password] Falha ao conectar ao backend externo, usando envio direto:",
+        err,
+      );
     }
-    return NextResponse.json(payload);
   }
 
+  // Envio direto via Next.js (funciona no Vercel ou localmente)
+  const user = usersSeed.find((u) => u.email.toLowerCase() === normalizedEmail);
+  const name = user?.name || "Usuário";
+
+  // Gera token assinado válido por 15 minutos (900 segundos)
+  const token = signMockToken(
+    {
+      sub: user?.id || "anon",
+      email: normalizedEmail,
+      purpose: "reset-password",
+    },
+    900,
+  );
+
+  // Determina a URL base da aplicação
+  const origin = request.headers.get("origin");
+  const host = request.headers.get("x-forwarded-host") || request.headers.get("host");
+  const proto = request.headers.get("x-forwarded-proto") || "https";
+  const appBaseUrl =
+    origin ||
+    (host ? `${proto}://${host}` : null) ||
+    process.env.NEXT_PUBLIC_APP_URL ||
+    "https://start-crm-lime.vercel.app";
+
+  const resetUrl = `${appBaseUrl}/reset-password?token=${encodeURIComponent(token)}`;
+
+  await sendPasswordResetEmail({
+    to: normalizedEmail,
+    name,
+    resetUrl,
+    expiresInMinutes: 15,
+  });
+
   return NextResponse.json({
-    message: "Se este e-mail existir em nossa base, você receberá instruções em breve.",
+    message: "Se este e-mail estiver cadastrado, as instruções para redefinição foram enviadas.",
   });
 });
