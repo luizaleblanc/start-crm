@@ -1,4 +1,5 @@
 import type { RequestContext } from "@/shared/domain/repository";
+import { isRealApi } from "@/shared/infrastructure/config/api-mode";
 import { ApiError } from "@/shared/infrastructure/http/api-error";
 import type { DealStatus } from "../domain/entities";
 import { dealsRepository } from "../infrastructure/repositories";
@@ -10,7 +11,7 @@ interface CloseDealInput {
 
 export async function closeDeal({ dealId, status }: CloseDealInput, context?: RequestContext) {
   const backendStatus = status === "won" ? "ganho" : "perdido";
-  const statusToSave = process.env.API_MODE === "real" ? (backendStatus as any) : status;
+  const statusToSave = isRealApi() ? (backendStatus as any) : status;
 
   const deal = await dealsRepository.update(
     dealId,

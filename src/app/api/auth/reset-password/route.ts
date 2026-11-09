@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { updateCredentialPassword } from "@/modules/iam/infrastructure/auth-credentials.mock";
 import { verifyMockToken } from "@/shared/infrastructure/auth/token";
+import { isRealApi } from "@/shared/infrastructure/config/api-mode";
 import { ApiError } from "@/shared/infrastructure/http/api-error";
 import { handleRoute } from "@/shared/infrastructure/http/handle-route";
 
@@ -27,15 +28,8 @@ export const POST = handleRoute(async (request) => {
     );
   }
 
-  // Se o NestJS estiver configurado com uma URL externa (não localhost), tenta enviar para o backend
-  const nestUrl = process.env.NEST_API_URL;
-  const isExternalBackend =
-    process.env.API_MODE === "real" &&
-    nestUrl &&
-    !nestUrl.includes("localhost") &&
-    !nestUrl.includes("127.0.0.1");
-
-  if (isExternalBackend) {
+  if (isRealApi()) {
+    const nestUrl = process.env.NEST_API_URL;
     try {
       const response = await fetch(`${nestUrl}/auth/reset-password`, {
         method: "POST",

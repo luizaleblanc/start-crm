@@ -1,17 +1,17 @@
 import { NextResponse } from "next/server";
+import type { User } from "@/modules/iam/domain/entities";
 import { findCredential } from "@/modules/iam/infrastructure/auth-credentials.mock";
 import { usersRepository } from "@/modules/iam/infrastructure/repositories";
+import { usersSeed } from "@/modules/iam/infrastructure/seed";
 import { verifyPassword } from "@/shared/infrastructure/auth/password";
 import { signMockToken } from "@/shared/infrastructure/auth/token";
+import { isRealApi } from "@/shared/infrastructure/config/api-mode";
 import { ApiError } from "@/shared/infrastructure/http/api-error";
 import { handleRoute } from "@/shared/infrastructure/http/handle-route";
 
 async function loginReal(email: string, password: string) {
   const baseUrl = process.env.NEST_API_URL;
-  if (!baseUrl || (baseUrl.includes("localhost") && process.env.NODE_ENV === "production")) {
-    console.warn(
-      "[login] NEST_API_URL aponta para localhost em produção. Usando modo mock como contingência.",
-    );
+  if (!baseUrl) {
     return loginMock(email, password);
   }
 
@@ -40,15 +40,33 @@ async function loginReal(email: string, password: string) {
 }
 
 async function loginMock(email: string, password: string) {
-  const credentials = findCredential(email);
+  const normalizedEmail = email.trim().toLowerCase();
+  const credentials = findCredential(normalizedEmail);
   if (!credentials || !verifyPassword(password, credentials.passwordHash)) {
     throw new ApiError(401, "Credenciais inválidas");
   }
 
-  const user = await usersRepository.findById(credentials.userId);
-  if (!user) {
-    throw new ApiError(401, "Credenciais inválidas");
+  let foundUser: User | undefined = usersSeed.find(
+    (u) => u.id === credentials.userId || u.email.toLowerCase() === normalizedEmail,
+  );
+
+  if (!foundUser) {
+    try {
+      foundUser = await usersRepository.findById(credentials.userId);
+    } catch {
+      // ignore
+    }
   }
+
+  const user: User = foundUser ?? {
+    id: credentials.userId,
+    organizationId: "org_1",
+    name: normalizedEmail.split("@")[0] || "Usuário",
+    email: normalizedEmail,
+    ativo: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
 
   const accessToken = signMockToken({
     sub: user.id,
@@ -62,10 +80,7 @@ export const POST = handleRoute(async (request) => {
   const { email, password } = (await request.json()) as { email?: string; password?: string };
   if (!email || !password) throw new ApiError(400, "E-mail e senha são obrigatórios");
 
-  const result =
-    process.env.API_MODE === "real"
-      ? await loginReal(email, password)
-      : await loginMock(email, password);
+  const result = isRealApi() ? await loginReal(email, password) : await loginMock(email, password);
 
   return NextResponse.json(result);
 });

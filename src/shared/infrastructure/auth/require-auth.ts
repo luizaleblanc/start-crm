@@ -1,4 +1,5 @@
 import { ApiError } from "@/shared/infrastructure/http/api-error";
+import { isRealApi } from "../config/api-mode";
 import { verifyMockToken } from "./token";
 
 export function extractBearerToken(request: Request): string | undefined {
@@ -8,11 +9,8 @@ export function extractBearerToken(request: Request): string | undefined {
 }
 
 /**
- * Em API_MODE=mock, valida a assinatura HMAC do token emitido por
- * /api/auth/login. Em API_MODE=real, apenas exige que um Bearer token
- * esteja presente — a validade de fato é responsabilidade do back-end
- * real: o Repository correspondente encaminha esse token, e um 401
- * retornado por ele propaga como erro desta rota.
+ * Em modo mock (ou na Vercel sem backend remoto), valida a assinatura HMAC do token.
+ * Em API real, exige que um Bearer token esteja presente.
  */
 export function requireAuth(request: Request): void {
   const token = extractBearerToken(request);
@@ -20,7 +18,7 @@ export function requireAuth(request: Request): void {
     throw new ApiError(401, "Não autenticado");
   }
 
-  if (process.env.API_MODE !== "real") {
+  if (!isRealApi()) {
     try {
       verifyMockToken(token);
     } catch {

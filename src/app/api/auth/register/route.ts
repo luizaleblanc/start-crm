@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { registerAccount } from "@/modules/iam/application/register-account.use-case";
 import { signMockToken } from "@/shared/infrastructure/auth/token";
+import { isRealApi } from "@/shared/infrastructure/config/api-mode";
 import { ApiError } from "@/shared/infrastructure/http/api-error";
 import { handleRoute } from "@/shared/infrastructure/http/handle-route";
 
@@ -13,10 +14,7 @@ interface RegisterBody {
 
 async function registerReal(body: RegisterBody) {
   const baseUrl = process.env.NEST_API_URL;
-  if (!baseUrl || (baseUrl.includes("localhost") && process.env.NODE_ENV === "production")) {
-    console.warn(
-      "[register] NEST_API_URL aponta para localhost em produção. Usando modo mock como contingência.",
-    );
+  if (!baseUrl) {
     return registerMock(body as Required<RegisterBody>);
   }
 
@@ -60,10 +58,9 @@ export const POST = handleRoute(async (request) => {
     throw new ApiError(400, "Nome, empresa, e-mail e senha são obrigatórios");
   }
 
-  const result =
-    process.env.API_MODE === "real"
-      ? await registerReal(body)
-      : await registerMock(body as Required<RegisterBody>);
+  const result = isRealApi()
+    ? await registerReal(body)
+    : await registerMock(body as Required<RegisterBody>);
 
   return NextResponse.json(result, { status: 201 });
 });

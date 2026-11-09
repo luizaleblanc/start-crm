@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
+import { isRealApi } from "@/shared/infrastructure/config/api-mode";
 
 export async function GET() {
-  if (process.env.API_MODE !== "real") {
+  if (!isRealApi()) {
     return NextResponse.json({ status: "ok", apiMode: "mock" });
   }
 
