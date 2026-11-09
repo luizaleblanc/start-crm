@@ -4,7 +4,11 @@ import {
   leadInteractionsRepository,
   meetingsRepository,
 } from "@/modules/crm/infrastructure/repositories";
-import { generateFunnelMessages } from "@/modules/crm/application/whatsapp-sales-agent";
+import {
+  generateFunnelMessages,
+  detectFunnelFromKanban,
+  type FunnelType,
+} from "@/modules/crm/application/whatsapp-sales-agent";
 import { ApiError } from "@/shared/infrastructure/http/api-error";
 import { handleRoute } from "@/shared/infrastructure/http/handle-route";
 import { requireAuth } from "@/shared/infrastructure/auth/require-auth";
@@ -12,6 +16,7 @@ import { requireAuth } from "@/shared/infrastructure/auth/require-auth";
 interface AiSalesBody {
   leadId: string;
   stepIndex?: number;
+  funnelType?: FunnelType;
   action?: "next_step" | "handle_price" | "schedule_meeting" | "custom_reply";
   userMessage?: string;
 }
@@ -20,7 +25,7 @@ export const POST = handleRoute(async (request) => {
   requireAuth(request);
 
   const body = (await request.json()) as AiSalesBody;
-  const { leadId, stepIndex = 0, action = "next_step", userMessage } = body;
+  const { leadId, stepIndex = 0, funnelType, action = "next_step", userMessage } = body;
 
   if (!leadId) {
     throw new ApiError(400, "Identificador do lead ('leadId') é obrigatório");
@@ -31,15 +36,27 @@ export const POST = handleRoute(async (request) => {
     throw new ApiError(404, "Lead não encontrado");
   }
 
-  const funnel = generateFunnelMessages({
-    id: lead.id,
-    name: lead.name,
-    phone: lead.phone,
-    jobTitle: lead.jobTitle,
-    company: lead.company,
-    city: lead.city,
-    linkedinUrl: lead.linkedinUrl,
-  });
+  const effectiveFunnelType =
+    funnelType ||
+    detectFunnelFromKanban({
+      temperature: lead.temperature,
+      funnelStageId: lead.funnelStageId,
+    });
+
+  const funnel = generateFunnelMessages(
+    {
+      id: lead.id,
+      name: lead.name,
+      phone: lead.phone,
+      jobTitle: lead.jobTitle,
+      company: lead.company,
+      city: lead.city,
+      linkedinUrl: lead.linkedinUrl,
+      temperature: lead.temperature,
+      funnelStageId: lead.funnelStageId,
+    },
+    effectiveFunnelType,
+  );
 
   const currentStep = Math.min(Math.max(stepIndex, 0), funnel.length - 1);
   const stepData = funnel[currentStep] || funnel[0];
@@ -96,6 +113,7 @@ export const POST = handleRoute(async (request) => {
 
   return NextResponse.json({
     success: true,
+    funnelType: effectiveFunnelType,
     stepIndex: currentStep,
     nextStepIndex: currentStep < funnel.length - 1 ? currentStep + 1 : currentStep,
     stage: stepData.stage,
