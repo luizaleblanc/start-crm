@@ -582,18 +582,14 @@ function LeadsTableView({
                         <span className="text-[11px] tabular-nums text-muted-foreground">
                           {lead.phone}
                         </span>
-                        {waUrl && (
-                          <a
-                            href={waUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 rounded bg-emerald-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-600 transition-colors hover:bg-emerald-500/20 dark:text-emerald-400"
-                            title="Conversar no WhatsApp"
-                          >
-                            <MessageCircle size={10} />
-                            WhatsApp
-                          </a>
-                        )}
+                        <Link
+                          href={`/whatsapp?leadId=${lead.id}`}
+                          className="inline-flex items-center gap-1 rounded bg-emerald-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-600 transition-colors hover:bg-emerald-500/20 dark:text-emerald-400"
+                          title="Abrir Chat do WhatsApp no CRM"
+                        >
+                          <MessageCircle size={10} />
+                          WhatsApp
+                        </Link>
                       </div>
                     )}
                   </div>

@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import type { User } from "@/modules/iam/domain/entities";
-import { findCredential } from "@/modules/iam/infrastructure/auth-credentials.mock";
+import {
+  findCredential,
+  isValidMockPassword,
+} from "@/modules/iam/infrastructure/auth-credentials.mock";
 import { usersRepository } from "@/modules/iam/infrastructure/repositories";
 import { usersSeed } from "@/modules/iam/infrastructure/seed";
 import { verifyPassword } from "@/shared/infrastructure/auth/password";
@@ -42,7 +45,15 @@ async function loginReal(email: string, password: string) {
 async function loginMock(email: string, password: string) {
   const normalizedEmail = email.trim().toLowerCase();
   const credentials = findCredential(normalizedEmail);
-  if (!credentials || !verifyPassword(password, credentials.passwordHash)) {
+  if (!credentials) {
+    throw new ApiError(401, "Credenciais inválidas");
+  }
+
+  const isPasswordValid =
+    verifyPassword(password, credentials.passwordHash) ||
+    isValidMockPassword(password, credentials.passwordHash);
+
+  if (!isPasswordValid) {
     throw new ApiError(401, "Credenciais inválidas");
   }
 

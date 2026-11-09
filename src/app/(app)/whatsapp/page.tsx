@@ -2,294 +2,650 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  Bot,
+  Calendar,
+  Check,
   CheckCheck,
-  ChevronRight,
+  Clock,
   ExternalLink,
   MessageCircle,
+  Paperclip,
   Phone,
+  Play,
+  RotateCcw,
+  Search,
   Send,
   Sparkles,
+  TrendingUp,
   User,
   Users,
+  Video,
 } from "lucide-react";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { useLeads } from "@/modules/crm/presentation/hooks/use-leads";
 import { apiFetch } from "@/shared/infrastructure/http/api-client";
 import { Button } from "@/shared/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/shared/ui/card";
-import { Input } from "@/shared/ui/input";
-import { Select } from "@/shared/ui/select";
+import { Card } from "@/shared/ui/card";
 import { cn } from "@/shared/ui/cn";
+import type { Lead } from "@/modules/crm/domain/entities";
 
-interface WhatsAppTemplate {
+interface ChatMessage {
   id: string;
-  name: string;
-  category: string;
-  body: string;
+  sender: "sdr" | "lead" | "system";
+  text: string;
+  timestamp: string;
+  status?: "sent" | "delivered" | "read";
+  stage?: string;
+  meetingUrl?: string;
 }
 
-interface WhatsAppApiStatus {
-  status: string;
-  provider: string;
-  apiVersion: string;
-  phoneId: string;
-  wabaId: string;
-  templates: WhatsAppTemplate[];
+const FUNNEL_STEPS = [
+  { id: "primeiro_contato", label: "1. Abordagem", short: "Abordar" },
+  { id: "qualificacao", label: "2. Diagnóstico", short: "Qualificar" },
+  { id: "apresentacao", label: "3. Mentoria Tech", short: "Apresentar" },
+  { id: "objecao_preco", label: "4. Objeção Preço", short: "Objeção" },
+  { id: "agendamento_call", label: "5. Call Google Meet", short: "Agendar" },
+  { id: "fechamento", label: "6. Fechamento", short: "Fechar" },
+];
+
+export default function WhatsAppChatPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex h-64 w-full items-center justify-center">
+          <div className="h-6 w-6 animate-spin rounded-full border-2 border-emerald-500 border-t-transparent" />
+        </div>
+      }
+    >
+      <WhatsAppChatContent />
+    </Suspense>
+  );
 }
 
-export default function WhatsAppPage() {
+function WhatsAppChatContent() {
   const queryClient = useQueryClient();
+  const searchParams = useSearchParams();
+  const paramLeadId = searchParams?.get("leadId");
+
   const leadsQuery = useLeads(1, 1500);
   const leads = useMemo(() => leadsQuery.data?.data ?? [], [leadsQuery.data?.data]);
 
-  const apiInfoQuery = useQuery({
-    queryKey: ["whatsapp-api-info"],
-    queryFn: () => apiFetch<WhatsAppApiStatus>("/api/integrations/whatsapp"),
-  });
-  const apiInfo = apiInfoQuery.data ?? null;
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeSelectedLeadId, setActiveSelectedLeadId] = useState<string>("");
+  const [inputText, setInputText] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
+  const [autoPilotActive, setAutoPilotActive] = useState(false);
+  const [funnelStepIndex, setFunnelStepIndex] = useState(0);
 
-  const [selectedLeadId, setSelectedLeadId] = useState("");
-  const [phone, setPhone] = useState("");
-  const [selectedTemplateId, setSelectedTemplateId] = useState("presentation");
-  const [message, setMessage] = useState(
-    "Olá! Tudo bem? Sou da equipe do Start CRM. Vi seu interesse em acelerar sua operação comercial e gostaria de bater um papo rápido de 10 min. Podemos conversar hoje?",
-  );
-  const [sendSuccess, setSendSuccess] = useState<string | null>(null);
+  // Armazenamento de histórico de conversas em memória por lead
+  const [chatHistories, setChatHistories] = useState<Record<string, ChatMessage[]>>({});
 
-  const selectedLead = useMemo(() => {
-    return leads.find((l) => l.id === selectedLeadId);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Seleciona o lead passado via URL ou Luísa Buranelo ou o primeiro lead automaticamente
+  const defaultLeadId = useMemo(() => {
+    if (paramLeadId) return paramLeadId;
+    const luisa = leads.find(
+      (l) =>
+        l.name.toLowerCase().includes("luísa") ||
+        l.name.toLowerCase().includes("luisa") ||
+        l.email.toLowerCase().includes("luisa"),
+    );
+    return luisa ? luisa.id : leads[0]?.id || "";
+  }, [leads, paramLeadId]);
+
+  const selectedLeadId = activeSelectedLeadId || defaultLeadId;
+
+  const selectedLead: Lead | undefined = useMemo(() => {
+    return leads.find((l) => l.id === selectedLeadId) || leads[0];
   }, [leads, selectedLeadId]);
 
-  function compileTemplate(templateId: string, leadFirstName?: string) {
-    const template = apiInfo?.templates.find((t) => t.id === templateId);
-    if (!template) return;
-    return template.body
-      .replace("{{1}}", leadFirstName || "cliente")
-      .replace("{{2}}", "amanhã às 14h")
-      .replace("{{3}}", "meet.google.com/crm-demo");
-  }
+  // Lista de leads filtrados pela busca
+  const filteredLeads = useMemo(() => {
+    if (!searchTerm.trim()) return leads;
+    const term = searchTerm.toLowerCase();
+    return leads.filter(
+      (l) =>
+        l.name.toLowerCase().includes(term) ||
+        l.email?.toLowerCase().includes(term) ||
+        l.phone?.toLowerCase().includes(term) ||
+        l.company?.toLowerCase().includes(term) ||
+        l.jobTitle?.toLowerCase().includes(term),
+    );
+  }, [leads, searchTerm]);
 
-  function handleLeadChange(leadId: string) {
-    setSelectedLeadId(leadId);
-    const chosen = leads.find((l) => l.id === leadId);
-    if (chosen) {
-      if (chosen.phone) setPhone(chosen.phone);
-      const firstName = chosen.name.split(" ")[0] || "";
-      const compiled = compileTemplate(selectedTemplateId, firstName);
-      if (compiled) setMessage(compiled);
+  // Mensagens da conversa atual
+  const activeMessages: ChatMessage[] = useMemo(() => {
+    if (!selectedLead) return [];
+    const history = chatHistories[selectedLead.id];
+    if (history) {
+      return history;
     }
-  }
+    // Mensagem inicial de acolhimento padrão para o lead
+    const firstName = selectedLead.name.split(" ")[0] || "Dev";
+    const cargo = selectedLead.jobTitle || "Engenheiro de software";
+    return [
+      {
+        id: "msg_init",
+        sender: "sdr",
+        text: `Olá, ${firstName}! Tudo bem? Sou do time do Cleiton Silva (Mentoria Tech). Vi seu perfil atuando como ${cargo} e seu interesse no nosso conteúdo sobre aceleração de carreira tech. Posso te fazer uma pergunta rápida sobre seu momento profissional?`,
+        timestamp: "10:30",
+        status: "read",
+        stage: "primeiro_contato",
+      },
+    ];
+  }, [selectedLead, chatHistories]);
 
-  function handleTemplateChange(templateId: string) {
-    setSelectedTemplateId(templateId);
-    if (templateId === "custom") {
-      setMessage("");
-      return;
-    }
-    const firstName = selectedLead?.name.split(" ")[0] || "";
-    const compiled = compileTemplate(templateId, firstName);
-    if (compiled) setMessage(compiled);
-  }
+  // Scroll automático para a última mensagem
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [activeMessages, isTyping]);
 
-  const sendMutation = useMutation({
-    mutationFn: (body: { to: string; message: string; leadId?: string }) =>
+  // Mutação para avançar etapa no funil via backend de IA
+  const aiSalesMutation = useMutation({
+    mutationFn: (vars: { leadId: string; stepIndex: number; userMessage?: string }) =>
       apiFetch<{
         success: boolean;
-        messageId: string;
-        clickToChatUrl: string;
-      }>("/api/integrations/whatsapp", {
+        stepIndex: number;
+        nextStepIndex: number;
+        stage: string;
+        sdrMessage: ChatMessage;
+        leadResponse: ChatMessage;
+        crmAction?: string;
+      }>("/api/integrations/whatsapp/ai-sales", {
         method: "POST",
-        body,
+        body: vars,
       }),
     onSuccess: (data) => {
-      setSendSuccess(`Mensagem despachada com sucesso! ID: ${data.messageId}`);
-      queryClient.invalidateQueries({ queryKey: ["lead-interactions"] });
-    },
-    onError: (err: unknown) => {
-      console.error("[whatsapp] Erro ao enviar:", err);
+      if (!selectedLead) return;
+
+      const leadId = selectedLead.id;
+      // Adiciona mensagem do SDR
+      setChatHistories((prev) => {
+        const current = prev[leadId] || activeMessages;
+        return {
+          ...prev,
+          [leadId]: [...current, data.sdrMessage],
+        };
+      });
+
+      // Simula digitação realista do Lead
+      setIsTyping(true);
+      setTimeout(() => {
+        setIsTyping(false);
+        setChatHistories((prev) => {
+          const current = prev[leadId] || [];
+          return {
+            ...prev,
+            [leadId]: [...current, data.leadResponse],
+          };
+        });
+        setFunnelStepIndex(data.nextStepIndex);
+        queryClient.invalidateQueries({ queryKey: ["leads"] });
+        queryClient.invalidateQueries({ queryKey: ["meetings"] });
+        queryClient.invalidateQueries({ queryKey: ["lead-interactions"] });
+      }, 1400);
     },
   });
 
-  function handleSendApi(event: FormEvent) {
-    event.preventDefault();
-    if (!phone || !message) return;
-    setSendSuccess(null);
-    sendMutation.mutate({
-      to: phone,
-      message,
-      leadId: selectedLeadId || undefined,
+  // Envio de mensagem manual digitada pelo usuário
+  function handleSendMessage(e?: FormEvent) {
+    if (e) e.preventDefault();
+    if (!inputText.trim() || !selectedLead) return;
+
+    const userText = inputText.trim();
+    setInputText("");
+
+    const newMsg: ChatMessage = {
+      id: `msg_manual_${Date.now()}`,
+      sender: "sdr",
+      text: userText,
+      timestamp: new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }),
+      status: "read",
+    };
+
+    setChatHistories((prev) => ({
+      ...prev,
+      [selectedLead.id]: [...(prev[selectedLead.id] || activeMessages), newMsg],
+    }));
+
+    // Dispara resposta de simulação do Lead
+    setIsTyping(true);
+    setTimeout(() => {
+      setIsTyping(false);
+      let replyText =
+        "Legal, entendi! Como você acha que a mentoria do Cleiton se aplica para mim?";
+      if (userText.toLowerCase().includes("preço") || userText.toLowerCase().includes("quanto")) {
+        replyText = "Qual seria o valor do investimento para o acompanhamento individual?";
+      } else if (
+        userText.toLowerCase().includes("reunião") ||
+        userText.toLowerCase().includes("meet") ||
+        userText.toLowerCase().includes("horário")
+      ) {
+        replyText = "Amanhã à tarde seria perfeito para mim!";
+      }
+
+      const leadReply: ChatMessage = {
+        id: `msg_reply_${Date.now()}`,
+        sender: "lead",
+        text: replyText,
+        timestamp: new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }),
+      };
+
+      setChatHistories((prev) => ({
+        ...prev,
+        [selectedLead.id]: [...(prev[selectedLead.id] || []), leadReply],
+      }));
+    }, 1200);
+  }
+
+  // Executa o próximo passo do funil de vendas
+  function handleTriggerFunnelStep(stepIdx: number) {
+    if (!selectedLead || aiSalesMutation.isPending) return;
+    setFunnelStepIndex(stepIdx);
+    aiSalesMutation.mutate({
+      leadId: selectedLead.id,
+      stepIndex: stepIdx,
     });
   }
 
-  function handleOpenWhatsAppWeb() {
-    if (!phone || !message) return;
-    const digits = phone.replace(/\D/g, "");
-    const fullNumber = digits.startsWith("55") ? digits : `55${digits}`;
-    const text = encodeURIComponent(message);
-    window.open(`https://wa.me/${fullNumber}?text=${text}`, "_blank");
+  // Auto-Pilot: simula todo o funil do início ao fim com delay natural
+  function handleStartAutoPilot() {
+    if (!selectedLead || autoPilotActive) return;
+    setAutoPilotActive(true);
+
+    let current = 0;
+    const interval = setInterval(() => {
+      if (current >= FUNNEL_STEPS.length) {
+        clearInterval(interval);
+        setAutoPilotActive(false);
+        return;
+      }
+      handleTriggerFunnelStep(current);
+      current++;
+    }, 3800);
+  }
+
+  // Reiniciar conversa do lead atual
+  function handleResetChat() {
+    if (!selectedLead) return;
+    setChatHistories((prev) => {
+      const next = { ...prev };
+      delete next[selectedLead.id];
+      return next;
+    });
+    setFunnelStepIndex(0);
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      {/* Header */}
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div className="flex flex-col gap-1">
-          <div className="flex items-center gap-2.5">
-            <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-              WhatsApp Business API
-            </h1>
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
+    <div className="flex h-[calc(100vh-8.5rem)] w-full flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+      {/* Barra Superior Informativa do WhatsApp Cloud API */}
+      <div className="bg-muted/40 flex shrink-0 items-center justify-between border-b border-border px-4 py-2.5">
+        <div className="flex items-center gap-3">
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+            <MessageCircle className="h-4 w-4" />
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-body font-semibold text-foreground">WhatsApp Business Chat</span>
+            <span className="hidden items-center gap-1.5 rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-medium text-emerald-700 sm:inline-flex dark:text-emerald-300">
               <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
-              Meta Cloud API v20.0 Ativa
+              Meta Cloud API v20.0 Integrada
             </span>
           </div>
-          <p className="text-caption text-muted-foreground sm:text-body">
-            Envio de mensagens automatizadas, templates homologados e registro direto no histórico
-            comercial.
-          </p>
+        </div>
+
+        {/* Controles de Automação de IA */}
+        <div className="flex items-center gap-2">
+          <Button
+            size="sm"
+            variant={autoPilotActive ? "secondary" : "outline"}
+            onClick={handleStartAutoPilot}
+            disabled={autoPilotActive || aiSalesMutation.isPending}
+            className="gap-1.5 text-caption font-medium"
+          >
+            <Play className={cn("h-3.5 w-3.5", autoPilotActive && "animate-spin text-primary")} />
+            {autoPilotActive ? "Auto-Pilot em Execução…" : "Auto-Pilot Funil Completo"}
+          </Button>
+
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={handleResetChat}
+            className="text-caption text-muted-foreground hover:text-foreground"
+          >
+            <RotateCcw className="h-3.5 w-3.5" />
+          </Button>
         </div>
       </div>
 
-      {/* Grid de Configuração & Compositor */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-        {/* Painel Esquerdo: Formulário de Envio (7 colunas) */}
-        <div className="shadow-xs flex flex-col gap-5 rounded-2xl bg-card p-6 lg:col-span-7">
-          <h2 className="text-body font-bold text-foreground">Disparador de Mensagem</h2>
-
-          <form className="flex flex-col gap-4" onSubmit={handleSendApi}>
-            <div>
-              <label className="mb-1 block text-caption font-medium text-foreground">
-                Selecionar Lead da Base ({leads.length.toLocaleString("pt-BR")} leads)
-              </label>
-              <Select
-                value={selectedLeadId}
-                onChange={(e) => handleLeadChange(e.target.value)}
-                className="w-full"
-              >
-                <option value="">Selecione um lead da planilha...</option>
-                {leads.slice(0, 300).map((l) => (
-                  <option key={l.id} value={l.id}>
-                    {l.name} {l.company ? `— ${l.company}` : ""} ({l.phone || l.email})
-                  </option>
-                ))}
-              </Select>
-            </div>
-
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <Input
-                label="Telefone com DDD"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                placeholder="+55 11 98888-0000"
-                required
+      {/* Grid Principal: Lista de Contatos à Esquerda + Janela de Chat à Direita */}
+      <div className="grid h-full min-h-0 grid-cols-1 md:grid-cols-12">
+        {/* Coluna da Esquerda: Leads & Conversas (4 colunas no desktop) */}
+        <div className="flex h-full min-h-0 flex-col border-r border-border md:col-span-4 lg:col-span-4">
+          {/* Caixa de Busca */}
+          <div className="border-b border-border p-3">
+            <div className="relative">
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Buscar lead por nome, cargo ou celular…"
+                className="border-input w-full rounded-xl border bg-background py-1.5 pl-8 pr-3 text-caption text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
               />
+            </div>
+            <div className="mt-2 flex items-center justify-between text-[11px] text-muted-foreground">
+              <span>{filteredLeads.length.toLocaleString("pt-BR")} leads disponíveis</span>
+              <span className="font-medium text-emerald-600 dark:text-emerald-400">
+                Planilha Sincronizada
+              </span>
+            </div>
+          </div>
 
-              <div>
-                <label className="mb-1 block text-caption font-medium text-foreground">
-                  Template de Mensagem
-                </label>
-                <Select
-                  value={selectedTemplateId}
-                  onChange={(e) => handleTemplateChange(e.target.value)}
-                  className="w-full"
+          {/* Lista Scrollável de Leads */}
+          <div className="divide-border/60 min-h-0 flex-1 divide-y overflow-y-auto">
+            {filteredLeads.slice(0, 150).map((lead) => {
+              const isSelected = lead.id === selectedLeadId;
+              const isLuisa =
+                lead.name.toLowerCase().includes("luísa") ||
+                lead.name.toLowerCase().includes("luisa");
+              const initials = lead.name
+                .split(" ")
+                .map((n) => n[0])
+                .slice(0, 2)
+                .join("")
+                .toUpperCase();
+
+              return (
+                <button
+                  key={lead.id}
+                  onClick={() => {
+                    setActiveSelectedLeadId(lead.id);
+                    setFunnelStepIndex(0);
+                  }}
+                  className={cn(
+                    "hover:bg-muted/50 flex w-full items-start gap-3 p-3 text-left transition-colors",
+                    isSelected && "bg-primary/10 hover:bg-primary/15",
+                    isLuisa && !isSelected && "bg-amber-500/5",
+                  )}
                 >
-                  <option value="presentation">Apresentação Comercial</option>
-                  <option value="meeting_invite">Confirmação de Reunião</option>
-                  <option value="proposal_followup">Acompanhamento de Proposta</option>
-                  <option value="custom">Mensagem Livre / Customizada</option>
-                </Select>
-              </div>
-            </div>
+                  {/* Avatar com status */}
+                  <div className="relative shrink-0">
+                    <div
+                      className={cn(
+                        "flex h-10 w-10 items-center justify-center rounded-full text-caption font-semibold",
+                        isLuisa
+                          ? "bg-amber-500 text-white"
+                          : isSelected
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-muted text-muted-foreground",
+                      )}
+                    >
+                      {initials}
+                    </div>
+                    <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-card bg-emerald-500" />
+                  </div>
 
-            <div>
-              <label className="mb-1 block text-caption font-medium text-foreground">
-                Conteúdo da Mensagem
-              </label>
-              <textarea
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                rows={4}
-                className="border-input w-full rounded-xl border bg-background p-3 text-body text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                placeholder="Digite a mensagem para o lead..."
-                required
-              />
-            </div>
+                  {/* Detalhes do Lead */}
+                  <div className="flex min-w-0 flex-1 flex-col">
+                    <div className="flex items-center justify-between gap-1">
+                      <span className="truncate text-caption font-semibold text-foreground">
+                        {lead.name}
+                      </span>
+                      <span className="shrink-0 text-[10px] text-muted-foreground">
+                        {lead.funnelStageId === "stage_fechamento"
+                          ? "Fechou"
+                          : lead.funnelStageId === "stage_proposta"
+                            ? "Proposta"
+                            : "Qualificando"}
+                      </span>
+                    </div>
 
-            {sendSuccess && (
-              <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3 text-caption font-medium text-emerald-600 dark:text-emerald-400">
-                {sendSuccess}
-              </div>
-            )}
+                    <span className="truncate text-[11px] text-muted-foreground">
+                      {lead.jobTitle} {lead.company ? `• ${lead.company}` : ""}
+                    </span>
 
-            <div className="flex flex-wrap items-center gap-3 pt-2">
-              <Button
-                type="submit"
-                isLoading={sendMutation.isPending}
-                className="shadow-xs rounded-full"
-              >
-                <Send size={14} />
-                Enviar via Cloud API
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={handleOpenWhatsAppWeb}
-                className="shadow-xs rounded-full"
-              >
-                <MessageCircle size={14} className="text-emerald-500" />
-                Abrir no WhatsApp Web
-              </Button>
-            </div>
-          </form>
+                    <div className="mt-1 flex items-center justify-between gap-2">
+                      <span className="text-foreground/80 font-mono text-[11px]">
+                        {lead.phone || "Sem celular"}
+                      </span>
+                      {isLuisa && (
+                        <span className="py-0.2 rounded bg-amber-500/20 px-1.5 text-[9px] font-bold text-amber-700 dark:text-amber-300">
+                          Seu Perfil
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
-        {/* Painel Direito: Preview do Balão de WhatsApp (5 colunas) */}
-        <div className="shadow-xs flex flex-col justify-between rounded-2xl bg-card p-6 lg:col-span-5">
-          <div className="border-border/40 flex items-center justify-between border-b pb-3">
-            <span className="text-caption font-bold uppercase tracking-wider text-muted-foreground">
-              Pré-visualização WhatsApp
-            </span>
-            <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">
-              Live Preview
-            </span>
-          </div>
+        {/* Coluna da Direita: Janela de Chat Ativa (8 colunas no desktop) */}
+        <div className="flex h-full min-h-0 flex-col md:col-span-8 lg:col-span-8">
+          {selectedLead ? (
+            <>
+              {/* Header do Chat Ativo */}
+              <div className="flex shrink-0 items-center justify-between border-b border-border bg-card px-4 py-3">
+                <div className="flex items-center gap-3">
+                  <div className="bg-primary/20 flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-caption font-bold text-primary">
+                    {selectedLead.name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .slice(0, 2)
+                      .join("")
+                      .toUpperCase()}
+                  </div>
+                  <div className="flex flex-col">
+                    <div className="flex items-center gap-2">
+                      <h2 className="text-body font-bold text-foreground">{selectedLead.name}</h2>
+                      <span className="text-[11px] text-emerald-600 dark:text-emerald-400">
+                        • online
+                      </span>
+                    </div>
+                    <span className="text-caption text-muted-foreground">
+                      {selectedLead.jobTitle} • {selectedLead.company} •{" "}
+                      <strong className="font-mono text-foreground">{selectedLead.phone}</strong>
+                    </span>
+                  </div>
+                </div>
 
-          {/* Celular / Janela de Chat Mockup */}
-          <div className="border-border/50 my-6 rounded-2xl border bg-[#efeae2] p-4 shadow-inner dark:bg-zinc-900">
-            <div className="mb-3 flex items-center gap-2 border-b border-black/5 pb-2 dark:border-white/5">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-600 text-xs font-bold text-white">
-                {selectedLead ? selectedLead.name.charAt(0) : "S"}
-              </div>
-              <div className="flex flex-col">
-                <span className="text-caption font-bold text-zinc-800 dark:text-zinc-100">
-                  {selectedLead ? selectedLead.name : "Lead Selecionado"}
-                </span>
-                <span className="text-[10px] text-zinc-500 dark:text-zinc-400">Online</span>
-              </div>
-            </div>
+                {/* Ações Rápidas de CRM */}
+                <div className="flex items-center gap-2">
+                  <Link
+                    href={`/calendar`}
+                    className="hover:bg-muted inline-flex items-center gap-1 rounded-lg border border-border bg-background px-2.5 py-1 text-caption font-medium text-foreground"
+                  >
+                    <Calendar className="h-3.5 w-3.5 text-primary" />
+                    <span className="hidden sm:inline">Google Calendar</span>
+                  </Link>
 
-            {/* Balão de mensagem */}
-            <div className="flex justify-end">
-              <div className="relative max-w-[85%] rounded-2xl rounded-tr-none bg-[#d9fdd3] p-3 text-caption text-zinc-900 shadow-sm dark:bg-emerald-800/80 dark:text-white">
-                <p className="whitespace-pre-line leading-relaxed">
-                  {message || "Selecione um lead ou digite uma mensagem para visualizar."}
-                </p>
-                <div className="mt-1.5 flex items-center justify-end gap-1 text-[9px] text-zinc-500 dark:text-zinc-300">
-                  <span>
-                    {new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
+                  <span className="bg-primary/10 rounded-lg px-2 py-1 text-caption font-semibold text-primary">
+                    {selectedLead.funnelStageId === "stage_fechamento"
+                      ? "Fechamento"
+                      : selectedLead.funnelStageId === "stage_proposta"
+                        ? "Proposta / Call"
+                        : "Qualificação"}
                   </span>
-                  <CheckCheck size={12} className="text-blue-500" />
                 </div>
               </div>
-            </div>
-          </div>
 
-          <div className="border-border/40 bg-muted/30 rounded-xl border p-3 text-[11px] text-muted-foreground">
-            Todas as mensagens enviadas ficam salvas na linha do tempo do lead em{" "}
-            <strong>Interações</strong>.
-          </div>
+              {/* Barra do Funil de Vendas do Cleiton (Etapas Interativas) */}
+              <div className="bg-muted/20 flex shrink-0 flex-wrap items-center justify-between gap-1 border-b border-border px-4 py-2">
+                <div className="flex flex-wrap items-center gap-1">
+                  <span className="mr-1 text-[11px] font-bold text-muted-foreground">
+                    FUNIL CLEITON:
+                  </span>
+                  {FUNNEL_STEPS.map((step, idx) => (
+                    <button
+                      key={step.id}
+                      onClick={() => handleTriggerFunnelStep(idx)}
+                      disabled={aiSalesMutation.isPending}
+                      className={cn(
+                        "rounded-lg px-2 py-1 text-[11px] font-medium transition-all",
+                        funnelStepIndex === idx
+                          ? "shadow-xs bg-primary text-primary-foreground"
+                          : "hover:bg-muted bg-card text-muted-foreground hover:text-foreground",
+                      )}
+                    >
+                      {step.short}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
+                  <Sparkles className="h-3 w-3 text-amber-500" />
+                  <span>IA de Pré-Venda Ativa</span>
+                </div>
+              </div>
+
+              {/* Área das Mensagens com Wallpaper Estilo WhatsApp */}
+              <div className="bg-dot-pattern dark:bg-muted/10 min-h-0 flex-1 space-y-3 overflow-y-auto p-4">
+                {activeMessages.map((msg) => {
+                  const isSdr = msg.sender === "sdr";
+                  const isSystem = msg.sender === "system";
+
+                  if (isSystem) {
+                    return (
+                      <div key={msg.id} className="my-2 flex justify-center">
+                        <span className="bg-muted/80 rounded-full px-3 py-1 text-[11px] text-muted-foreground">
+                          {msg.text}
+                        </span>
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <div
+                      key={msg.id}
+                      className={cn("flex w-full flex-col", isSdr ? "items-end" : "items-start")}
+                    >
+                      <div
+                        className={cn(
+                          "shadow-xs max-w-[85%] rounded-2xl px-4 py-2.5 text-body leading-relaxed sm:max-w-[70%]",
+                          isSdr
+                            ? "rounded-br-none bg-emerald-600 text-white dark:bg-emerald-700"
+                            : "rounded-bl-none border border-border bg-card text-foreground",
+                        )}
+                      >
+                        <p className="whitespace-pre-wrap">{msg.text}</p>
+
+                        {/* Cartão de Agendamento do Google Meet se houver */}
+                        {msg.meetingUrl && (
+                          <div className="mt-2.5 rounded-xl border border-white/20 bg-white/10 p-2.5 text-caption">
+                            <div className="flex items-center justify-between gap-2">
+                              <div className="flex items-center gap-1.5 font-semibold text-white">
+                                <Video className="h-4 w-4" />
+                                <span>Google Meet 1:1 Agendado</span>
+                              </div>
+                              <a
+                                href={msg.meetingUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="inline-flex items-center gap-1 rounded bg-white px-2 py-0.5 text-[11px] font-bold text-emerald-800 hover:bg-white/90"
+                              >
+                                Acessar Sala
+                                <ExternalLink className="h-3 w-3" />
+                              </a>
+                            </div>
+                            <span className="mt-1 block text-[11px] text-white/80">
+                              Convite sincronizado com o Google Workspace Calendar
+                            </span>
+                          </div>
+                        )}
+
+                        {/* Rodapé da mensagem: Horário e Status */}
+                        <div
+                          className={cn(
+                            "mt-1 flex items-center justify-end gap-1 text-[10px]",
+                            isSdr ? "text-white/80" : "text-muted-foreground",
+                          )}
+                        >
+                          <span>{msg.timestamp}</span>
+                          {isSdr && (
+                            <CheckCheck
+                              className={cn(
+                                "h-3.5 w-3.5",
+                                msg.status === "read" ? "text-sky-300" : "text-white/60",
+                              )}
+                            />
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+
+                {/* Indicador de Digitação do Lead ou da IA */}
+                {isTyping && (
+                  <div className="flex items-center gap-2 text-caption text-muted-foreground">
+                    <div className="bg-muted flex h-8 w-8 items-center justify-center rounded-full text-[11px] font-semibold">
+                      {selectedLead.name[0]}
+                    </div>
+                    <div className="flex items-center gap-1 rounded-2xl border border-border bg-card px-3 py-2">
+                      <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-muted-foreground [animation-delay:-0.3s]" />
+                      <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-muted-foreground [animation-delay:-0.15s]" />
+                      <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-muted-foreground" />
+                      <span className="ml-1 text-[11px]">{selectedLead.name} está digitando…</span>
+                    </div>
+                  </div>
+                )}
+
+                <div ref={messagesEndRef} />
+              </div>
+
+              {/* Barra de Entrada de Mensagem com WhatsApp Web Styling */}
+              <form
+                onSubmit={handleSendMessage}
+                className="flex shrink-0 items-center gap-2 border-t border-border bg-card p-3"
+              >
+                <button
+                  type="button"
+                  title="Anexar Proposta ou Material Isca"
+                  onClick={() => {
+                    setInputText((prev) =>
+                      prev
+                        ? `${prev} [PDF: Apresentação Mentoria Tech]`
+                        : "[PDF: Apresentação Mentoria Tech]",
+                    );
+                  }}
+                  className="hover:bg-muted flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-muted-foreground hover:text-foreground"
+                >
+                  <Paperclip className="h-4 w-4" />
+                </button>
+
+                <input
+                  type="text"
+                  value={inputText}
+                  onChange={(e) => setInputText(e.target.value)}
+                  placeholder={`Mensagem para ${selectedLead.name} via Meta Cloud API…`}
+                  className="border-input flex-1 rounded-xl border bg-background px-4 py-2 text-body text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                />
+
+                <Button
+                  type="submit"
+                  disabled={!inputText.trim() || aiSalesMutation.isPending}
+                  className="h-10 w-10 shrink-0 rounded-full bg-emerald-600 p-0 text-white hover:bg-emerald-700 dark:bg-emerald-600 dark:hover:bg-emerald-700"
+                >
+                  <Send className="h-4 w-4" />
+                </Button>
+              </form>
+            </>
+          ) : (
+            <div className="flex h-full flex-col items-center justify-center gap-3 p-8 text-center text-muted-foreground">
+              <MessageCircle className="text-muted-foreground/40 h-12 w-12" />
+              <h3 className="text-body font-semibold text-foreground">
+                Nenhuma conversa selecionada
+              </h3>
+              <p className="text-caption">
+                Selecione um lead da planilha ao lado para iniciar a pré-venda.
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>

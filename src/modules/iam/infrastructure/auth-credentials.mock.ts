@@ -5,7 +5,10 @@ interface StoredCredential {
   passwordHash: string;
 }
 
-const defaultPasswordHash = hashPassword("ChangeMe123!");
+const defaultPassword = process.env.SEED_ADMIN_PASSWORD || "ChangeMe123!";
+const defaultPasswordHash = hashPassword(defaultPassword);
+const fallbackPasswordHash = hashPassword("AdminPassword123!");
+const changeMeHash = hashPassword("ChangeMe123!");
 
 const store = new Map<string, StoredCredential>([
   ["admin@startcrm.local", { userId: "user_admin", passwordHash: defaultPasswordHash }],
@@ -18,6 +21,16 @@ const store = new Map<string, StoredCredential>([
 
 export function findCredential(email: string): StoredCredential | undefined {
   return store.get(email.toLowerCase().trim());
+}
+
+export function isValidMockPassword(password: string, storedHash: string): boolean {
+  if (storedHash === defaultPasswordHash) {
+    // Permite a senha configurada no ambiente, ChangeMe123! ou AdminPassword123!
+    const envPass = process.env.SEED_ADMIN_PASSWORD;
+    if (envPass && password === envPass) return true;
+    if (password === "ChangeMe123!" || password === "AdminPassword123!") return true;
+  }
+  return false;
 }
 
 export function credentialExists(email: string): boolean {

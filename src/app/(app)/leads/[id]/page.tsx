@@ -172,15 +172,14 @@ export default function LeadDetailPage() {
 
         {lead.phone && (
           <div className="flex gap-2">
-            <a
-              href={`https://wa.me/${onlyDigits(lead.phone)}`}
-              target="_blank"
-              rel="noreferrer"
+            <Link
+              href={`/whatsapp?leadId=${lead.id}`}
               className={buttonVariants({ variant: "outline", size: "sm" })}
+              title="Abrir Chat do WhatsApp no CRM"
             >
               <MessageCircle aria-hidden size={16} />
               WhatsApp
-            </a>
+            </Link>
             <a
               href={`tel:${lead.phone}`}
               className={buttonVariants({ variant: "outline", size: "sm" })}
