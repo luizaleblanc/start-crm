@@ -22,9 +22,9 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (!isLoading && user) {
-      window.location.href = "/";
+      router.replace("/");
     }
-  }, [isLoading, user]);
+  }, [isLoading, user, router]);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -32,7 +32,7 @@ export default function LoginPage() {
     setIsSubmitting(true);
     try {
       await login(email, password);
-      window.location.href = "/";
+      router.replace("/");
     } catch (err) {
       setError(err instanceof ApiClientError ? err.message : "Não foi possível entrar");
       setIsSubmitting(false);

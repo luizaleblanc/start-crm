@@ -32,9 +32,9 @@ export default function RegisterPage() {
 
   useEffect(() => {
     if (!isLoading && user) {
-      window.location.href = "/";
+      router.replace("/");
     }
-  }, [isLoading, user]);
+  }, [isLoading, user, router]);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -53,7 +53,7 @@ export default function RegisterPage() {
     setIsSubmitting(true);
     try {
       await register({ name, organizationName, email, password });
-      window.location.href = "/";
+      router.replace("/");
     } catch (err) {
       setError(err instanceof ApiClientError ? err.message : "Não foi possível criar a conta");
       setIsSubmitting(false);

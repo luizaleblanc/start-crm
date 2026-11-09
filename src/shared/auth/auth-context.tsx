@@ -32,17 +32,28 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-function getSnapshot(): User | null {
+const emptySubscribe = () => () => {};
+
+function useHydrated(): boolean {
+  return useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false,
+  );
+}
+
+function getUserSnapshot(): User | null {
   const session = getStoredSession();
   return (session?.user as User | undefined) ?? null;
 }
 
-function getServerSnapshot(): User | null {
+function getServerUserSnapshot(): User | null {
   return null;
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const user = useSyncExternalStore(subscribeToSession, getSnapshot, getServerSnapshot);
+  const isHydrated = useHydrated();
+  const user = useSyncExternalStore(subscribeToSession, getUserSnapshot, getServerUserSnapshot);
 
   const login = useCallback(async (email: string, password: string) => {
     const response = await apiFetch<AuthResponse>("/api/auth/login", {
@@ -67,7 +78,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, isLoading: false, login, register, logout }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        isLoading: !isHydrated,
+        login,
+        register,
+        logout,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

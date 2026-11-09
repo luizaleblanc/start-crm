@@ -8,28 +8,46 @@ interface StoredSession {
 let cachedRaw: string | null = null;
 let cachedSession: StoredSession | null = null;
 
-/**
- * Returns a cached reference while the underlying localStorage value is
- * unchanged, as required by useSyncExternalStore's getSnapshot contract —
- * parsing JSON on every call would return a new object each time and cause
- * an infinite re-render loop.
- */
+function readCookie(name: string): string | null {
+  if (typeof document === "undefined") return null;
+  const match = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`));
+  return match && match[1] ? decodeURIComponent(match[1]) : null;
+}
+
 export function getStoredSession(): StoredSession | null {
   if (typeof window === "undefined") return null;
-  const raw = window.localStorage.getItem(SESSION_STORAGE_KEY);
-  if (raw === cachedRaw) return cachedSession;
 
-  cachedRaw = raw;
-  if (!raw) {
-    cachedSession = null;
-    return null;
-  }
   try {
-    cachedSession = JSON.parse(raw) as StoredSession;
+    const raw = window.localStorage.getItem(SESSION_STORAGE_KEY);
+    if (raw) {
+      if (raw === cachedRaw && cachedSession) return cachedSession;
+      cachedRaw = raw;
+      cachedSession = JSON.parse(raw) as StoredSession;
+      return cachedSession;
+    }
+
+    // Fallback: tenta recuperar via cookie se o localStorage estiver vazio
+    const cookieRaw = readCookie(SESSION_STORAGE_KEY);
+    if (cookieRaw) {
+      try {
+        const parsed = JSON.parse(cookieRaw) as StoredSession;
+        if (parsed?.accessToken) {
+          window.localStorage.setItem(SESSION_STORAGE_KEY, cookieRaw);
+          cachedRaw = cookieRaw;
+          cachedSession = parsed;
+          return cachedSession;
+        }
+      } catch {
+        // ignore
+      }
+    }
   } catch {
-    cachedSession = null;
+    // ignore
   }
-  return cachedSession;
+
+  cachedRaw = null;
+  cachedSession = null;
+  return null;
 }
 
 type SessionListener = () => void;
@@ -46,10 +64,27 @@ export function subscribeToSession(listener: SessionListener): () => void {
 
 export function setStoredSession(session: StoredSession | null): void {
   if (typeof window === "undefined") return;
+
   if (!session) {
-    window.localStorage.removeItem(SESSION_STORAGE_KEY);
+    cachedRaw = null;
+    cachedSession = null;
+    try {
+      window.localStorage.removeItem(SESSION_STORAGE_KEY);
+      document.cookie = `${SESSION_STORAGE_KEY}=; path=/; max-age=0; SameSite=Lax`;
+    } catch {
+      // ignore
+    }
   } else {
-    window.localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(session));
+    try {
+      const raw = JSON.stringify(session);
+      cachedRaw = raw;
+      cachedSession = session;
+      window.localStorage.setItem(SESSION_STORAGE_KEY, raw);
+      // Persiste por 30 dias em cookie para sobrevivência entre recarregamentos
+      document.cookie = `${SESSION_STORAGE_KEY}=${encodeURIComponent(raw)}; path=/; max-age=${30 * 24 * 3600}; SameSite=Lax`;
+    } catch {
+      // ignore
+    }
   }
   sessionListeners.forEach((listener) => listener());
 }
@@ -60,6 +95,7 @@ export class ApiClientError extends Error {
     message: string,
   ) {
     super(message);
+    this.name = "ApiClientError";
   }
 }
 
@@ -76,7 +112,9 @@ export async function apiFetch<T>(path: string, options: RequestOptions = {}): P
   if (body !== undefined) headers["Content-Type"] = "application/json";
   if (auth) {
     const session = getStoredSession();
-    if (session) headers.Authorization = `Bearer ${session.accessToken}`;
+    if (session?.accessToken) {
+      headers.Authorization = `Bearer ${session.accessToken}`;
+    }
   }
 
   const response = await fetch(path, {
@@ -90,10 +128,13 @@ export async function apiFetch<T>(path: string, options: RequestOptions = {}): P
   const payload = await response.json().catch(() => null);
 
   if (!response.ok) {
+    // Se receber 401 em rota autenticada e estivermos fora do /login,
+    // só desloga se realmente não houver mais sessão válida
     if (response.status === 401 && auth && typeof window !== "undefined") {
-      setStoredSession(null);
-      if (window.location.pathname !== "/login") {
-        window.location.href = "/login";
+      const current = getStoredSession();
+      if (!current?.accessToken && window.location.pathname !== "/login") {
+        setStoredSession(null);
+        window.location.replace("/login");
       }
     }
     const message =

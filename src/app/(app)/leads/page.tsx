@@ -64,17 +64,17 @@ export default function LeadsPage() {
   const leads = useMemo(() => leadsQuery.data?.data ?? [], [leadsQuery.data?.data]);
   const funnelStages = useMemo(
     () => [...(funnelStagesQuery.data?.data ?? [])].sort((a, b) => a.order - b.order),
-    [funnelStagesQuery.data],
+    [funnelStagesQuery.data?.data],
   );
-  const sources = sourcesQuery.data?.data ?? [];
+  const sources = useMemo(() => sourcesQuery.data?.data ?? [], [sourcesQuery.data?.data]);
 
   const stageById = useMemo(
     () => new Map(funnelStages.map((stage) => [stage.id, stage])),
     [funnelStages],
   );
   const sourceNameById = useMemo(
-    () => new Map((sourcesQuery.data?.data ?? []).map((source) => [source.id, source.name])),
-    [sourcesQuery.data],
+    () => new Map(sources.map((source) => [source.id, source.name])),
+    [sources],
   );
   const stageNameById = useMemo(
     () => new Map(funnelStages.map((stage) => [stage.id, stage.name])),

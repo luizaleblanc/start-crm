@@ -63,10 +63,10 @@ export default function DealsPage() {
   const leadsQuery = useLeads(1, 1500);
   const closeDeal = useCloseDeal();
 
-  const deals = dealsQuery.data?.data ?? [];
+  const deals = useMemo(() => dealsQuery.data?.data ?? [], [dealsQuery.data?.data]);
   const leadNameById = useMemo(
     () => new Map((leadsQuery.data?.data ?? []).map((lead) => [lead.id, lead.name])),
-    [leadsQuery.data],
+    [leadsQuery.data?.data],
   );
 
   const totalValue = useMemo(() => deals.reduce((acc, d) => acc + d.value, 0), [deals]);
