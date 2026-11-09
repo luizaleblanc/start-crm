@@ -21,6 +21,8 @@ export interface Lead extends Timestamps, SoftDeletable {
   phone: string;
   sourceId: string;
   funnelStageId: string;
+  score?: number;
+  temperature?: "hot" | "warm" | "cold";
 }
 
 export interface LeadOwnership extends Timestamps {

@@ -45,7 +45,7 @@ type ViewMode = "table" | "kanban";
 const PAGE_SIZE = 25;
 
 export default function LeadsPage() {
-  const leadsQuery = useLeads(1, 1500);
+  const leadsQuery = useLeads(1, 3000);
   const funnelStagesQuery = useFunnelStages();
   const sourcesQuery = useSources();
   const updateLeadStage = useUpdateLeadStage();

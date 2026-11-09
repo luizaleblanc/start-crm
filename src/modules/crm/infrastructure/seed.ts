@@ -7,14 +7,66 @@ import type {
   Meeting,
   Source,
 } from "../domain/entities";
+import dealsData from "./deals-data.json";
+import interactionsData from "./interactions-data.json";
+import leadsData from "./leads-data.json";
+import ownershipsData from "./ownerships-data.json";
 
 const now = new Date().toISOString();
 
 export const sourcesSeed: Source[] = [
   {
+    id: "source_new_mentoria",
+    organizationId: "org_1",
+    name: "NEW - Mentoria Tech (Ads)",
+    ativo: true,
+    createdAt: now,
+    updatedAt: now,
+  },
+  {
+    id: "source_mentoria",
+    organizationId: "org_1",
+    name: "Mentoria Tech (Ads)",
+    ativo: true,
+    createdAt: now,
+    updatedAt: now,
+  },
+  {
+    id: "source_post_itau",
+    organizationId: "org_1",
+    name: "Post Saída Itaú (Orgânico)",
+    ativo: true,
+    createdAt: now,
+    updatedAt: now,
+  },
+  {
+    id: "source_post_reprovacao",
+    organizationId: "org_1",
+    name: "Post Reprovação 2010 (Orgânico)",
+    ativo: true,
+    createdAt: now,
+    updatedAt: now,
+  },
+  {
+    id: "source_amigo",
+    organizationId: "org_1",
+    name: "Indicação / Amigo",
+    ativo: true,
+    createdAt: now,
+    updatedAt: now,
+  },
+  {
     id: "source_site",
     organizationId: "org_1",
     name: "Site",
+    ativo: true,
+    createdAt: now,
+    updatedAt: now,
+  },
+  {
+    id: "source_google_ads",
+    organizationId: "org_1",
+    name: "Google Ads",
     ativo: true,
     createdAt: now,
     updatedAt: now,
@@ -68,56 +120,13 @@ export const funnelStagesSeed: FunnelStage[] = [
   },
 ];
 
-export const leadsSeed: Lead[] = [
-  {
-    id: "lead_1",
-    organizationId: "org_1",
-    name: "Maria Souza",
-    email: "maria@example.com",
-    phone: "+55 11 90000-0001",
-    sourceId: "source_site",
-    funnelStageId: "stage_novo",
-    ativo: true,
-    createdAt: now,
-    updatedAt: now,
-  },
-  {
-    id: "lead_2",
-    organizationId: "org_1",
-    name: "João Lima",
-    email: "joao@example.com",
-    phone: "+55 11 90000-0002",
-    sourceId: "source_indicacao",
-    funnelStageId: "stage_qualificacao",
-    ativo: true,
-    createdAt: now,
-    updatedAt: now,
-  },
-];
+export const leadsSeed: Lead[] = leadsData as unknown as Lead[];
 
-export const leadOwnershipsSeed: LeadOwnership[] = [
-  {
-    id: "ownership_1",
-    leadId: "lead_1",
-    userId: "user_admin",
-    assignedAt: now,
-    createdAt: now,
-    updatedAt: now,
-  },
-];
+export const leadOwnershipsSeed: LeadOwnership[] = ownershipsData as unknown as LeadOwnership[];
 
-export const leadInteractionsSeed: LeadInteraction[] = [
-  {
-    id: "interaction_1",
-    leadId: "lead_1",
-    userId: "user_admin",
-    type: "note",
-    notes: "Lead recebido via site.",
-    createdAt: now,
-    updatedAt: now,
-  },
-];
+export const leadInteractionsSeed: LeadInteraction[] =
+  interactionsData as unknown as LeadInteraction[];
 
 export const meetingsSeed: Meeting[] = [];
 
-export const dealsSeed: Deal[] = [];
+export const dealsSeed: Deal[] = dealsData as unknown as Deal[];

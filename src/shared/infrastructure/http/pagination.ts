@@ -6,7 +6,7 @@ export function parsePagination(request: Request): PaginationParams {
   const pageSize = Number(url.searchParams.get("pageSize") ?? "20");
   return {
     page: Number.isFinite(page) && page > 0 ? page : 1,
-    pageSize: Number.isFinite(pageSize) && pageSize > 0 ? Math.min(pageSize, 1500) : 20,
+    pageSize: Number.isFinite(pageSize) && pageSize > 0 ? Math.min(pageSize, 5000) : 20,
   };
 }
 

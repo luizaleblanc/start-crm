@@ -39,6 +39,42 @@ export const usersSeed: User[] = [
     createdAt: now,
     updatedAt: now,
   },
+  {
+    id: "user_cleiton",
+    organizationId: "org_1",
+    name: "Cleiton",
+    email: "cleiton@startcrm.local",
+    ativo: true,
+    createdAt: now,
+    updatedAt: now,
+  },
+  {
+    id: "user_si",
+    organizationId: "org_1",
+    name: "Si",
+    email: "si@startcrm.local",
+    ativo: true,
+    createdAt: now,
+    updatedAt: now,
+  },
+  {
+    id: "user_elis",
+    organizationId: "org_1",
+    name: "Elis",
+    email: "elis@startcrm.local",
+    ativo: true,
+    createdAt: now,
+    updatedAt: now,
+  },
+  {
+    id: "user_bruno",
+    organizationId: "org_1",
+    name: "Bruno",
+    email: "bruno@startcrm.local",
+    ativo: true,
+    createdAt: now,
+    updatedAt: now,
+  },
 ];
 
 export const rolesSeed: Role[] = [
@@ -70,4 +106,8 @@ export const rolePermissionsSeed: RolePermission[] = [
 export const userRolesSeed: UserRole[] = [
   { id: "ur_1", userId: "user_admin", roleId: "role_admin", createdAt: now, updatedAt: now },
   { id: "ur_2", userId: "user_luiza", roleId: "role_admin", createdAt: now, updatedAt: now },
+  { id: "ur_3", userId: "user_cleiton", roleId: "role_admin", createdAt: now, updatedAt: now },
+  { id: "ur_4", userId: "user_si", roleId: "role_admin", createdAt: now, updatedAt: now },
+  { id: "ur_5", userId: "user_elis", roleId: "role_admin", createdAt: now, updatedAt: now },
+  { id: "ur_6", userId: "user_bruno", roleId: "role_admin", createdAt: now, updatedAt: now },
 ];
