@@ -62,7 +62,7 @@ export default function WhatsAppPage() {
     return leads.find((l) => l.id === selectedLeadId);
   }, [leads, selectedLeadId]);
 
-  function compileTemplate(templateId: string, leadFirstName: string) {
+  function compileTemplate(templateId: string, leadFirstName?: string) {
     const template = apiInfo?.templates.find((t) => t.id === templateId);
     if (!template) return;
     return template.body
@@ -88,7 +88,7 @@ export default function WhatsAppPage() {
       setMessage("");
       return;
     }
-    const firstName = selectedLead ? selectedLead.name.split(" ")[0] : "";
+    const firstName = selectedLead?.name.split(" ")[0] || "";
     const compiled = compileTemplate(templateId, firstName);
     if (compiled) setMessage(compiled);
   }
