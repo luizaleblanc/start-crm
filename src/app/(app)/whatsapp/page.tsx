@@ -97,7 +97,7 @@ function WhatsAppChatContent() {
   const closerProfile = {
     name: "Luiza Ferraz",
     role: "Closer & Co-fundadora",
-    phone: "+55 (16) 99968-1670",
+    phone: "+55 (83) 99142-9201",
     instanceId: "closer_luiza",
   };
 

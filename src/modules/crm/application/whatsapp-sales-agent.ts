@@ -48,8 +48,8 @@ export interface FunnelStepDefinition {
 
 /**
  * Funil de Vendas Personalizado — Marca Cleiton Silva (Mentoria Tech):
- * - Closer Responsável: Luiza Ferraz (+55 16 99968-1670)
- * - Mentor Principal: Cleiton Silva
+ * - Closer Responsável: Luiza Ferraz (+55 83 99142-9201)
+ * - Co-fundador & Mentor: Cleiton Silva
  * - Formato: Mensagens de texto + Áudios de voz gravados (Voice Notes) + Google Meet 1:1
  * - Oferta Principal: Mentoria Tech Individual para transição Sênior / Tech Lead
  * - Downsell: Sprint de Reposicionamento Tech por R$ 97
