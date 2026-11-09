@@ -6,6 +6,10 @@ export interface SalesMessage {
   status?: "sent" | "delivered" | "read";
   stage?: string;
   meetingUrl?: string;
+  isAudio?: boolean;
+  audioDuration?: string;
+  audioVoice?: "cleiton" | "luiza";
+  audioTranscript?: string;
 }
 
 export interface FunnelState {
@@ -31,19 +35,26 @@ export interface LeadContext {
   sourceName?: string;
 }
 
-/**
- * Roteiro Estratégico de Pré-Venda da Mentoria Tech do Cleiton Silva:
- * - Produto: Mentoria Tech Individual para Desenvolvedores e Engenheiros de Software
- * - Objetivo: Transição para Sênior / Tech Lead, aumento salarial (R$ 12k - 25k) ou vagas remotas
- * - Oferta de Entrada (Downsell): Imersão / Sprint de Carreira R$ 97 para leads com objeção de orçamento
- * - Call Comercial: Sessão Diagnóstica de 15 a 30 min via Google Meet
- */
-export function generateFunnelMessages(lead: LeadContext): {
+export interface FunnelStepDefinition {
   stage: FunnelState["stage"];
   sdr: string;
   leadResponse: string;
   crmAction?: string;
-}[] {
+  isAudio?: boolean;
+  audioDuration?: string;
+  audioVoice?: "cleiton" | "luiza";
+  audioTranscript?: string;
+}
+
+/**
+ * Funil de Vendas Personalizado — Marca Cleiton Silva (Mentoria Tech):
+ * - Closer Responsável: Luiza Ferraz (+55 16 99968-1670)
+ * - Mentor Principal: Cleiton Silva
+ * - Formato: Mensagens de texto + Áudios de voz gravados (Voice Notes) + Google Meet 1:1
+ * - Oferta Principal: Mentoria Tech Individual para transição Sênior / Tech Lead
+ * - Downsell: Sprint de Reposicionamento Tech por R$ 97
+ */
+export function generateFunnelMessages(lead: LeadContext): FunnelStepDefinition[] {
   const firstName = lead.name.split(" ")[0] || "Dev";
   const cargo = lead.jobTitle || "Engenheiro de software";
   const empresa =
@@ -52,39 +63,47 @@ export function generateFunnelMessages(lead: LeadContext): {
   return [
     {
       stage: "primeiro_contato",
-      sdr: `Olá, ${firstName}! Tudo bem? Sou do time do Cleiton Silva (Mentoria Tech). Vi seu perfil atuando como ${cargo} e seu interesse no nosso conteúdo sobre aceleração de carreira tech. Posso te fazer uma pergunta rápida sobre seu momento profissional?`,
-      leadResponse: `Oi! Tudo bem sim. Claro, pode perguntar!`,
-      crmAction: "Contato iniciado via Meta Cloud API",
+      sdr: `Olá, ${firstName}! Tudo bem? Sou a Luiza Ferraz, closer da Mentoria Tech do Cleiton Silva. Vi seu perfil no LinkedIn como ${cargo} e seu interesse no nosso acelerador de carreira tech. Posso te fazer uma pergunta rápida sobre seu momento profissional?`,
+      leadResponse: `Oi Luiza! Tudo bem sim. Pode perguntar!`,
+      crmAction: "Abordagem inicial Luiza Ferraz via Closer WhatsApp Gateway",
     },
     {
       stage: "qualificacao",
-      sdr: `Show! Hoje você sente que o seu maior desafio na carreira é destravar promoção para Sênior/Tech Lead, aumentar sua remuneração para a faixa de R$ 15k+, ou encontrar vagas remotas internacionais?`,
-      leadResponse: `Meu maior desafio hoje é realmente destravar essa transição para Sênior e ter uma remuneração melhor. Sinto que bato na trave em entrevistas técnicas e fico preso nas mesmas demandas.`,
-      crmAction: "Lead qualificado: interesse em transição Sênior e aumento salarial",
+      sdr: `Show! Hoje o que está mais travando seu crescimento: a transição técnica para Sênior/Tech Lead, conseguir entrevistas em empresas que pagam R$ 15k+, ou destravar vagas remotas no exterior?`,
+      leadResponse: `Com certeza destravar a transição para Sênior e aumentar meu salário. Bato na trave em testes práticos e sinto que não sei me vender na entrevista.`,
+      crmAction: "Lead qualificado: transição técnica para Sênior e aumento salarial",
     },
     {
       stage: "apresentacao",
-      sdr: `Entendo perfeitamente, ${firstName}. É exatamente esse padrão que o Cleiton trabalha na Mentoria Tech. Ele mapeia seus gaps técnicos de arquitetura e liderança, refaz seu posicionamento no LinkedIn/GitHub e faz simulações reais de entrevistas para você negociar na mesa com segurança. Faz sentido conhecer como funciona esse plano prático individual?`,
-      leadResponse: `Faz total sentido! Mas como funciona a mentoria e quanto custa o investimento?`,
-      crmAction: "Apresentação concluída — Objeção de preço levantada",
+      sdr: `Ouça este áudio rápido que o Cleiton gravou para você explicando como estruturamos seu plano individual:`,
+      leadResponse: `Caramba, muito bom o áudio do Cleiton! Faz total sentido. Mas como funciona na prática e qual é o valor do investimento?`,
+      crmAction: "Áudio do Cleiton Silva reproduzido — Interesse confirmado",
+      isAudio: true,
+      audioDuration: "0:42",
+      audioVoice: "cleiton",
+      audioTranscript: `Fala ${firstName}, beleza? Cleiton aqui! Gravei esse áudio porque vejo muitos devs como você, com baita bagagem técnica, mas que ficam presos na mesma faixa salarial porque falta estratégia de posicionamento e arquitetura. Na mentoria eu sento com você 1 a 1, mapeio seus gaps e simulamos entrevistas reais até você fechar uma proposta sênior.`,
     },
     {
       stage: "objecao_preco",
-      sdr: `A Mentoria individual com acompanhamento 1:1 do Cleiton é personalizada, com encontros semanais e suporte direto no WhatsApp. O investimento cabe em até 12x no cartão e se paga já no primeiro aumento salarial que você conquista. E se preferir começar testando, temos também o Sprint de Reposicionamento Tech por apenas R$ 97. Mas antes de qualquer decisão financeira, o Cleiton faz uma call de diagnóstico de 15 minutos sem compromisso.`,
-      leadResponse: `Legal! Se tem essa sessão de 15 minutos de diagnóstico gratuita com o Cleiton, eu gostaria muito de fazer!`,
-      crmAction: "Objeção contornada — Lead aceitou diagnóstico 1:1",
+      sdr: `Ouça este áudio da Luiza Ferraz sobre as condições de entrada:`,
+      leadResponse: `Excelente Luiza! Se tem essa sessão de 15 minutos de alinhamento com o Cleiton sem custo, eu topo fazer sim!`,
+      crmAction: "Áudio de contorno de preço — Lead aceitou diagnóstico 1:1",
+      isAudio: true,
+      audioDuration: "0:36",
+      audioVoice: "luiza",
+      audioTranscript: `Oi ${firstName}, Luiza aqui! A Mentoria individual do Cleiton é personalizada com suporte direto no WhatsApp e encontros semanais. O investimento é parcelado em até 12x e se paga logo no primeiro mês com o novo salário. E se quiser começar testando agora, temos o Sprint de R$ 97. Mas antes de qualquer decisão, o Cleiton faz uma call de 15 minutos com você.`,
     },
     {
       stage: "agendamento_call",
-      sdr: `Excelente decisão, ${firstName}! Acabei de reservar seu horário na agenda do Cleiton no Google Calendar. Segue o link da nossa sala no Google Meet: https://meet.google.com/crm-mentoria-${lead.id}. Amanhã às 15h fica bom para você?`,
-      leadResponse: `Perfeito! Amanhã às 15h está confirmado. Já salvei o link aqui na minha agenda. Obrigado!`,
-      crmAction: "Call agendada no Google Calendar / Meet — Lead movido para Proposta",
+      sdr: `Perfeito, ${firstName}! Reservei seu horário exclusivo com o Cleiton no Google Calendar. Segue o link da nossa sala no Google Meet: https://meet.google.com/crm-mentoria-${lead.id.slice(-6)}. Amanhã às 15h fica bom para você?`,
+      leadResponse: `Perfeito, Luiza! Amanhã às 15h está confirmadíssimo. Já coloquei o link do Google Meet na minha agenda!`,
+      crmAction: "Reunião Google Meet agendada — Lead avançado para Proposta",
     },
     {
       stage: "fechamento",
-      sdr: `Confirmadíssimo, ${firstName}! O convite oficial com o link do Google Meet acabou de ser enviado para seu e-mail e seu WhatsApp. Até amanhã às 15h com o Cleiton!`,
-      leadResponse: `Show de bola, até amanhã!`,
-      crmAction: "Oportunidade fechada com sucesso — Negócio ganho!",
+      sdr: `Tudo certo, ${firstName}! O convite oficial com o link da call e o material de preparação já estão salvos aqui no CRM. Até amanhã às 15h com o Cleiton!`,
+      leadResponse: `Combinado Luiza, muito obrigado pela atenção e até amanhã!`,
+      crmAction: "Fechamento concluído com sucesso — Negócio Ganho!",
     },
   ];
 }

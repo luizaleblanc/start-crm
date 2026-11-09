@@ -33,7 +33,7 @@ export const usersSeed: User[] = [
   {
     id: "user_luiza",
     organizationId: "org_1",
-    name: "Luiza",
+    name: "Luiza Ferraz",
     email: "luizaa.fq@gmail.com",
     ativo: true,
     createdAt: now,

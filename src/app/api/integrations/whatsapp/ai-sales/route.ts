@@ -106,6 +106,10 @@ export const POST = handleRoute(async (request) => {
       timestamp: new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }),
       status: "read",
       meetingUrl: stepData.stage === "agendamento_call" ? meetingUrl : undefined,
+      isAudio: stepData.isAudio,
+      audioDuration: stepData.audioDuration,
+      audioVoice: stepData.audioVoice,
+      audioTranscript: stepData.audioTranscript,
     },
     leadResponse: {
       id: `msg_lead_${Date.now() + 1}`,
