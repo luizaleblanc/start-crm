@@ -21,8 +21,10 @@ export default function LoginPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    if (!isLoading && user) router.replace("/");
-  }, [isLoading, user, router]);
+    if (!isLoading && user) {
+      window.location.href = "/";
+    }
+  }, [isLoading, user]);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -30,10 +32,9 @@ export default function LoginPage() {
     setIsSubmitting(true);
     try {
       await login(email, password);
-      router.replace("/");
+      window.location.href = "/";
     } catch (err) {
       setError(err instanceof ApiClientError ? err.message : "Não foi possível entrar");
-    } finally {
       setIsSubmitting(false);
     }
   }
@@ -61,6 +62,7 @@ export default function LoginPage() {
                 type="password"
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
+                placeholder="••••••••••••"
                 required
               />
               <Link
@@ -77,6 +79,13 @@ export default function LoginPage() {
             <Link href="/register" className={buttonVariants({ variant: "outline" })}>
               Criar conta
             </Link>
+
+            <div className="border-border/40 bg-muted/40 mt-2 rounded-lg border p-2.5 text-center text-[11px] text-muted-foreground">
+              Acesso Demo:{" "}
+              <span className="font-semibold text-foreground">admin@startcrm.local</span>
+              <br />
+              Senha padrão: <span className="font-semibold text-foreground">ChangeMe123!</span>
+            </div>
           </form>
         </CardContent>
       </Card>

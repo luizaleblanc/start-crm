@@ -4,12 +4,14 @@ import {
   ArrowDownUp,
   ChevronLeft,
   ChevronRight,
+  ExternalLink,
   FileSpreadsheet,
   FileText,
   FileType,
   Filter,
   LayoutGrid,
   Mail,
+  MessageCircle,
   Phone,
   Search,
   Table2,
@@ -469,6 +471,16 @@ interface LeadsTableViewProps {
   sourceNameById: Map<string, string>;
 }
 
+function getWhatsAppUrl(phone?: string, name?: string): string | null {
+  if (!phone) return null;
+  const digits = phone.replace(/\D/g, "");
+  if (!digits || digits.length < 8) return null;
+  const fullNumber = digits.startsWith("55") ? digits : `55${digits}`;
+  const firstName = name ? name.split(" ")[0] : "";
+  const text = encodeURIComponent(`Olá ${firstName}! Tudo bem? Sou da equipe do Start CRM.`);
+  return `https://wa.me/${fullNumber}?text=${text}`;
+}
+
 function LeadsTableView({
   leads,
   isLoading,
@@ -503,49 +515,141 @@ function LeadsTableView({
       <Table>
         <TableHeader>
           <TableRow className="border-border/40 hover:bg-transparent">
-            <TableHead className="font-semibold text-muted-foreground">Nome do Lead</TableHead>
-            <TableHead className="font-semibold text-muted-foreground">E-mail</TableHead>
-            <TableHead className="font-semibold text-muted-foreground">Telefone</TableHead>
-            <TableHead className="font-semibold text-muted-foreground">
-              Origem da Captação
+            <TableHead className="min-w-[170px] font-semibold text-muted-foreground">
+              Lead
             </TableHead>
-            <TableHead className="font-semibold text-muted-foreground">Estágio Atual</TableHead>
-            <TableHead className="text-right font-semibold text-muted-foreground">Data</TableHead>
+            <TableHead className="min-w-[200px] font-semibold text-muted-foreground">
+              Contato
+            </TableHead>
+            <TableHead className="min-w-[160px] font-semibold text-muted-foreground">
+              Empresa / Cargo
+            </TableHead>
+            <TableHead className="min-w-[110px] font-semibold text-muted-foreground">
+              Cidade
+            </TableHead>
+            <TableHead className="min-w-[90px] font-semibold text-muted-foreground">
+              LinkedIn
+            </TableHead>
+            <TableHead className="min-w-[160px] font-semibold text-muted-foreground">
+              Origem
+            </TableHead>
+            <TableHead className="min-w-[110px] font-semibold text-muted-foreground">
+              Responsável
+            </TableHead>
+            <TableHead className="min-w-[130px] font-semibold text-muted-foreground">
+              Estágio
+            </TableHead>
+            <TableHead className="min-w-[130px] font-semibold text-muted-foreground">
+              Situação
+            </TableHead>
+            <TableHead className="min-w-[90px] text-right font-semibold text-muted-foreground">
+              Data
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {leads.map((lead) => {
             const stage = stageById.get(lead.funnelStageId);
+            const waUrl = getWhatsAppUrl(lead.phone, lead.name);
+
             return (
               <TableRow
                 key={lead.id}
                 className="border-border/30 hover:bg-muted/40 transition-colors"
               >
-                <TableCell className="py-3.5">
-                  <Link
-                    href={`/leads/${lead.id}`}
-                    className="font-semibold text-foreground hover:text-primary hover:underline"
-                  >
-                    {lead.name}
-                  </Link>
+                <TableCell className="py-3">
+                  <div className="flex flex-col">
+                    <Link
+                      href={`/leads/${lead.id}`}
+                      className="font-semibold text-foreground hover:text-primary hover:underline"
+                    >
+                      {lead.name}
+                    </Link>
+                    {lead.jobTitle && (
+                      <span className="line-clamp-1 text-[11px] text-muted-foreground">
+                        {lead.jobTitle}
+                      </span>
+                    )}
+                  </div>
                 </TableCell>
-                <TableCell className="text-muted-foreground">{lead.email ?? "—"}</TableCell>
-                <TableCell className="text-caption tabular-nums text-muted-foreground">
-                  {lead.phone ?? "—"}
+                <TableCell className="py-3">
+                  <div className="flex flex-col gap-1">
+                    <span className="text-foreground/90 max-w-[190px] truncate text-caption">
+                      {lead.email ?? "—"}
+                    </span>
+                    {lead.phone && (
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-[11px] tabular-nums text-muted-foreground">
+                          {lead.phone}
+                        </span>
+                        {waUrl && (
+                          <a
+                            href={waUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 rounded bg-emerald-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-600 transition-colors hover:bg-emerald-500/20 dark:text-emerald-400"
+                            title="Conversar no WhatsApp"
+                          >
+                            <MessageCircle size={10} />
+                            WhatsApp
+                          </a>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </TableCell>
-                <TableCell>
-                  <span className="bg-muted/60 rounded-full px-2.5 py-1 text-[11px] font-medium text-foreground">
+                <TableCell className="py-3">
+                  <div className="flex flex-col">
+                    <span className="text-caption font-medium text-foreground">
+                      {lead.company || "—"}
+                    </span>
+                    <span className="text-[11px] text-muted-foreground">
+                      {lead.jobTitle || "—"}
+                    </span>
+                  </div>
+                </TableCell>
+                <TableCell className="py-3 text-caption text-muted-foreground">
+                  {lead.city || "—"}
+                </TableCell>
+                <TableCell className="py-3">
+                  {lead.linkedinUrl ? (
+                    <a
+                      href={lead.linkedinUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="border-border/50 bg-muted/40 hover:bg-muted inline-flex items-center gap-1 rounded-md border px-2 py-1 text-[11px] font-medium text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400"
+                    >
+                      <ExternalLink size={11} />
+                      Perfil
+                    </a>
+                  ) : (
+                    <span className="text-caption text-muted-foreground">—</span>
+                  )}
+                </TableCell>
+                <TableCell className="py-3">
+                  <span className="bg-muted/60 whitespace-nowrap rounded-full px-2.5 py-1 text-[11px] font-medium text-foreground">
                     {sourceNameById.get(lead.sourceId) ?? "—"}
                   </span>
                 </TableCell>
-                <TableCell>
+                <TableCell className="py-3 text-caption font-medium text-foreground">
+                  {lead.ownerName || "—"}
+                </TableCell>
+                <TableCell className="py-3">
                   {stage ? (
                     <TemperatureBadge stage={stage} allStages={funnelStages} />
                   ) : (
                     <span className="text-caption text-muted-foreground">{lead.funnelStageId}</span>
                   )}
                 </TableCell>
-                <TableCell className="text-right text-caption tabular-nums text-muted-foreground">
+                <TableCell className="py-3">
+                  <span
+                    className="line-clamp-1 max-w-[140px] text-caption text-muted-foreground"
+                    title={lead.situation}
+                  >
+                    {lead.situation || "—"}
+                  </span>
+                </TableCell>
+                <TableCell className="whitespace-nowrap py-3 text-right text-caption tabular-nums text-muted-foreground">
                   {new Date(lead.createdAt).toLocaleDateString("pt-BR", {
                     day: "2-digit",
                     month: "2-digit",

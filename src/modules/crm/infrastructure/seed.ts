@@ -127,6 +127,52 @@ export const leadOwnershipsSeed: LeadOwnership[] = ownershipsData as unknown as 
 export const leadInteractionsSeed: LeadInteraction[] =
   interactionsData as unknown as LeadInteraction[];
 
-export const meetingsSeed: Meeting[] = [];
+export const meetingsSeed: Meeting[] = [
+  {
+    id: "meeting_1",
+    leadId: "lead_1",
+    userId: "user_admin",
+    scheduledAt: new Date(Date.now() + 2 * 3600 * 1000).toISOString(),
+    notes: "Apresentação de Diagnóstico e Fechamento Comercial",
+    createdAt: now,
+    updatedAt: now,
+  },
+  {
+    id: "meeting_2",
+    leadId: "lead_2",
+    userId: "user_cleiton",
+    scheduledAt: new Date(Date.now() + 5 * 3600 * 1000).toISOString(),
+    notes: "Demonstração do Start CRM e alinhamento de escopo",
+    createdAt: now,
+    updatedAt: now,
+  },
+  {
+    id: "meeting_3",
+    leadId: "lead_3",
+    userId: "user_si",
+    scheduledAt: new Date(Date.now() + 24 * 3600 * 1000).toISOString(),
+    notes: "Alinhamento de Proposta Comercial e Condições de Pagamento",
+    createdAt: now,
+    updatedAt: now,
+  },
+  {
+    id: "meeting_4",
+    leadId: "lead_4",
+    userId: "user_admin",
+    scheduledAt: new Date(Date.now() + 28 * 3600 * 1000).toISOString(),
+    notes: "Follow-up de Proposta e Esclarecimento de Dúvidas Técnicas",
+    createdAt: now,
+    updatedAt: now,
+  },
+  {
+    id: "meeting_5",
+    leadId: "lead_5",
+    userId: "user_cleiton",
+    scheduledAt: new Date(Date.now() + 48 * 3600 * 1000).toISOString(),
+    notes: "Reunião de Onboarding e Validação do Funil de Vendas",
+    createdAt: now,
+    updatedAt: now,
+  },
+];
 
 export const dealsSeed: Deal[] = dealsData as unknown as Deal[];

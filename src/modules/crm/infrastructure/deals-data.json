@@ -1,9 +1,62 @@
 [
   {
-    "id": "deal_lead_1",
+    "id": "deal_1",
     "organizationId": "org_1",
     "leadId": "lead_1",
-    "title": "Mentoria Tech - Tiago Doriguelo",
+    "title": "Mentoria Tech — Simone Castro",
+    "value": 2500,
+    "status": "won",
+    "closedAt": "2025-07-05T12:00:00.000Z",
+    "createdAt": "2025-07-01T12:00:00.000Z",
+    "updatedAt": "2025-07-05T12:00:00.000Z"
+  },
+  {
+    "id": "deal_2",
+    "organizationId": "org_1",
+    "leadId": "lead_2",
+    "title": "Mentoria Tech — Cleiton Silva",
+    "value": 2500,
+    "status": "won",
+    "closedAt": "2025-07-05T12:00:00.000Z",
+    "createdAt": "2025-07-01T12:00:00.000Z",
+    "updatedAt": "2025-07-05T12:00:00.000Z"
+  },
+  {
+    "id": "deal_3",
+    "organizationId": "org_1",
+    "leadId": "lead_5",
+    "title": "Mentoria Tech — Luiza Ferraz",
+    "value": 2500,
+    "status": "won",
+    "closedAt": "2025-07-05T12:00:00.000Z",
+    "createdAt": "2025-07-01T12:00:00.000Z",
+    "updatedAt": "2025-07-05T12:00:00.000Z"
+  },
+  {
+    "id": "deal_4",
+    "organizationId": "org_1",
+    "leadId": "lead_6",
+    "title": "Mentoria Tech — Rafael Mendes",
+    "value": 2500,
+    "status": "open",
+    "createdAt": "2025-07-01T12:00:00.000Z",
+    "updatedAt": "2025-07-01T12:00:00.000Z"
+  },
+  {
+    "id": "deal_5",
+    "organizationId": "org_1",
+    "leadId": "lead_7",
+    "title": "Mentoria Tech — Juliana Rocha",
+    "value": 2500,
+    "status": "open",
+    "createdAt": "2025-07-01T12:00:00.000Z",
+    "updatedAt": "2025-07-01T12:00:00.000Z"
+  },
+  {
+    "id": "deal_6",
+    "organizationId": "org_1",
+    "leadId": "lead_12",
+    "title": "Mentoria Tech — Tiago Doriguelo",
     "value": 2500,
     "status": "won",
     "closedAt": "2025-07-07T12:00:00.000Z",
@@ -11,10 +64,10 @@
     "updatedAt": "2025-07-07T12:00:00.000Z"
   },
   {
-    "id": "deal_lead_2",
+    "id": "deal_7",
     "organizationId": "org_1",
-    "leadId": "lead_2",
-    "title": "Mentoria Tech - Marcelo Rufino",
+    "leadId": "lead_13",
+    "title": "Mentoria Tech — Marcelo Rufino",
     "value": 1200,
     "status": "won",
     "closedAt": "2025-07-08T12:00:00.000Z",
@@ -22,10 +75,10 @@
     "updatedAt": "2025-07-08T12:00:00.000Z"
   },
   {
-    "id": "deal_lead_3",
+    "id": "deal_8",
     "organizationId": "org_1",
-    "leadId": "lead_3",
-    "title": "Mentoria Tech - Luccas Gonçalves",
+    "leadId": "lead_14",
+    "title": "Mentoria Tech — Luccas Gonçalves",
     "value": 2500,
     "status": "won",
     "closedAt": "2025-07-09T12:00:00.000Z",
@@ -33,32 +86,32 @@
     "updatedAt": "2025-07-09T12:00:00.000Z"
   },
   {
-    "id": "deal_lead_5",
+    "id": "deal_9",
     "organizationId": "org_1",
-    "leadId": "lead_5",
-    "title": "Mentoria Tech - Júlio",
+    "leadId": "lead_16",
+    "title": "Mentoria Tech — Júlio",
     "value": 2500,
     "status": "won",
-    "closedAt": "2025-07-11T13:29:00.000Z",
-    "createdAt": "2025-07-11T13:29:00.000Z",
-    "updatedAt": "2025-07-11T13:29:00.000Z"
+    "closedAt": "2025-07-15T12:00:00.000Z",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "deal_lead_6",
+    "id": "deal_10",
     "organizationId": "org_1",
-    "leadId": "lead_6",
-    "title": "Mentoria Tech - Emanuel",
+    "leadId": "lead_17",
+    "title": "Mentoria Tech — Emanuel",
     "value": 2500,
     "status": "won",
-    "closedAt": "2025-07-11T12:15:00.000Z",
-    "createdAt": "2025-07-11T12:15:00.000Z",
-    "updatedAt": "2025-07-11T12:15:00.000Z"
+    "closedAt": "2025-07-15T12:00:00.000Z",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "deal_lead_10",
+    "id": "deal_11",
     "organizationId": "org_1",
-    "leadId": "lead_10",
-    "title": "Mentoria Tech - Adonizedeque",
+    "leadId": "lead_21",
+    "title": "Mentoria Tech — Adonizedeque",
     "value": 2500,
     "status": "lost",
     "closedAt": "2025-07-15T12:00:00.000Z",
@@ -66,124 +119,119 @@
     "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "deal_lead_24",
+    "id": "deal_12",
     "organizationId": "org_1",
-    "leadId": "lead_24",
-    "title": "Mentoria Tech - Rafael",
+    "leadId": "lead_35",
+    "title": "Mentoria Tech — Rafael",
     "value": 2500,
     "status": "won",
-    "closedAt": "2025-07-29T22:37:00.000Z",
-    "createdAt": "2025-07-29T22:37:00.000Z",
-    "updatedAt": "2025-07-29T22:37:00.000Z"
+    "closedAt": "2025-07-15T12:00:00.000Z",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "deal_lead_25",
-    "organizationId": "org_1",
-    "leadId": "lead_25",
-    "title": "Mentoria Tech - Elizeth",
-    "value": 2500,
-    "status": "lost",
-    "closedAt": "2025-07-29T22:16:00.000Z",
-    "createdAt": "2025-07-29T22:16:00.000Z",
-    "updatedAt": "2025-07-29T22:16:00.000Z"
-  },
-  {
-    "id": "deal_lead_31",
-    "organizationId": "org_1",
-    "leadId": "lead_31",
-    "title": "Mentoria Tech - Saulo J Pavanello",
-    "value": 2500,
-    "status": "lost",
-    "closedAt": "2025-07-30T02:19:00.000Z",
-    "createdAt": "2025-07-30T02:19:00.000Z",
-    "updatedAt": "2025-07-30T02:19:00.000Z"
-  },
-  {
-    "id": "deal_lead_36",
+    "id": "deal_13",
     "organizationId": "org_1",
     "leadId": "lead_36",
-    "title": "Mentoria Tech - Emerson",
+    "title": "Mentoria Tech — Elizeth",
+    "value": 2500,
+    "status": "lost",
+    "closedAt": "2025-07-15T12:00:00.000Z",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
+  },
+  {
+    "id": "deal_14",
+    "organizationId": "org_1",
+    "leadId": "lead_42",
+    "title": "Mentoria Tech — Saulo J Pavanello",
+    "value": 2500,
+    "status": "lost",
+    "closedAt": "2025-07-15T12:00:00.000Z",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
+  },
+  {
+    "id": "deal_15",
+    "organizationId": "org_1",
+    "leadId": "lead_47",
+    "title": "Mentoria Tech — Emerson",
     "value": 2500,
     "status": "won",
-    "closedAt": "2025-08-01T12:40:00.000Z",
-    "createdAt": "2025-08-01T12:40:00.000Z",
-    "updatedAt": "2025-08-01T12:40:00.000Z"
+    "closedAt": "2025-07-15T12:00:00.000Z",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "deal_lead_41",
+    "id": "deal_16",
     "organizationId": "org_1",
-    "leadId": "lead_41",
-    "title": "Mentoria Tech - João",
+    "leadId": "lead_52",
+    "title": "Mentoria Tech — João",
     "value": 2500,
     "status": "won",
-    "closedAt": "2025-08-03T21:09:00.000Z",
-    "createdAt": "2025-08-03T21:09:00.000Z",
-    "updatedAt": "2025-08-03T21:09:00.000Z"
+    "closedAt": "2025-07-15T12:00:00.000Z",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "deal_lead_85",
+    "id": "deal_17",
     "organizationId": "org_1",
-    "leadId": "lead_85",
-    "title": "Mentoria Tech - Isabela",
+    "leadId": "lead_96",
+    "title": "Mentoria Tech — Isabela",
     "value": 2500,
     "status": "won",
-    "closedAt": "2025-08-13T15:53:00.000Z",
-    "createdAt": "2025-08-13T15:53:00.000Z",
-    "updatedAt": "2025-08-13T15:53:00.000Z"
+    "closedAt": "2025-07-15T12:00:00.000Z",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "deal_lead_705",
+    "id": "deal_18",
     "organizationId": "org_1",
-    "leadId": "lead_705",
-    "title": "Mentoria Tech - Ramon",
+    "leadId": "lead_716",
+    "title": "Mentoria Tech — Ramon",
     "value": 2500,
     "status": "open",
-    "closedAt": null,
-    "createdAt": "2026-01-24T01:37:00.000Z",
-    "updatedAt": "2026-01-24T01:37:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "deal_lead_973",
+    "id": "deal_19",
     "organizationId": "org_1",
-    "leadId": "lead_973",
-    "title": "Mentoria Tech - Gustavo",
+    "leadId": "lead_984",
+    "title": "Mentoria Tech — Gustavo",
     "value": 2500,
     "status": "open",
-    "closedAt": null,
-    "createdAt": "2026-03-20T02:19:00.000Z",
-    "updatedAt": "2026-03-20T02:19:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "deal_lead_975",
+    "id": "deal_20",
     "organizationId": "org_1",
-    "leadId": "lead_975",
-    "title": "Mentoria Tech - Glécio",
+    "leadId": "lead_986",
+    "title": "Mentoria Tech — Glécio",
     "value": 2500,
     "status": "open",
-    "closedAt": null,
-    "createdAt": "2026-03-21T20:30:00.000Z",
-    "updatedAt": "2026-03-21T20:30:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "deal_lead_987",
+    "id": "deal_21",
     "organizationId": "org_1",
-    "leadId": "lead_987",
-    "title": "Mentoria Tech - Fabio",
+    "leadId": "lead_998",
+    "title": "Mentoria Tech — Fabio",
     "value": 2500,
     "status": "open",
-    "closedAt": null,
-    "createdAt": "2026-03-24T20:29:00.000Z",
-    "updatedAt": "2026-03-24T20:29:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "deal_lead_992",
+    "id": "deal_22",
     "organizationId": "org_1",
-    "leadId": "lead_992",
-    "title": "Mentoria Tech - Maria Alice",
+    "leadId": "lead_1003",
+    "title": "Mentoria Tech — Maria Alice",
     "value": 2500,
     "status": "open",
-    "closedAt": null,
-    "createdAt": "2026-03-25T14:25:00.000Z",
-    "updatedAt": "2026-03-25T14:25:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   }
 ]

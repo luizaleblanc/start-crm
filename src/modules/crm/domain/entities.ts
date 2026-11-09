@@ -23,6 +23,14 @@ export interface Lead extends Timestamps, SoftDeletable {
   funnelStageId: string;
   score?: number;
   temperature?: "hot" | "warm" | "cold";
+  company?: string;
+  jobTitle?: string;
+  city?: string;
+  linkedinUrl?: string;
+  ownerName?: string;
+  situation?: string;
+  postType?: string;
+  notes?: string;
 }
 
 export interface LeadOwnership extends Timestamps {
@@ -59,5 +67,5 @@ export interface Deal extends Timestamps {
   title: string;
   value: number;
   status: DealStatus;
-  closedAt: string | null;
+  closedAt?: string;
 }

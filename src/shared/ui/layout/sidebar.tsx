@@ -18,6 +18,8 @@ export interface SidebarStaticItem {
   label: string;
   icon?: LucideIcon;
   badge?: string;
+  href?: string;
+  active?: boolean;
 }
 
 interface SidebarSecondarySection {
@@ -137,6 +139,31 @@ export function Sidebar({
             </span>
             {secondarySection.items.map((item) => {
               const Icon = item.icon;
+              if (item.href) {
+                return (
+                  <Link
+                    key={item.label}
+                    href={item.href}
+                    className={cn(
+                      "flex items-center gap-3.5 rounded-xl px-3.5 py-2.5 text-left text-body transition-colors",
+                      item.active
+                        ? "bg-muted font-semibold text-foreground"
+                        : "hover:bg-muted/50 text-muted-foreground hover:text-foreground",
+                    )}
+                  >
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center">
+                      {Icon && <Icon aria-hidden size={18} />}
+                    </span>
+                    <span className="flex-1 text-caption font-medium">{item.label}</span>
+                    {item.badge && (
+                      <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+                        {item.badge}
+                      </span>
+                    )}
+                  </Link>
+                );
+              }
+
               return (
                 <button
                   key={item.label}

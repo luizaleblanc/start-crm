@@ -14,12 +14,20 @@ export function handleRoute<Params = Record<string, never>>(
     try {
       return await handler(request, context);
     } catch (error) {
-      if (error instanceof ApiError) {
+      if (
+        error instanceof ApiError ||
+        (error &&
+          typeof error === "object" &&
+          "statusCode" in error &&
+          typeof (error as { statusCode: unknown }).statusCode === "number")
+      ) {
+        const apiErr = error as { statusCode: number; message: string };
         return NextResponse.json(
-          { statusCode: error.statusCode, message: error.message },
-          { status: error.statusCode },
+          { statusCode: apiErr.statusCode, message: apiErr.message },
+          { status: apiErr.statusCode },
         );
       }
+      console.error("[handleRoute uncaught error]", error);
       return NextResponse.json(
         { statusCode: 500, message: "Internal server error" },
         { status: 500 },

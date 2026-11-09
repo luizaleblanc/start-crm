@@ -8,7 +8,20 @@ export interface ExportLookup {
   sourceNameById: Map<string, string>;
 }
 
-const HEADERS = ["Nome", "E-mail", "Telefone", "Origem", "Estágio"];
+const HEADERS = [
+  "Nome",
+  "E-mail",
+  "Telefone",
+  "Empresa",
+  "Cargo",
+  "Cidade",
+  "LinkedIn",
+  "Origem",
+  "Responsável",
+  "Estágio",
+  "Situação",
+  "Data",
+];
 
 function sanitizeSpreadsheetCell(value: string): string {
   if (!value) return "";
@@ -24,8 +37,17 @@ function leadsToRows(leads: Lead[], lookup: ExportLookup): string[][] {
     sanitizeSpreadsheetCell(lead.name),
     sanitizeSpreadsheetCell(lead.email ?? ""),
     sanitizeSpreadsheetCell(lead.phone ?? ""),
+    sanitizeSpreadsheetCell(lead.company ?? ""),
+    sanitizeSpreadsheetCell(lead.jobTitle ?? ""),
+    sanitizeSpreadsheetCell(lead.city ?? ""),
+    sanitizeSpreadsheetCell(lead.linkedinUrl ?? ""),
     sanitizeSpreadsheetCell(lookup.sourceNameById.get(lead.sourceId) ?? ""),
+    sanitizeSpreadsheetCell(lead.ownerName ?? ""),
     sanitizeSpreadsheetCell(lookup.stageNameById.get(lead.funnelStageId) ?? ""),
+    sanitizeSpreadsheetCell(lead.situation ?? ""),
+    sanitizeSpreadsheetCell(
+      lead.createdAt ? new Date(lead.createdAt).toLocaleDateString("pt-BR") : "",
+    ),
   ]);
 }
 
@@ -49,7 +71,20 @@ export async function exportLeads(
 async function exportToXlsx(rows: string[][]): Promise<void> {
   const XLSX = await import("xlsx");
   const worksheet = XLSX.utils.aoa_to_sheet([HEADERS, ...rows]);
-  worksheet["!cols"] = HEADERS.map(() => ({ wch: 24 }));
+  worksheet["!cols"] = [
+    { wch: 26 }, // Nome
+    { wch: 28 }, // E-mail
+    { wch: 18 }, // Telefone
+    { wch: 24 }, // Empresa
+    { wch: 22 }, // Cargo
+    { wch: 18 }, // Cidade
+    { wch: 30 }, // LinkedIn
+    { wch: 24 }, // Origem
+    { wch: 16 }, // Responsável
+    { wch: 16 }, // Estágio
+    { wch: 24 }, // Situação
+    { wch: 14 }, // Data
+  ];
 
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(workbook, worksheet, "Leads");
@@ -66,13 +101,18 @@ async function exportToPdf(rows: string[][]): Promise<void> {
   const { default: autoTable } = await import("jspdf-autotable");
 
   const doc = new jsPDF({ orientation: "landscape" });
-  doc.text("Leads", 14, 15);
+  doc.setFontSize(14);
+  doc.text("Relatório de Leads — Start CRM", 14, 15);
+  doc.setFontSize(9);
+  doc.setTextColor(100);
+  doc.text(`Total: ${rows.length} leads exportados`, 14, 21);
+
   autoTable(doc, {
     head: [HEADERS],
     body: rows,
-    startY: 20,
-    styles: { fontSize: 9 },
-    headStyles: { fillColor: [37, 99, 235] },
+    startY: 25,
+    styles: { fontSize: 7, cellPadding: 1.5 },
+    headStyles: { fillColor: [24, 24, 27], textColor: [255, 255, 255] },
   });
 
   downloadBlob(doc.output("blob"), timestampedFilename("pdf"));
@@ -82,12 +122,14 @@ async function exportToDocx(rows: string[][]): Promise<void> {
   const { Document, Packer, Table, TableRow, TableCell, Paragraph, HeadingLevel, WidthType } =
     await import("docx");
 
+  const colWidthPct = Math.floor(100 / HEADERS.length);
+
   const headerRow = new TableRow({
     tableHeader: true,
     children: HEADERS.map(
       (header) =>
         new TableCell({
-          width: { size: 20, type: WidthType.PERCENTAGE },
+          width: { size: colWidthPct, type: WidthType.PERCENTAGE },
           children: [new Paragraph({ text: header, heading: HeadingLevel.HEADING_6 })],
         }),
     ),
@@ -99,27 +141,35 @@ async function exportToDocx(rows: string[][]): Promise<void> {
         children: row.map(
           (cell) =>
             new TableCell({
-              width: { size: 20, type: WidthType.PERCENTAGE },
-              children: [new Paragraph(cell)],
+              width: { size: colWidthPct, type: WidthType.PERCENTAGE },
+              children: [new Paragraph({ text: cell })],
             }),
         ),
       }),
   );
 
-  const document = new Document({
+  const doc = new Document({
     sections: [
       {
+        properties: {},
         children: [
-          new Paragraph({ text: "Leads", heading: HeadingLevel.HEADING_1 }),
+          new Paragraph({
+            text: "Start CRM — Exportação de Leads",
+            heading: HeadingLevel.HEADING_1,
+          }),
+          new Paragraph({
+            text: `Data de exportação: ${new Date().toLocaleDateString("pt-BR")} | Total: ${rows.length} leads`,
+          }),
+          new Paragraph({ text: "" }),
           new Table({
-            width: { size: 100, type: WidthType.PERCENTAGE },
             rows: [headerRow, ...dataRows],
+            width: { size: 100, type: WidthType.PERCENTAGE },
           }),
         ],
       },
     ],
   });
 
-  const blob = await Packer.toBlob(document);
+  const blob = await Packer.toBlob(doc);
   downloadBlob(blob, timestampedFilename("docx"));
 }

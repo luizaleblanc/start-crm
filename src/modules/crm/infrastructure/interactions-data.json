@@ -1,7 +1,106 @@
 [
   {
-    "id": "interaction_lead_1",
+    "id": "interaction_1",
     "leadId": "lead_1",
+    "userId": "user_si",
+    "type": "note",
+    "notes": "Fechou plano anual",
+    "createdAt": "2025-07-01T12:00:00.000Z",
+    "updatedAt": "2025-07-01T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_2",
+    "leadId": "lead_2",
+    "userId": "user_cleiton",
+    "type": "note",
+    "notes": "Fechou mentoria",
+    "createdAt": "2025-07-01T12:00:00.000Z",
+    "updatedAt": "2025-07-01T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_3",
+    "leadId": "lead_3",
+    "userId": "user_elis",
+    "type": "note",
+    "notes": "Em negociação",
+    "createdAt": "2025-07-01T12:00:00.000Z",
+    "updatedAt": "2025-07-01T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_4",
+    "leadId": "lead_4",
+    "userId": "user_bruno",
+    "type": "note",
+    "notes": "Alinhando requisitos",
+    "createdAt": "2025-07-01T12:00:00.000Z",
+    "updatedAt": "2025-07-01T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_5",
+    "leadId": "lead_5",
+    "userId": "user_luiza",
+    "type": "note",
+    "notes": "Conta institucional ativa",
+    "createdAt": "2025-07-01T12:00:00.000Z",
+    "updatedAt": "2025-07-01T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_6",
+    "leadId": "lead_6",
+    "userId": "user_cleiton",
+    "type": "note",
+    "notes": "Enviada proposta comercial",
+    "createdAt": "2025-07-01T12:00:00.000Z",
+    "updatedAt": "2025-07-01T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_7",
+    "leadId": "lead_7",
+    "userId": "user_si",
+    "type": "note",
+    "notes": "Demonstração agendada",
+    "createdAt": "2025-07-01T12:00:00.000Z",
+    "updatedAt": "2025-07-01T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_8",
+    "leadId": "lead_8",
+    "userId": "user_elis",
+    "type": "note",
+    "notes": "Convite enviado via LinkedIn",
+    "createdAt": "2025-07-01T12:00:00.000Z",
+    "updatedAt": "2025-07-01T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_9",
+    "leadId": "lead_9",
+    "userId": "user_bruno",
+    "type": "note",
+    "notes": "Aguardando aceite de conexão",
+    "createdAt": "2025-07-01T12:00:00.000Z",
+    "updatedAt": "2025-07-01T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_10",
+    "leadId": "lead_10",
+    "userId": "user_admin",
+    "type": "note",
+    "notes": "Primeiro contato realizado",
+    "createdAt": "2025-07-01T12:00:00.000Z",
+    "updatedAt": "2025-07-01T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_11",
+    "leadId": "lead_11",
+    "userId": "user_si",
+    "type": "note",
+    "notes": "Convidado para evento tech",
+    "createdAt": "2025-07-01T12:00:00.000Z",
+    "updatedAt": "2025-07-01T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_12",
+    "leadId": "lead_12",
     "userId": "user_admin",
     "type": "note",
     "notes": "Fechou após insistencia",
@@ -9,8 +108,8 @@
     "updatedAt": "2025-07-07T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_2",
-    "leadId": "lead_2",
+    "id": "interaction_13",
+    "leadId": "lead_13",
     "userId": "user_admin",
     "type": "note",
     "notes": "Fechou, porem, está com dificuldades financeiras e vai pagar 1.200",
@@ -18,8 +117,8 @@
     "updatedAt": "2025-07-08T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_3",
-    "leadId": "lead_3",
+    "id": "interaction_14",
+    "leadId": "lead_14",
     "userId": "user_admin",
     "type": "note",
     "notes": "Fechou tranquilo, foi o primeiro aluno",
@@ -27,8 +126,8 @@
     "updatedAt": "2025-07-09T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_4",
-    "leadId": "lead_4",
+    "id": "interaction_15",
+    "leadId": "lead_15",
     "userId": "user_admin",
     "type": "note",
     "notes": "Não ofereci o produto e não respondeu mais após a conversa de 1h que fizemos",
@@ -36,53 +135,53 @@
     "updatedAt": "2025-07-10T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_5",
-    "leadId": "lead_5",
+    "id": "interaction_16",
+    "leadId": "lead_16",
     "userId": "user_admin",
     "type": "email",
     "notes": "Mandei material isca por email, falta um retorno",
-    "createdAt": "2025-07-11T13:29:00.000Z",
-    "updatedAt": "2025-07-11T13:29:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_6",
-    "leadId": "lead_6",
+    "id": "interaction_17",
+    "leadId": "lead_17",
     "userId": "user_admin",
     "type": "call",
     "notes": "Mandei material isca por email, agendado call de vendas em 23/07/2025",
-    "createdAt": "2025-07-11T12:15:00.000Z",
-    "updatedAt": "2025-07-11T12:15:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_7",
-    "leadId": "lead_7",
+    "id": "interaction_18",
+    "leadId": "lead_18",
     "userId": "user_admin",
     "type": "note",
     "notes": "Chamar novamente no linkedin",
-    "createdAt": "2025-07-13T17:06:00.000Z",
-    "updatedAt": "2025-07-13T17:06:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_8",
-    "leadId": "lead_8",
+    "id": "interaction_19",
+    "leadId": "lead_19",
     "userId": "user_admin",
     "type": "note",
     "notes": "Chamar novamente no linkedin",
-    "createdAt": "2025-07-14T12:00:00.000Z",
-    "updatedAt": "2025-07-14T12:00:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_9",
-    "leadId": "lead_9",
+    "id": "interaction_20",
+    "leadId": "lead_20",
     "userId": "user_admin",
     "type": "note",
     "notes": "Chamar novamente no linkedin",
-    "createdAt": "2025-07-14T02:54:00.000Z",
-    "updatedAt": "2025-07-14T02:54:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_10",
-    "leadId": "lead_10",
+    "id": "interaction_21",
+    "leadId": "lead_21",
     "userId": "user_admin",
     "type": "call",
     "notes": "Ofereci o produto em call de vendas e não fechou",
@@ -90,8 +189,8 @@
     "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_11",
-    "leadId": "lead_11",
+    "id": "interaction_22",
+    "leadId": "lead_22",
     "userId": "user_admin",
     "type": "note",
     "notes": "Aceitou Convite",
@@ -99,8 +198,8 @@
     "updatedAt": "2025-07-16T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_12",
-    "leadId": "lead_12",
+    "id": "interaction_23",
+    "leadId": "lead_23",
     "userId": "user_admin",
     "type": "note",
     "notes": "Aceitou Convite",
@@ -108,8 +207,8 @@
     "updatedAt": "2025-07-16T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_13",
-    "leadId": "lead_13",
+    "id": "interaction_24",
+    "leadId": "lead_24",
     "userId": "user_admin",
     "type": "note",
     "notes": "Aceitou Convite",
@@ -117,17 +216,17 @@
     "updatedAt": "2025-07-16T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_14",
-    "leadId": "lead_14",
+    "id": "interaction_25",
+    "leadId": "lead_25",
     "userId": "user_admin",
     "type": "note",
     "notes": "Mandei invite e aceitou",
-    "createdAt": "2025-07-17T22:16:00.000Z",
-    "updatedAt": "2025-07-17T22:16:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_15",
-    "leadId": "lead_15",
+    "id": "interaction_26",
+    "leadId": "lead_26",
     "userId": "user_admin",
     "type": "call",
     "notes": "Ofereci o produto em call de vendas e não fechou",
@@ -135,1299 +234,1299 @@
     "updatedAt": "2025-07-17T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_16",
-    "leadId": "lead_16",
+    "id": "interaction_27",
+    "leadId": "lead_27",
     "userId": "user_admin",
     "type": "note",
     "notes": "Mandei invite e está pendente",
-    "createdAt": "2025-07-18T01:31:00.000Z",
-    "updatedAt": "2025-07-18T01:31:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_17",
-    "leadId": "lead_17",
-    "userId": "user_admin",
-    "type": "note",
-    "notes": "Convite para turma 2 enviado",
-    "createdAt": "2025-07-28T12:57:00.000Z",
-    "updatedAt": "2025-07-28T12:57:00.000Z"
-  },
-  {
-    "id": "interaction_lead_18",
-    "leadId": "lead_18",
-    "userId": "user_admin",
-    "type": "call",
-    "notes": "Bate papo marcado para 31.07 as 19h. Não se interessou pela mentoria",
-    "createdAt": "2025-07-28T12:57:00.000Z",
-    "updatedAt": "2025-07-28T12:57:00.000Z"
-  },
-  {
-    "id": "interaction_lead_19",
-    "leadId": "lead_19",
-    "userId": "user_admin",
-    "type": "note",
-    "notes": "Envio de datas feito",
-    "createdAt": "2025-07-28T12:58:00.000Z",
-    "updatedAt": "2025-07-28T12:58:00.000Z"
-  },
-  {
-    "id": "interaction_lead_20",
-    "leadId": "lead_20",
-    "userId": "user_admin",
-    "type": "call",
-    "notes": "Bate papo marcado para 31.07 as 19:45. Se interessou, mas não fechou por falta de dinheiro",
-    "createdAt": "2025-07-28T13:00:00.000Z",
-    "updatedAt": "2025-07-28T13:00:00.000Z"
-  },
-  {
-    "id": "interaction_lead_21",
-    "leadId": "lead_21",
-    "userId": "user_admin",
-    "type": "call",
-    "notes": "Bate papo marcado para 30.07 as 18:30. Não respondeu mais.",
-    "createdAt": "2025-07-28T13:56:00.000Z",
-    "updatedAt": "2025-07-28T13:56:00.000Z"
-  },
-  {
-    "id": "interaction_lead_22",
-    "leadId": "lead_22",
-    "userId": "user_admin",
-    "type": "note",
-    "notes": "Respondeu, pendente de marcação de horario",
-    "createdAt": "2025-07-28T14:12:00.000Z",
-    "updatedAt": "2025-07-28T14:12:00.000Z"
-  },
-  {
-    "id": "interaction_lead_23",
-    "leadId": "lead_23",
-    "userId": "user_admin",
-    "type": "note",
-    "notes": "Convite para turma 2 enviado",
-    "createdAt": "2025-07-29T00:35:00.000Z",
-    "updatedAt": "2025-07-29T00:35:00.000Z"
-  },
-  {
-    "id": "interaction_lead_24",
-    "leadId": "lead_24",
-    "userId": "user_admin",
-    "type": "note",
-    "notes": "Mandei invite e está pendente",
-    "createdAt": "2025-07-29T22:37:00.000Z",
-    "updatedAt": "2025-07-29T22:37:00.000Z"
-  },
-  {
-    "id": "interaction_lead_25",
-    "leadId": "lead_25",
-    "userId": "user_admin",
-    "type": "note",
-    "notes": "Marcado para 05.08 as 15h",
-    "createdAt": "2025-07-29T22:16:00.000Z",
-    "updatedAt": "2025-07-29T22:16:00.000Z"
-  },
-  {
-    "id": "interaction_lead_26",
-    "leadId": "lead_26",
-    "userId": "user_elis",
-    "type": "note",
-    "notes": "Enviei mensagem no lInkedin, aguardando uma resposta",
-    "createdAt": "2025-07-29T15:52:00.000Z",
-    "updatedAt": "2025-07-29T15:52:00.000Z"
-  },
-  {
-    "id": "interaction_lead_28",
+    "id": "interaction_28",
     "leadId": "lead_28",
-    "userId": "user_elis",
+    "userId": "user_admin",
     "type": "note",
-    "notes": "Enviei mensagem no linkedin, aguardando uma resposta - retomei o contato em 19/02",
-    "createdAt": "2025-07-29T18:52:00.000Z",
-    "updatedAt": "2025-07-29T18:52:00.000Z"
+    "notes": "Convite para turma 2 enviado",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_29",
+    "id": "interaction_29",
     "leadId": "lead_29",
     "userId": "user_admin",
     "type": "note",
-    "notes": "Convite para turma 2 enviado",
-    "createdAt": "2025-07-29T21:35:00.000Z",
-    "updatedAt": "2025-07-29T21:35:00.000Z"
+    "notes": "Bate papo marcado para 31.07 as 19h. Não se interessou pela mentoria",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_33",
+    "id": "interaction_30",
+    "leadId": "lead_30",
+    "userId": "user_admin",
+    "type": "note",
+    "notes": "Envio de datas feito",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_31",
+    "leadId": "lead_31",
+    "userId": "user_admin",
+    "type": "note",
+    "notes": "Bate papo marcado para 31.07 as 19:45. Se interessou, mas não fechou por falta de dinheiro",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_32",
+    "leadId": "lead_32",
+    "userId": "user_admin",
+    "type": "note",
+    "notes": "Bate papo marcado para 30.07 as 18:30. Não respondeu mais.",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_33",
     "leadId": "lead_33",
     "userId": "user_admin",
     "type": "note",
-    "notes": "Marcado para 06.08 as 15h",
-    "createdAt": "2025-07-30T00:20:00.000Z",
-    "updatedAt": "2025-07-30T00:20:00.000Z"
+    "notes": "Respondeu, pendente de marcação de horario",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_34",
+    "id": "interaction_34",
     "leadId": "lead_34",
-    "userId": "user_elis",
-    "type": "note",
-    "notes": "Enviei mensagem no likedin - retomei o contato em 19/02",
-    "createdAt": "2025-07-30T14:50:00.000Z",
-    "updatedAt": "2025-07-30T14:50:00.000Z"
-  },
-  {
-    "id": "interaction_lead_36",
-    "leadId": "lead_36",
     "userId": "user_admin",
     "type": "note",
-    "notes": "Marcado para 05.08 as 19h",
-    "createdAt": "2025-08-01T12:40:00.000Z",
-    "updatedAt": "2025-08-01T12:40:00.000Z"
+    "notes": "Convite para turma 2 enviado",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_41",
-    "leadId": "lead_41",
+    "id": "interaction_35",
+    "leadId": "lead_35",
     "userId": "user_admin",
     "type": "note",
     "notes": "Mandei invite e está pendente",
-    "createdAt": "2025-08-03T21:09:00.000Z",
-    "updatedAt": "2025-08-03T21:09:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_43",
-    "leadId": "lead_43",
+    "id": "interaction_36",
+    "leadId": "lead_36",
+    "userId": "user_admin",
+    "type": "note",
+    "notes": "Marcado para 05.08 as 15h",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_37",
+    "leadId": "lead_37",
+    "userId": "user_elis",
+    "type": "note",
+    "notes": "Enviei mensagem no lInkedin, aguardando uma resposta",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_38",
+    "leadId": "lead_39",
+    "userId": "user_elis",
+    "type": "note",
+    "notes": "Enviei mensagem no linkedin, aguardando uma resposta - retomei o contato em 19/02",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_39",
+    "leadId": "lead_40",
+    "userId": "user_admin",
+    "type": "note",
+    "notes": "Convite para turma 2 enviado",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_40",
+    "leadId": "lead_44",
+    "userId": "user_admin",
+    "type": "note",
+    "notes": "Marcado para 06.08 as 15h",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_41",
+    "leadId": "lead_45",
+    "userId": "user_elis",
+    "type": "note",
+    "notes": "Enviei mensagem no likedin - retomei o contato em 19/02",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_42",
+    "leadId": "lead_47",
+    "userId": "user_admin",
+    "type": "note",
+    "notes": "Marcado para 05.08 as 19h",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_43",
+    "leadId": "lead_52",
+    "userId": "user_admin",
+    "type": "note",
+    "notes": "Mandei invite e está pendente",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_44",
+    "leadId": "lead_54",
     "userId": "user_admin",
     "type": "note",
     "notes": "Aguardando marcar um horario",
-    "createdAt": "2025-08-04T01:08:00.000Z",
-    "updatedAt": "2025-08-04T01:08:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_66",
-    "leadId": "lead_66",
-    "userId": "user_admin",
-    "type": "note",
-    "notes": "Não vou fazer invite",
-    "createdAt": "2025-08-08T13:04:00.000Z",
-    "updatedAt": "2025-08-08T13:04:00.000Z"
-  },
-  {
-    "id": "interaction_lead_68",
-    "leadId": "lead_68",
-    "userId": "user_admin",
-    "type": "note",
-    "notes": "Não vou fazer invite",
-    "createdAt": "2025-08-08T00:18:00.000Z",
-    "updatedAt": "2025-08-08T00:18:00.000Z"
-  },
-  {
-    "id": "interaction_lead_69",
-    "leadId": "lead_69",
-    "userId": "user_admin",
-    "type": "note",
-    "notes": "Não vou fazer invite",
-    "createdAt": "2025-08-08T00:18:00.000Z",
-    "updatedAt": "2025-08-08T00:18:00.000Z"
-  },
-  {
-    "id": "interaction_lead_70",
-    "leadId": "lead_70",
-    "userId": "user_admin",
-    "type": "note",
-    "notes": "Não vou fazer invite",
-    "createdAt": "2025-08-08T00:15:00.000Z",
-    "updatedAt": "2025-08-08T00:15:00.000Z"
-  },
-  {
-    "id": "interaction_lead_71",
-    "leadId": "lead_71",
-    "userId": "user_admin",
-    "type": "note",
-    "notes": "Não vou fazer invite",
-    "createdAt": "2025-08-08T00:05:00.000Z",
-    "updatedAt": "2025-08-08T00:05:00.000Z"
-  },
-  {
-    "id": "interaction_lead_72",
-    "leadId": "lead_72",
-    "userId": "user_admin",
-    "type": "note",
-    "notes": "Não vou fazer invite",
-    "createdAt": "2025-08-09T17:45:00.000Z",
-    "updatedAt": "2025-08-09T17:45:00.000Z"
-  },
-  {
-    "id": "interaction_lead_73",
-    "leadId": "lead_73",
-    "userId": "user_admin",
-    "type": "note",
-    "notes": "Não vou fazer invite",
-    "createdAt": "2025-08-09T17:06:00.000Z",
-    "updatedAt": "2025-08-09T17:06:00.000Z"
-  },
-  {
-    "id": "interaction_lead_74",
-    "leadId": "lead_74",
-    "userId": "user_admin",
-    "type": "note",
-    "notes": "Não vou fazer invite",
-    "createdAt": "2025-08-09T00:19:00.000Z",
-    "updatedAt": "2025-08-09T00:19:00.000Z"
-  },
-  {
-    "id": "interaction_lead_76",
-    "leadId": "lead_76",
-    "userId": "user_admin",
-    "type": "note",
-    "notes": "Não vou fazer invite",
-    "createdAt": "2025-08-10T06:32:00.000Z",
-    "updatedAt": "2025-08-10T06:32:00.000Z"
-  },
-  {
-    "id": "interaction_lead_77",
+    "id": "interaction_45",
     "leadId": "lead_77",
     "userId": "user_admin",
     "type": "note",
     "notes": "Não vou fazer invite",
-    "createdAt": "2025-08-10T00:14:00.000Z",
-    "updatedAt": "2025-08-10T00:14:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_78",
-    "leadId": "lead_78",
-    "userId": "user_admin",
-    "type": "note",
-    "notes": "Não vou fazer invite",
-    "createdAt": "2025-08-11T14:26:00.000Z",
-    "updatedAt": "2025-08-11T14:26:00.000Z"
-  },
-  {
-    "id": "interaction_lead_79",
+    "id": "interaction_46",
     "leadId": "lead_79",
     "userId": "user_admin",
     "type": "note",
     "notes": "Não vou fazer invite",
-    "createdAt": "2025-08-11T13:53:00.000Z",
-    "updatedAt": "2025-08-11T13:53:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_83",
+    "id": "interaction_47",
+    "leadId": "lead_80",
+    "userId": "user_admin",
+    "type": "note",
+    "notes": "Não vou fazer invite",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_48",
+    "leadId": "lead_81",
+    "userId": "user_admin",
+    "type": "note",
+    "notes": "Não vou fazer invite",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_49",
+    "leadId": "lead_82",
+    "userId": "user_admin",
+    "type": "note",
+    "notes": "Não vou fazer invite",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_50",
     "leadId": "lead_83",
     "userId": "user_admin",
     "type": "note",
     "notes": "Não vou fazer invite",
-    "createdAt": "2025-08-12T00:06:00.000Z",
-    "updatedAt": "2025-08-12T00:06:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_84",
+    "id": "interaction_51",
     "leadId": "lead_84",
     "userId": "user_admin",
     "type": "note",
     "notes": "Não vou fazer invite",
-    "createdAt": "2025-08-12T00:03:00.000Z",
-    "updatedAt": "2025-08-12T00:03:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_86",
-    "leadId": "lead_86",
+    "id": "interaction_52",
+    "leadId": "lead_85",
     "userId": "user_admin",
     "type": "note",
     "notes": "Não vou fazer invite",
-    "createdAt": "2025-08-13T18:08:00.000Z",
-    "updatedAt": "2025-08-13T18:08:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_87",
+    "id": "interaction_53",
     "leadId": "lead_87",
     "userId": "user_admin",
     "type": "note",
     "notes": "Não vou fazer invite",
-    "createdAt": "2025-08-13T17:23:00.000Z",
-    "updatedAt": "2025-08-13T17:23:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_88",
+    "id": "interaction_54",
     "leadId": "lead_88",
     "userId": "user_admin",
     "type": "note",
     "notes": "Não vou fazer invite",
-    "createdAt": "2025-08-13T16:01:00.000Z",
-    "updatedAt": "2025-08-13T16:01:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_90",
+    "id": "interaction_55",
+    "leadId": "lead_89",
+    "userId": "user_admin",
+    "type": "note",
+    "notes": "Não vou fazer invite",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_56",
     "leadId": "lead_90",
     "userId": "user_admin",
     "type": "note",
     "notes": "Não vou fazer invite",
-    "createdAt": "2025-08-14T07:09:00.000Z",
-    "updatedAt": "2025-08-14T07:09:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_91",
-    "leadId": "lead_91",
+    "id": "interaction_57",
+    "leadId": "lead_94",
     "userId": "user_admin",
     "type": "note",
     "notes": "Não vou fazer invite",
-    "createdAt": "2025-08-14T00:09:00.000Z",
-    "updatedAt": "2025-08-14T00:09:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_576",
-    "leadId": "lead_576",
-    "userId": "user_cleiton",
+    "id": "interaction_58",
+    "leadId": "lead_95",
+    "userId": "user_admin",
     "type": "note",
-    "notes": "26.03.2026 - Chamei pela segunda vez.",
-    "createdAt": "2025-12-26T13:14:00.000Z",
-    "updatedAt": "2025-12-26T13:14:00.000Z"
+    "notes": "Não vou fazer invite",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_580",
-    "leadId": "lead_580",
-    "userId": "user_cleiton",
+    "id": "interaction_59",
+    "leadId": "lead_97",
+    "userId": "user_admin",
     "type": "note",
-    "notes": "26.03.2026 - Chamei pela segunda vez.",
-    "createdAt": "2025-12-27T16:08:00.000Z",
-    "updatedAt": "2025-12-27T16:08:00.000Z"
+    "notes": "Não vou fazer invite",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_581",
-    "leadId": "lead_581",
-    "userId": "user_cleiton",
+    "id": "interaction_60",
+    "leadId": "lead_98",
+    "userId": "user_admin",
     "type": "note",
-    "notes": "26.03.2026 - Chamei pela segunda vez.",
-    "createdAt": "2025-12-27T13:42:00.000Z",
-    "updatedAt": "2025-12-27T13:42:00.000Z"
+    "notes": "Não vou fazer invite",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_584",
-    "leadId": "lead_584",
-    "userId": "user_elis",
-    "type": "whatsapp",
-    "notes": "Enivei mensagem no Whats / Retomei o contato em 19/02",
-    "createdAt": "2025-12-28T15:12:00.000Z",
-    "updatedAt": "2025-12-28T15:12:00.000Z"
+    "id": "interaction_61",
+    "leadId": "lead_99",
+    "userId": "user_admin",
+    "type": "note",
+    "notes": "Não vou fazer invite",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_585",
-    "leadId": "lead_585",
-    "userId": "user_elis",
-    "type": "whatsapp",
-    "notes": "Enviei mensagem no Whats / Retomei o contato em 19/02",
-    "createdAt": "2025-12-28T13:21:00.000Z",
-    "updatedAt": "2025-12-28T13:21:00.000Z"
+    "id": "interaction_62",
+    "leadId": "lead_101",
+    "userId": "user_admin",
+    "type": "note",
+    "notes": "Não vou fazer invite",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_586",
-    "leadId": "lead_586",
-    "userId": "user_elis",
-    "type": "whatsapp",
-    "notes": "Enviei mensagem no Whats / Retomei o contato em 19/02",
-    "createdAt": "2025-12-28T00:06:00.000Z",
-    "updatedAt": "2025-12-28T00:06:00.000Z"
+    "id": "interaction_63",
+    "leadId": "lead_102",
+    "userId": "user_admin",
+    "type": "note",
+    "notes": "Não vou fazer invite",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_587",
+    "id": "interaction_64",
     "leadId": "lead_587",
-    "userId": "user_elis",
-    "type": "whatsapp",
-    "notes": "Enviei mensagem no Whats / Retomei o contato em 19/02",
-    "createdAt": "2025-12-29T17:22:00.000Z",
-    "updatedAt": "2025-12-29T17:22:00.000Z"
+    "userId": "user_cleiton",
+    "type": "note",
+    "notes": "26.03.2026 - Chamei pela segunda vez.",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_588",
-    "leadId": "lead_588",
-    "userId": "user_elis",
-    "type": "whatsapp",
-    "notes": "Enviei mensagem no Whats / Retomei o contato em 19/02",
-    "createdAt": "2025-12-29T16:18:00.000Z",
-    "updatedAt": "2025-12-29T16:18:00.000Z"
-  },
-  {
-    "id": "interaction_lead_589",
-    "leadId": "lead_589",
-    "userId": "user_elis",
-    "type": "whatsapp",
-    "notes": "Enviei mensagem no Whats / Retomei o contato em 19/02",
-    "createdAt": "2025-12-29T13:04:00.000Z",
-    "updatedAt": "2025-12-29T13:04:00.000Z"
-  },
-  {
-    "id": "interaction_lead_590",
-    "leadId": "lead_590",
-    "userId": "user_elis",
-    "type": "whatsapp",
-    "notes": "Enviei mensagem no Whats / Retomei o contato em 19/02",
-    "createdAt": "2025-12-29T00:16:00.000Z",
-    "updatedAt": "2025-12-29T00:16:00.000Z"
-  },
-  {
-    "id": "interaction_lead_591",
+    "id": "interaction_65",
     "leadId": "lead_591",
-    "userId": "user_elis",
-    "type": "whatsapp",
-    "notes": "Enviei mensagem no Whats / Retomei o contato em 19/02",
-    "createdAt": "2025-12-29T00:12:00.000Z",
-    "updatedAt": "2025-12-29T00:12:00.000Z"
+    "userId": "user_cleiton",
+    "type": "note",
+    "notes": "26.03.2026 - Chamei pela segunda vez.",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_592",
+    "id": "interaction_66",
     "leadId": "lead_592",
-    "userId": "user_elis",
-    "type": "whatsapp",
-    "notes": "Enviei mensagem no Whats - 19/02",
-    "createdAt": "2025-12-30T14:19:00.000Z",
-    "updatedAt": "2025-12-30T14:19:00.000Z"
+    "userId": "user_cleiton",
+    "type": "note",
+    "notes": "26.03.2026 - Chamei pela segunda vez.",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_593",
-    "leadId": "lead_593",
-    "userId": "user_elis",
-    "type": "whatsapp",
-    "notes": "Enviei mensagem no Whats - 19/02",
-    "createdAt": "2025-12-30T12:40:00.000Z",
-    "updatedAt": "2025-12-30T12:40:00.000Z"
-  },
-  {
-    "id": "interaction_lead_594",
-    "leadId": "lead_594",
-    "userId": "user_elis",
-    "type": "whatsapp",
-    "notes": "Enviei mensagem no Whats - 19/02",
-    "createdAt": "2025-12-30T12:05:00.000Z",
-    "updatedAt": "2025-12-30T12:05:00.000Z"
-  },
-  {
-    "id": "interaction_lead_595",
+    "id": "interaction_67",
     "leadId": "lead_595",
     "userId": "user_elis",
     "type": "whatsapp",
-    "notes": "Enviei mensagem no Whats - 19/02",
-    "createdAt": "2025-12-30T09:11:00.000Z",
-    "updatedAt": "2025-12-30T09:11:00.000Z"
+    "notes": "Enivei mensagem no Whats / Retomei o contato em 19/02",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_596",
+    "id": "interaction_68",
     "leadId": "lead_596",
     "userId": "user_elis",
     "type": "whatsapp",
-    "notes": "Enviei mensagem no Whats - 19/02",
-    "createdAt": "2025-12-30T00:05:00.000Z",
-    "updatedAt": "2025-12-30T00:05:00.000Z"
+    "notes": "Enviei mensagem no Whats / Retomei o contato em 19/02",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_597",
+    "id": "interaction_69",
     "leadId": "lead_597",
     "userId": "user_elis",
     "type": "whatsapp",
-    "notes": "Enviei mensagem no Whats - 19/02",
-    "createdAt": "2025-12-31T19:20:00.000Z",
-    "updatedAt": "2025-12-31T19:20:00.000Z"
+    "notes": "Enviei mensagem no Whats / Retomei o contato em 19/02",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_598",
+    "id": "interaction_70",
     "leadId": "lead_598",
     "userId": "user_elis",
     "type": "whatsapp",
-    "notes": "Enviei mensagem no Whats- 19/02",
-    "createdAt": "2025-12-31T17:17:00.000Z",
-    "updatedAt": "2025-12-31T17:17:00.000Z"
+    "notes": "Enviei mensagem no Whats / Retomei o contato em 19/02",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_599",
+    "id": "interaction_71",
     "leadId": "lead_599",
     "userId": "user_elis",
     "type": "whatsapp",
-    "notes": "Enviei mensagem no Whats - 19/02",
-    "createdAt": "2025-12-31T15:35:00.000Z",
-    "updatedAt": "2025-12-31T15:35:00.000Z"
+    "notes": "Enviei mensagem no Whats / Retomei o contato em 19/02",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_600",
+    "id": "interaction_72",
     "leadId": "lead_600",
     "userId": "user_elis",
     "type": "whatsapp",
-    "notes": "Enviei mensagem no Whats - 19/02",
-    "createdAt": "2025-12-31T13:00:00.000Z",
-    "updatedAt": "2025-12-31T13:00:00.000Z"
+    "notes": "Enviei mensagem no Whats / Retomei o contato em 19/02",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_601",
+    "id": "interaction_73",
     "leadId": "lead_601",
     "userId": "user_elis",
     "type": "whatsapp",
-    "notes": "Enviei mensagem no Whats - 19/02",
-    "createdAt": "2025-12-31T02:29:00.000Z",
-    "updatedAt": "2025-12-31T02:29:00.000Z"
+    "notes": "Enviei mensagem no Whats / Retomei o contato em 19/02",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_602",
+    "id": "interaction_74",
     "leadId": "lead_602",
     "userId": "user_elis",
     "type": "whatsapp",
-    "notes": "Enviei mensagem no Whats - 19/02",
-    "createdAt": "2026-01-01T19:14:00.000Z",
-    "updatedAt": "2026-01-01T19:14:00.000Z"
+    "notes": "Enviei mensagem no Whats / Retomei o contato em 19/02",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_603",
+    "id": "interaction_75",
     "leadId": "lead_603",
     "userId": "user_elis",
     "type": "whatsapp",
     "notes": "Enviei mensagem no Whats - 19/02",
-    "createdAt": "2026-01-01T16:21:00.000Z",
-    "updatedAt": "2026-01-01T16:21:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_604",
+    "id": "interaction_76",
     "leadId": "lead_604",
     "userId": "user_elis",
     "type": "whatsapp",
     "notes": "Enviei mensagem no Whats - 19/02",
-    "createdAt": "2026-01-01T11:38:00.000Z",
-    "updatedAt": "2026-01-01T11:38:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_605",
+    "id": "interaction_77",
     "leadId": "lead_605",
     "userId": "user_elis",
     "type": "whatsapp",
     "notes": "Enviei mensagem no Whats - 19/02",
-    "createdAt": "2026-01-01T11:38:00.000Z",
-    "updatedAt": "2026-01-01T11:38:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_606",
+    "id": "interaction_78",
     "leadId": "lead_606",
     "userId": "user_elis",
     "type": "whatsapp",
     "notes": "Enviei mensagem no Whats - 19/02",
-    "createdAt": "2026-01-01T11:34:00.000Z",
-    "updatedAt": "2026-01-01T11:34:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_607",
+    "id": "interaction_79",
     "leadId": "lead_607",
     "userId": "user_elis",
     "type": "whatsapp",
     "notes": "Enviei mensagem no Whats - 19/02",
-    "createdAt": "2026-01-01T00:16:00.000Z",
-    "updatedAt": "2026-01-01T00:16:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_608",
+    "id": "interaction_80",
     "leadId": "lead_608",
     "userId": "user_elis",
     "type": "whatsapp",
-    "notes": "Enviei mensagem no Whats -19/02",
-    "createdAt": "2026-01-01T00:08:00.000Z",
-    "updatedAt": "2026-01-01T00:08:00.000Z"
+    "notes": "Enviei mensagem no Whats - 19/02",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_609",
+    "id": "interaction_81",
     "leadId": "lead_609",
     "userId": "user_elis",
     "type": "whatsapp",
-    "notes": "Enviei mensagem no Whats -19/02",
-    "createdAt": "2026-01-02T20:21:00.000Z",
-    "updatedAt": "2026-01-02T20:21:00.000Z"
+    "notes": "Enviei mensagem no Whats- 19/02",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_610",
+    "id": "interaction_82",
     "leadId": "lead_610",
     "userId": "user_elis",
     "type": "whatsapp",
-    "notes": "Enviei mensagem no Whats / Retomei o contato em 19/22",
-    "createdAt": "2026-01-02T17:28:00.000Z",
-    "updatedAt": "2026-01-02T17:28:00.000Z"
+    "notes": "Enviei mensagem no Whats - 19/02",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_611",
+    "id": "interaction_83",
     "leadId": "lead_611",
     "userId": "user_elis",
     "type": "whatsapp",
-    "notes": "Enviei mensagem no Whats 19/02",
-    "createdAt": "2026-01-02T16:52:00.000Z",
-    "updatedAt": "2026-01-02T16:52:00.000Z"
+    "notes": "Enviei mensagem no Whats - 19/02",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_612",
+    "id": "interaction_84",
     "leadId": "lead_612",
     "userId": "user_elis",
     "type": "whatsapp",
-    "notes": "Enviei mensagem no Whats 19/02",
-    "createdAt": "2026-01-02T14:51:00.000Z",
-    "updatedAt": "2026-01-02T14:51:00.000Z"
+    "notes": "Enviei mensagem no Whats - 19/02",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_613",
+    "id": "interaction_85",
     "leadId": "lead_613",
     "userId": "user_elis",
     "type": "whatsapp",
-    "notes": "Enviei mensagem no Whats 19/02",
-    "createdAt": "2026-01-02T14:38:00.000Z",
-    "updatedAt": "2026-01-02T14:38:00.000Z"
+    "notes": "Enviei mensagem no Whats - 19/02",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_614",
+    "id": "interaction_86",
     "leadId": "lead_614",
-    "userId": "user_si",
+    "userId": "user_elis",
     "type": "whatsapp",
-    "notes": "Enviei mensagem no Whats 24/03",
-    "createdAt": "2026-01-02T01:11:00.000Z",
-    "updatedAt": "2026-01-02T01:11:00.000Z"
+    "notes": "Enviei mensagem no Whats - 19/02",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_615",
+    "id": "interaction_87",
     "leadId": "lead_615",
-    "userId": "user_si",
+    "userId": "user_elis",
     "type": "whatsapp",
-    "notes": "Enviei mensagem no Whats 24/03",
-    "createdAt": "2026-01-02T00:02:00.000Z",
-    "updatedAt": "2026-01-02T00:02:00.000Z"
+    "notes": "Enviei mensagem no Whats - 19/02",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_616",
+    "id": "interaction_88",
     "leadId": "lead_616",
-    "userId": "user_si",
+    "userId": "user_elis",
     "type": "whatsapp",
-    "notes": "Enviei mensagem no Whats 24/03",
-    "createdAt": "2026-01-03T20:05:00.000Z",
-    "updatedAt": "2026-01-03T20:05:00.000Z"
+    "notes": "Enviei mensagem no Whats - 19/02",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_617",
+    "id": "interaction_89",
     "leadId": "lead_617",
+    "userId": "user_elis",
+    "type": "whatsapp",
+    "notes": "Enviei mensagem no Whats - 19/02",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_90",
+    "leadId": "lead_618",
+    "userId": "user_elis",
+    "type": "whatsapp",
+    "notes": "Enviei mensagem no Whats - 19/02",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_91",
+    "leadId": "lead_619",
+    "userId": "user_elis",
+    "type": "whatsapp",
+    "notes": "Enviei mensagem no Whats -19/02",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_92",
+    "leadId": "lead_620",
+    "userId": "user_elis",
+    "type": "whatsapp",
+    "notes": "Enviei mensagem no Whats -19/02",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_93",
+    "leadId": "lead_621",
+    "userId": "user_elis",
+    "type": "whatsapp",
+    "notes": "Enviei mensagem no Whats / Retomei o contato em 19/22",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_94",
+    "leadId": "lead_622",
+    "userId": "user_elis",
+    "type": "whatsapp",
+    "notes": "Enviei mensagem no Whats 19/02",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_95",
+    "leadId": "lead_623",
+    "userId": "user_elis",
+    "type": "whatsapp",
+    "notes": "Enviei mensagem no Whats 19/02",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_96",
+    "leadId": "lead_624",
+    "userId": "user_elis",
+    "type": "whatsapp",
+    "notes": "Enviei mensagem no Whats 19/02",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_97",
+    "leadId": "lead_625",
     "userId": "user_si",
     "type": "whatsapp",
     "notes": "Enviei mensagem no Whats 24/03",
-    "createdAt": "2026-01-03T13:22:00.000Z",
-    "updatedAt": "2026-01-03T13:22:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_630",
-    "leadId": "lead_630",
+    "id": "interaction_98",
+    "leadId": "lead_626",
+    "userId": "user_si",
+    "type": "whatsapp",
+    "notes": "Enviei mensagem no Whats 24/03",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_99",
+    "leadId": "lead_627",
+    "userId": "user_si",
+    "type": "whatsapp",
+    "notes": "Enviei mensagem no Whats 24/03",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_100",
+    "leadId": "lead_628",
+    "userId": "user_si",
+    "type": "whatsapp",
+    "notes": "Enviei mensagem no Whats 24/03",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_101",
+    "leadId": "lead_641",
     "userId": "user_cleiton",
     "type": "call",
     "notes": "26.03.2026 - Foi marcada a reuniao\n27.03.2026 - Conversado, vai marcar call de vendas",
-    "createdAt": "2026-01-06T17:07:00.000Z",
-    "updatedAt": "2026-01-06T17:07:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_644",
-    "leadId": "lead_644",
+    "id": "interaction_102",
+    "leadId": "lead_655",
     "userId": "user_cleiton",
     "type": "call",
     "notes": "26.03.2026 - Adicionei no linkedin e enviei mensagem de conexão\n27.03.2026 - Conversado, vai marcar call de vendas",
-    "createdAt": "2026-01-11T00:06:00.000Z",
-    "updatedAt": "2026-01-11T00:06:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_651",
-    "leadId": "lead_651",
+    "id": "interaction_103",
+    "leadId": "lead_662",
     "userId": "user_cleiton",
     "type": "note",
     "notes": "26.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
-    "createdAt": "2026-01-12T01:00:00.000Z",
-    "updatedAt": "2026-01-12T01:00:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_655",
-    "leadId": "lead_655",
+    "id": "interaction_104",
+    "leadId": "lead_666",
     "userId": "user_cleiton",
     "type": "note",
     "notes": "26.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
-    "createdAt": "2026-01-13T12:53:00.000Z",
-    "updatedAt": "2026-01-13T12:53:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_680",
-    "leadId": "lead_680",
-    "userId": "user_cleiton",
-    "type": "note",
-    "notes": "26.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
-    "createdAt": "2026-01-20T09:23:00.000Z",
-    "updatedAt": "2026-01-20T09:23:00.000Z"
-  },
-  {
-    "id": "interaction_lead_691",
+    "id": "interaction_105",
     "leadId": "lead_691",
     "userId": "user_cleiton",
     "type": "note",
     "notes": "26.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
-    "createdAt": "2026-01-22T03:12:00.000Z",
-    "updatedAt": "2026-01-22T03:12:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_694",
-    "leadId": "lead_694",
+    "id": "interaction_106",
+    "leadId": "lead_702",
     "userId": "user_cleiton",
     "type": "note",
     "notes": "26.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
-    "createdAt": "2026-01-23T17:13:00.000Z",
-    "updatedAt": "2026-01-23T17:13:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_705",
+    "id": "interaction_107",
     "leadId": "lead_705",
+    "userId": "user_cleiton",
+    "type": "note",
+    "notes": "26.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_108",
+    "leadId": "lead_716",
     "userId": "user_si",
     "type": "call",
     "notes": "26.03.2026 - Conversado o primeiro papo, se interessou e vai marcar call de vendas.",
-    "createdAt": "2026-01-24T01:37:00.000Z",
-    "updatedAt": "2026-01-24T01:37:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_707",
-    "leadId": "lead_707",
+    "id": "interaction_109",
+    "leadId": "lead_718",
     "userId": "user_si",
     "type": "whatsapp",
     "notes": "Via Whats e Linkedin",
-    "createdAt": "2026-01-25T03:02:00.000Z",
-    "updatedAt": "2026-01-25T03:02:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_751",
-    "leadId": "lead_751",
+    "id": "interaction_110",
+    "leadId": "lead_762",
     "userId": "user_cleiton",
     "type": "note",
     "notes": "26.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
-    "createdAt": "2026-02-05T20:51:00.000Z",
-    "updatedAt": "2026-02-05T20:51:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_773",
-    "leadId": "lead_773",
+    "id": "interaction_111",
+    "leadId": "lead_784",
     "userId": "user_cleiton",
     "type": "note",
     "notes": "26.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
-    "createdAt": "2026-02-09T19:11:00.000Z",
-    "updatedAt": "2026-02-09T19:11:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_812",
-    "leadId": "lead_812",
+    "id": "interaction_112",
+    "leadId": "lead_823",
     "userId": "user_cleiton",
     "type": "note",
     "notes": "26.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
-    "createdAt": "2026-02-12T11:29:00.000Z",
-    "updatedAt": "2026-02-12T11:29:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_852",
-    "leadId": "lead_852",
+    "id": "interaction_113",
+    "leadId": "lead_863",
     "userId": "user_cleiton",
     "type": "note",
     "notes": "26.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
-    "createdAt": "2026-02-20T16:03:00.000Z",
-    "updatedAt": "2026-02-20T16:03:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_896",
-    "leadId": "lead_896",
+    "id": "interaction_114",
+    "leadId": "lead_907",
     "userId": "user_cleiton",
     "type": "note",
     "notes": "26.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
-    "createdAt": "2026-03-03T22:45:00.000Z",
-    "updatedAt": "2026-03-03T22:45:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_899",
-    "leadId": "lead_899",
+    "id": "interaction_115",
+    "leadId": "lead_910",
     "userId": "user_cleiton",
     "type": "note",
     "notes": "26.03.2026 - Primeira mensagem enviada no sales navigator",
-    "createdAt": "2026-03-03T13:44:00.000Z",
-    "updatedAt": "2026-03-03T13:44:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_909",
-    "leadId": "lead_909",
+    "id": "interaction_116",
+    "leadId": "lead_920",
     "userId": "user_cleiton",
     "type": "note",
     "notes": "26.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
-    "createdAt": "2026-03-05T19:48:00.000Z",
-    "updatedAt": "2026-03-05T19:48:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_915",
-    "leadId": "lead_915",
+    "id": "interaction_117",
+    "leadId": "lead_926",
     "userId": "user_cleiton",
     "type": "note",
     "notes": "26.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
-    "createdAt": "2026-03-06T00:19:00.000Z",
-    "updatedAt": "2026-03-06T00:19:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_921",
-    "leadId": "lead_921",
+    "id": "interaction_118",
+    "leadId": "lead_932",
     "userId": "user_cleiton",
     "type": "call",
     "notes": "26.03.2026 - Adicionei no linkedin e enviei mensagem de conexão\n27.03.2026 - Conversado com sucesso, marcou call de vendas para 09.04 as 16h",
-    "createdAt": "2026-03-08T04:18:00.000Z",
-    "updatedAt": "2026-03-08T04:18:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_942",
-    "leadId": "lead_942",
-    "userId": "user_bruno",
-    "type": "note",
-    "notes": "27.05.2026 - adicionei wpp aguardando retorno",
-    "createdAt": "2026-03-13T21:21:00.000Z",
-    "updatedAt": "2026-03-13T21:21:00.000Z"
-  },
-  {
-    "id": "interaction_lead_943",
-    "leadId": "lead_943",
-    "userId": "user_bruno",
-    "type": "note",
-    "notes": "27.05.2026 - adicionei wpp aguardando retorno",
-    "createdAt": "2026-03-13T13:19:00.000Z",
-    "updatedAt": "2026-03-13T13:19:00.000Z"
-  },
-  {
-    "id": "interaction_lead_944",
-    "leadId": "lead_944",
-    "userId": "user_bruno",
-    "type": "note",
-    "notes": "27.05.2026 - adicionei wpp aguardando retorno",
-    "createdAt": "2026-03-14T11:44:00.000Z",
-    "updatedAt": "2026-03-14T11:44:00.000Z"
-  },
-  {
-    "id": "interaction_lead_945",
-    "leadId": "lead_945",
-    "userId": "user_bruno",
-    "type": "note",
-    "notes": "27.05.2026 - adicionei wpp aguardando retorno",
-    "createdAt": "2026-03-14T11:33:00.000Z",
-    "updatedAt": "2026-03-14T11:33:00.000Z"
-  },
-  {
-    "id": "interaction_lead_947",
-    "leadId": "lead_947",
-    "userId": "user_bruno",
-    "type": "note",
-    "notes": "27.05.2026 - convernsando wpp",
-    "createdAt": "2026-03-15T15:19:00.000Z",
-    "updatedAt": "2026-03-15T15:19:00.000Z"
-  },
-  {
-    "id": "interaction_lead_948",
-    "leadId": "lead_948",
-    "userId": "user_bruno",
-    "type": "note",
-    "notes": "27.05.2026 - convernsando wpp",
-    "createdAt": "2026-03-16T18:21:00.000Z",
-    "updatedAt": "2026-03-16T18:21:00.000Z"
-  },
-  {
-    "id": "interaction_lead_949",
-    "leadId": "lead_949",
-    "userId": "user_cleiton",
-    "type": "note",
-    "notes": "26.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
-    "createdAt": "2026-03-16T16:42:00.000Z",
-    "updatedAt": "2026-03-16T16:42:00.000Z"
-  },
-  {
-    "id": "interaction_lead_950",
-    "leadId": "lead_950",
-    "userId": "user_bruno",
-    "type": "whatsapp",
-    "notes": "26.05.2026 - adicionei no whatsapp e enviei mensagem inicial aguardando retorno.",
-    "createdAt": "2026-03-16T16:30:00.000Z",
-    "updatedAt": "2026-03-16T16:30:00.000Z"
-  },
-  {
-    "id": "interaction_lead_951",
-    "leadId": "lead_951",
-    "userId": "user_bruno",
-    "type": "whatsapp",
-    "notes": "26.05.2026 - adicionei no whatsapp e enviei mensagem inicial aguardando retorno.",
-    "createdAt": "2026-03-16T02:16:00.000Z",
-    "updatedAt": "2026-03-16T02:16:00.000Z"
-  },
-  {
-    "id": "interaction_lead_952",
-    "leadId": "lead_952",
-    "userId": "user_bruno",
-    "type": "whatsapp",
-    "notes": "26.05.2026 - adicionei no whatsapp e enviei mensagem inicial aguardando retorno.",
-    "createdAt": "2026-03-16T00:55:00.000Z",
-    "updatedAt": "2026-03-16T00:55:00.000Z"
-  },
-  {
-    "id": "interaction_lead_953",
+    "id": "interaction_119",
     "leadId": "lead_953",
     "userId": "user_bruno",
-    "type": "whatsapp",
-    "notes": "26.05.2026 - adicionei no whatsapp e enviei mensagem inicial aguardando retorno.",
-    "createdAt": "2026-03-17T18:44:00.000Z",
-    "updatedAt": "2026-03-17T18:44:00.000Z"
+    "type": "note",
+    "notes": "27.05.2026 - adicionei wpp aguardando retorno",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_954",
+    "id": "interaction_120",
     "leadId": "lead_954",
     "userId": "user_bruno",
     "type": "note",
-    "notes": "26.05.2026 -convernsando.....",
-    "createdAt": "2026-03-17T17:14:00.000Z",
-    "updatedAt": "2026-03-17T17:14:00.000Z"
+    "notes": "27.05.2026 - adicionei wpp aguardando retorno",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_955",
+    "id": "interaction_121",
     "leadId": "lead_955",
     "userId": "user_bruno",
     "type": "note",
-    "notes": "28.05.2026 - AGENDAMENTO OK",
-    "createdAt": "2026-03-17T10:55:00.000Z",
-    "updatedAt": "2026-03-17T10:55:00.000Z"
+    "notes": "27.05.2026 - adicionei wpp aguardando retorno",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_956",
+    "id": "interaction_122",
     "leadId": "lead_956",
     "userId": "user_bruno",
     "type": "note",
-    "notes": "25.05.2026 - agendamento OK",
-    "createdAt": "2026-03-17T02:49:00.000Z",
-    "updatedAt": "2026-03-17T02:49:00.000Z"
+    "notes": "27.05.2026 - adicionei wpp aguardando retorno",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_957",
-    "leadId": "lead_957",
-    "userId": "user_bruno",
-    "type": "note",
-    "notes": "25.05.2026 -convernsando.....",
-    "createdAt": "2026-03-18T20:13:00.000Z",
-    "updatedAt": "2026-03-18T20:13:00.000Z"
-  },
-  {
-    "id": "interaction_lead_958",
+    "id": "interaction_123",
     "leadId": "lead_958",
     "userId": "user_bruno",
-    "type": "whatsapp",
-    "notes": "25.05.2026 - adicionei no whatsapp e enviei mensagem inicial aguardando retorno.",
-    "createdAt": "2026-03-18T17:44:00.000Z",
-    "updatedAt": "2026-03-18T17:44:00.000Z"
+    "type": "note",
+    "notes": "27.05.2026 - convernsando wpp",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_959",
+    "id": "interaction_124",
     "leadId": "lead_959",
     "userId": "user_bruno",
     "type": "note",
-    "notes": "25.05.2026 -convernsando.....",
-    "createdAt": "2026-03-18T11:34:00.000Z",
-    "updatedAt": "2026-03-18T11:34:00.000Z"
+    "notes": "27.05.2026 - convernsando wpp",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_960",
+    "id": "interaction_125",
     "leadId": "lead_960",
-    "userId": "user_bruno",
-    "type": "whatsapp",
-    "notes": "25.05.2026 - adicionei no whatsapp e enviei mensagem inicial aguardando retorno.",
-    "createdAt": "2026-03-18T03:40:00.000Z",
-    "updatedAt": "2026-03-18T03:40:00.000Z"
+    "userId": "user_cleiton",
+    "type": "note",
+    "notes": "26.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_961",
+    "id": "interaction_126",
     "leadId": "lead_961",
     "userId": "user_bruno",
     "type": "whatsapp",
-    "notes": "25.05.2026 - adicionei no whatsapp e enviei mensagem inicial aguardando retorno.",
-    "createdAt": "2026-03-18T00:19:00.000Z",
-    "updatedAt": "2026-03-18T00:19:00.000Z"
+    "notes": "26.05.2026 - adicionei no whatsapp e enviei mensagem inicial aguardando retorno.",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_962",
+    "id": "interaction_127",
     "leadId": "lead_962",
     "userId": "user_bruno",
-    "type": "note",
-    "notes": "25.05.2026 -convernsando.....",
-    "createdAt": "2026-03-19T19:47:00.000Z",
-    "updatedAt": "2026-03-19T19:47:00.000Z"
+    "type": "whatsapp",
+    "notes": "26.05.2026 - adicionei no whatsapp e enviei mensagem inicial aguardando retorno.",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_963",
+    "id": "interaction_128",
     "leadId": "lead_963",
     "userId": "user_bruno",
     "type": "whatsapp",
-    "notes": "25.05.2026 - adicionei no whatsapp e enviei mensagem inicial aguardando retorno.",
-    "createdAt": "2026-03-19T19:21:00.000Z",
-    "updatedAt": "2026-03-19T19:21:00.000Z"
+    "notes": "26.05.2026 - adicionei no whatsapp e enviei mensagem inicial aguardando retorno.",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_964",
+    "id": "interaction_129",
     "leadId": "lead_964",
     "userId": "user_bruno",
     "type": "whatsapp",
-    "notes": "22.05.2026 - adicionei no whatsapp e enviei mensagem inicial aguardando retorno.",
-    "createdAt": "2026-03-19T18:28:00.000Z",
-    "updatedAt": "2026-03-19T18:28:00.000Z"
+    "notes": "26.05.2026 - adicionei no whatsapp e enviei mensagem inicial aguardando retorno.",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_965",
+    "id": "interaction_130",
     "leadId": "lead_965",
     "userId": "user_bruno",
-    "type": "whatsapp",
-    "notes": "22.05.2026 - adicionei no whatsapp e enviei mensagem inicial aguardando retorno.",
-    "createdAt": "2026-03-19T13:54:00.000Z",
-    "updatedAt": "2026-03-19T13:54:00.000Z"
+    "type": "note",
+    "notes": "26.05.2026 -convernsando.....",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_966",
+    "id": "interaction_131",
     "leadId": "lead_966",
     "userId": "user_bruno",
-    "type": "whatsapp",
-    "notes": "22.05.2026 - adicionei no whatsapp e enviei mensagem inicial aguardando retorno.",
-    "createdAt": "2026-03-19T00:06:00.000Z",
-    "updatedAt": "2026-03-19T00:06:00.000Z"
+    "type": "note",
+    "notes": "28.05.2026 - AGENDAMENTO OK",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_967",
+    "id": "interaction_132",
     "leadId": "lead_967",
     "userId": "user_bruno",
-    "type": "whatsapp",
-    "notes": "22.05.2026 - adicionei no whatsapp e enviei mensagem inicial aguardando retorno.",
-    "createdAt": "2026-03-19T00:05:00.000Z",
-    "updatedAt": "2026-03-19T00:05:00.000Z"
+    "type": "note",
+    "notes": "25.05.2026 - agendamento OK",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_968",
+    "id": "interaction_133",
     "leadId": "lead_968",
     "userId": "user_bruno",
-    "type": "whatsapp",
-    "notes": "22.05.2026 - adicionei no whatsapp e enviei mensagem inicial aguardando retorno.",
-    "createdAt": "2026-03-20T17:41:00.000Z",
-    "updatedAt": "2026-03-20T17:41:00.000Z"
+    "type": "note",
+    "notes": "25.05.2026 -convernsando.....",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_969",
+    "id": "interaction_134",
     "leadId": "lead_969",
     "userId": "user_bruno",
     "type": "whatsapp",
-    "notes": "21.05.2026 - adicionei no whatsapp e enviei mensagem inicial aguardando retorno.",
-    "createdAt": "2026-03-20T14:46:00.000Z",
-    "updatedAt": "2026-03-20T14:46:00.000Z"
+    "notes": "25.05.2026 - adicionei no whatsapp e enviei mensagem inicial aguardando retorno.",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_970",
+    "id": "interaction_135",
     "leadId": "lead_970",
     "userId": "user_bruno",
-    "type": "whatsapp",
-    "notes": "21.05.2026 - adicionei no whatsapp e enviei mensagem inicial aguardando retorno.",
-    "createdAt": "2026-03-20T12:32:00.000Z",
-    "updatedAt": "2026-03-20T12:32:00.000Z"
-  },
-  {
-    "id": "interaction_lead_971",
-    "leadId": "lead_971",
-    "userId": "user_cleiton",
     "type": "note",
-    "notes": "26.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
-    "createdAt": "2026-03-20T12:10:00.000Z",
-    "updatedAt": "2026-03-20T12:10:00.000Z"
+    "notes": "25.05.2026 -convernsando.....",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_972",
+    "id": "interaction_136",
+    "leadId": "lead_971",
+    "userId": "user_bruno",
+    "type": "whatsapp",
+    "notes": "25.05.2026 - adicionei no whatsapp e enviei mensagem inicial aguardando retorno.",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_137",
     "leadId": "lead_972",
     "userId": "user_bruno",
     "type": "whatsapp",
-    "notes": "21.05.2026 - adicionei no whatsapp e enviei mensagem inicial aguardando retorno.",
-    "createdAt": "2026-03-20T11:20:00.000Z",
-    "updatedAt": "2026-03-20T11:20:00.000Z"
+    "notes": "25.05.2026 - adicionei no whatsapp e enviei mensagem inicial aguardando retorno.",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_973",
+    "id": "interaction_138",
     "leadId": "lead_973",
     "userId": "user_bruno",
-    "type": "call",
-    "notes": "22.05.2026 - agendamento bate papo segunda 25/05 as 15:00",
-    "createdAt": "2026-03-20T02:19:00.000Z",
-    "updatedAt": "2026-03-20T02:19:00.000Z"
+    "type": "note",
+    "notes": "25.05.2026 -convernsando.....",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_974",
+    "id": "interaction_139",
     "leadId": "lead_974",
     "userId": "user_bruno",
-    "type": "note",
-    "notes": "22.05.2026. aguardando retorno",
-    "createdAt": "2026-03-20T01:21:00.000Z",
-    "updatedAt": "2026-03-20T01:21:00.000Z"
+    "type": "whatsapp",
+    "notes": "25.05.2026 - adicionei no whatsapp e enviei mensagem inicial aguardando retorno.",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_975",
+    "id": "interaction_140",
     "leadId": "lead_975",
-    "userId": "user_cleiton",
-    "type": "call",
-    "notes": "26.03.2026 - Adicionei no linkedin e enviei mensagem de conexão\n27.03.2026 - Conversado com sucesso, marcou call de vendas para 30.03 as 10h",
-    "createdAt": "2026-03-21T20:30:00.000Z",
-    "updatedAt": "2026-03-21T20:30:00.000Z"
+    "userId": "user_bruno",
+    "type": "whatsapp",
+    "notes": "22.05.2026 - adicionei no whatsapp e enviei mensagem inicial aguardando retorno.",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_976",
+    "id": "interaction_141",
     "leadId": "lead_976",
-    "userId": "user_cleiton",
-    "type": "note",
-    "notes": "26.03.2026 - Primeira mensagem enviada no sales navigator",
-    "createdAt": "2026-03-21T18:15:00.000Z",
-    "updatedAt": "2026-03-21T18:15:00.000Z"
+    "userId": "user_bruno",
+    "type": "whatsapp",
+    "notes": "22.05.2026 - adicionei no whatsapp e enviei mensagem inicial aguardando retorno.",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_977",
+    "id": "interaction_142",
     "leadId": "lead_977",
-    "userId": "user_cleiton",
-    "type": "note",
-    "notes": "26.03.2026 - Primeira mensagem enviada no sales navigator",
-    "createdAt": "2026-03-21T10:10:00.000Z",
-    "updatedAt": "2026-03-21T10:10:00.000Z"
+    "userId": "user_bruno",
+    "type": "whatsapp",
+    "notes": "22.05.2026 - adicionei no whatsapp e enviei mensagem inicial aguardando retorno.",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_978",
+    "id": "interaction_143",
     "leadId": "lead_978",
-    "userId": "user_cleiton",
-    "type": "note",
-    "notes": "26.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
-    "createdAt": "2026-03-21T03:17:00.000Z",
-    "updatedAt": "2026-03-21T03:17:00.000Z"
+    "userId": "user_bruno",
+    "type": "whatsapp",
+    "notes": "22.05.2026 - adicionei no whatsapp e enviei mensagem inicial aguardando retorno.",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_979",
+    "id": "interaction_144",
     "leadId": "lead_979",
-    "userId": "user_cleiton",
-    "type": "note",
-    "notes": "26.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
-    "createdAt": "2026-03-22T19:26:00.000Z",
-    "updatedAt": "2026-03-22T19:26:00.000Z"
+    "userId": "user_bruno",
+    "type": "whatsapp",
+    "notes": "22.05.2026 - adicionei no whatsapp e enviei mensagem inicial aguardando retorno.",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_980",
+    "id": "interaction_145",
     "leadId": "lead_980",
-    "userId": "user_cleiton",
-    "type": "note",
-    "notes": "26.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
-    "createdAt": "2026-03-22T02:16:00.000Z",
-    "updatedAt": "2026-03-22T02:16:00.000Z"
+    "userId": "user_bruno",
+    "type": "whatsapp",
+    "notes": "21.05.2026 - adicionei no whatsapp e enviei mensagem inicial aguardando retorno.",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_981",
+    "id": "interaction_146",
     "leadId": "lead_981",
-    "userId": "user_cleiton",
-    "type": "note",
-    "notes": "26.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
-    "createdAt": "2026-03-22T02:15:00.000Z",
-    "updatedAt": "2026-03-22T02:15:00.000Z"
+    "userId": "user_bruno",
+    "type": "whatsapp",
+    "notes": "21.05.2026 - adicionei no whatsapp e enviei mensagem inicial aguardando retorno.",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_982",
+    "id": "interaction_147",
     "leadId": "lead_982",
     "userId": "user_cleiton",
     "type": "note",
     "notes": "26.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
-    "createdAt": "2026-03-23T14:44:00.000Z",
-    "updatedAt": "2026-03-23T14:44:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_983",
+    "id": "interaction_148",
     "leadId": "lead_983",
-    "userId": "user_cleiton",
-    "type": "note",
-    "notes": "26.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
-    "createdAt": "2026-03-23T14:38:00.000Z",
-    "updatedAt": "2026-03-23T14:38:00.000Z"
+    "userId": "user_bruno",
+    "type": "whatsapp",
+    "notes": "21.05.2026 - adicionei no whatsapp e enviei mensagem inicial aguardando retorno.",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_984",
+    "id": "interaction_149",
     "leadId": "lead_984",
-    "userId": "user_cleiton",
+    "userId": "user_bruno",
     "type": "note",
-    "notes": "25.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
-    "createdAt": "2026-03-23T13:57:00.000Z",
-    "updatedAt": "2026-03-23T13:57:00.000Z"
+    "notes": "22.05.2026 - agendamento bate papo segunda 25/05 as 15:00",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_985",
+    "id": "interaction_150",
     "leadId": "lead_985",
-    "userId": "user_cleiton",
+    "userId": "user_bruno",
     "type": "note",
-    "notes": "25.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
-    "createdAt": "2026-03-23T01:40:00.000Z",
-    "updatedAt": "2026-03-23T01:40:00.000Z"
+    "notes": "22.05.2026. aguardando retorno",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_986",
+    "id": "interaction_151",
     "leadId": "lead_986",
     "userId": "user_cleiton",
-    "type": "note",
-    "notes": "25.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
-    "createdAt": "2026-03-24T21:10:00.000Z",
-    "updatedAt": "2026-03-24T21:10:00.000Z"
+    "type": "call",
+    "notes": "26.03.2026 - Adicionei no linkedin e enviei mensagem de conexão\n27.03.2026 - Conversado com sucesso, marcou call de vendas para 30.03 as 10h",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_987",
+    "id": "interaction_152",
     "leadId": "lead_987",
     "userId": "user_cleiton",
     "type": "note",
-    "notes": "25.03.2026 - Primeira mensagem enviada no sales navigator \n26.03.3036 - Conversado, não tem dinheiro para mentoria, ofereci produto 97 reais",
-    "createdAt": "2026-03-24T20:29:00.000Z",
-    "updatedAt": "2026-03-24T20:29:00.000Z"
+    "notes": "26.03.2026 - Primeira mensagem enviada no sales navigator",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_988",
+    "id": "interaction_153",
     "leadId": "lead_988",
     "userId": "user_cleiton",
     "type": "note",
-    "notes": "25.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
-    "createdAt": "2026-03-24T18:21:00.000Z",
-    "updatedAt": "2026-03-24T18:21:00.000Z"
+    "notes": "26.03.2026 - Primeira mensagem enviada no sales navigator",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_989",
+    "id": "interaction_154",
     "leadId": "lead_989",
     "userId": "user_cleiton",
     "type": "note",
-    "notes": "25.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
-    "createdAt": "2026-03-24T16:40:00.000Z",
-    "updatedAt": "2026-03-24T16:40:00.000Z"
+    "notes": "26.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_990",
+    "id": "interaction_155",
     "leadId": "lead_990",
     "userId": "user_cleiton",
     "type": "note",
-    "notes": "25.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
-    "createdAt": "2026-03-24T12:15:00.000Z",
-    "updatedAt": "2026-03-24T12:15:00.000Z"
+    "notes": "26.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_991",
+    "id": "interaction_156",
     "leadId": "lead_991",
     "userId": "user_cleiton",
     "type": "note",
-    "notes": "25.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
-    "createdAt": "2026-03-24T00:07:00.000Z",
-    "updatedAt": "2026-03-24T00:07:00.000Z"
+    "notes": "26.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_992",
+    "id": "interaction_157",
     "leadId": "lead_992",
     "userId": "user_cleiton",
     "type": "note",
-    "notes": "25.03.2026 - Adicionei no linkedin e enviei mensagem de conexão\n26.03.2026 - Conversado 1:1, aguardar para oferecer a mentoria.",
-    "createdAt": "2026-03-25T14:25:00.000Z",
-    "updatedAt": "2026-03-25T14:25:00.000Z"
+    "notes": "26.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_993",
+    "id": "interaction_158",
     "leadId": "lead_993",
     "userId": "user_cleiton",
     "type": "note",
-    "notes": "25.03.2026 - Primeira mensagem enviada no sales navigator",
-    "createdAt": "2026-03-25T00:22:00.000Z",
-    "updatedAt": "2026-03-25T00:22:00.000Z"
+    "notes": "26.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "interaction_lead_994",
+    "id": "interaction_159",
     "leadId": "lead_994",
     "userId": "user_cleiton",
     "type": "note",
     "notes": "26.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
-    "createdAt": "2026-03-26T12:40:00.000Z",
-    "updatedAt": "2026-03-26T12:40:00.000Z"
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_160",
+    "leadId": "lead_995",
+    "userId": "user_cleiton",
+    "type": "note",
+    "notes": "25.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_161",
+    "leadId": "lead_996",
+    "userId": "user_cleiton",
+    "type": "note",
+    "notes": "25.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_162",
+    "leadId": "lead_997",
+    "userId": "user_cleiton",
+    "type": "note",
+    "notes": "25.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_163",
+    "leadId": "lead_998",
+    "userId": "user_cleiton",
+    "type": "note",
+    "notes": "25.03.2026 - Primeira mensagem enviada no sales navigator \n26.03.3036 - Conversado, não tem dinheiro para mentoria, ofereci produto 97 reais",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_164",
+    "leadId": "lead_999",
+    "userId": "user_cleiton",
+    "type": "note",
+    "notes": "25.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_165",
+    "leadId": "lead_1000",
+    "userId": "user_cleiton",
+    "type": "note",
+    "notes": "25.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_166",
+    "leadId": "lead_1001",
+    "userId": "user_cleiton",
+    "type": "note",
+    "notes": "25.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_167",
+    "leadId": "lead_1002",
+    "userId": "user_cleiton",
+    "type": "note",
+    "notes": "25.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_168",
+    "leadId": "lead_1003",
+    "userId": "user_cleiton",
+    "type": "note",
+    "notes": "25.03.2026 - Adicionei no linkedin e enviei mensagem de conexão\n26.03.2026 - Conversado 1:1, aguardar para oferecer a mentoria.",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_169",
+    "leadId": "lead_1004",
+    "userId": "user_cleiton",
+    "type": "note",
+    "notes": "25.03.2026 - Primeira mensagem enviada no sales navigator",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
+  },
+  {
+    "id": "interaction_170",
+    "leadId": "lead_1005",
+    "userId": "user_cleiton",
+    "type": "note",
+    "notes": "26.03.2026 - Adicionei no linkedin e enviei mensagem de conexão",
+    "createdAt": "2025-07-15T12:00:00.000Z",
+    "updatedAt": "2025-07-15T12:00:00.000Z"
   }
 ]

@@ -28,15 +28,6 @@ const NAV_ITEMS: Array<Omit<SidebarItem, "active">> = [
   { label: "Administração", href: "#administracao", icon: Settings, disabled: true },
 ];
 
-const INTEGRATIONS_SECTION = {
-  label: "Integrações",
-  items: [
-    { label: "Reuniões", icon: Calendar, badge: "breve" },
-    { label: "Relatórios", icon: BarChart3, badge: "breve" },
-    { label: "WhatsApp", icon: MessageCircle, badge: "breve" },
-  ],
-};
-
 export default function AppLayout({ children }: { children: ReactNode }) {
   return (
     <AuthGuard>
@@ -63,6 +54,31 @@ function AppShellWithNav({ children }: { children: ReactNode }) {
         : pathname.startsWith(item.href),
   }));
 
+  const integrationsSection = {
+    label: "Integrações",
+    items: [
+      {
+        label: "Calendário",
+        href: "/calendar",
+        icon: Calendar,
+        active: pathname.startsWith("/calendar"),
+        badge: "Google",
+      },
+      {
+        label: "WhatsApp",
+        href: "/whatsapp",
+        icon: MessageCircle,
+        active: pathname.startsWith("/whatsapp"),
+        badge: "Meta",
+      },
+      {
+        label: "Relatórios",
+        icon: BarChart3,
+        badge: "breve",
+      },
+    ],
+  };
+
   const activeItem = items.find((item) => item.active);
 
   function handleSearch(term: string) {
@@ -75,7 +91,7 @@ function AppShellWithNav({ children }: { children: ReactNode }) {
   return (
     <AppShell
       sidebarItems={items}
-      sidebarSecondarySection={INTEGRATIONS_SECTION}
+      sidebarSecondarySection={integrationsSection}
       sidebarCollapsed={collapsed}
       onToggleSidebarCollapse={() => setCollapsed((current) => !current)}
       pageTitle={activeItem?.label}

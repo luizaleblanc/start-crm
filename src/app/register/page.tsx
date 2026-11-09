@@ -31,8 +31,10 @@ export default function RegisterPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    if (!isLoading && user) router.replace("/");
-  }, [isLoading, user, router]);
+    if (!isLoading && user) {
+      window.location.href = "/";
+    }
+  }, [isLoading, user]);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -51,10 +53,9 @@ export default function RegisterPage() {
     setIsSubmitting(true);
     try {
       await register({ name, organizationName, email, password });
-      router.replace("/");
+      window.location.href = "/";
     } catch (err) {
       setError(err instanceof ApiClientError ? err.message : "Não foi possível criar a conta");
-    } finally {
       setIsSubmitting(false);
     }
   }
@@ -107,7 +108,7 @@ export default function RegisterPage() {
               Criar conta
             </Button>
             <Link href="/login" className={buttonVariants({ variant: "outline" })}>
-              Já tenho conta
+              Já tenho uma conta
             </Link>
           </form>
         </CardContent>

@@ -39,7 +39,7 @@ function normalizeDeal(raw: RawDeal): Deal {
     title: raw.title || "Mentoria Tech",
     value: numValue,
     status,
-    closedAt: raw.closedAt ?? null,
+    closedAt: raw.closedAt ?? undefined,
     createdAt: raw.createdAt,
     updatedAt: raw.updatedAt ?? raw.createdAt,
   };

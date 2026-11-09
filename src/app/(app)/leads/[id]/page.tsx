@@ -1,6 +1,20 @@
 "use client";
 
-import { Calendar, ChevronLeft, Mail, MessageCircle, Phone, Tag, Trash2 } from "lucide-react";
+import {
+  Briefcase,
+  Building2,
+  Calendar,
+  ChevronLeft,
+  ExternalLink,
+  FileText,
+  Mail,
+  MapPin,
+  MessageCircle,
+  Phone,
+  Tag,
+  Trash2,
+  UserCheck,
+} from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useState } from "react";
@@ -343,7 +357,9 @@ export default function LeadDetailPage() {
         <div className="flex flex-col gap-6">
           <Card>
             <CardHeader>
-              <CardTitle className="text-h6 uppercase text-muted-foreground">Contato</CardTitle>
+              <CardTitle className="text-h6 uppercase text-muted-foreground">
+                Dados & Contato
+              </CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col gap-3">
               <a
@@ -361,6 +377,51 @@ export default function LeadDetailPage() {
                   <Phone aria-hidden size={16} className="shrink-0 text-muted-foreground" />
                   {lead.phone}
                 </a>
+              )}
+              {lead.company && (
+                <span className="flex items-center gap-2 text-body text-foreground">
+                  <Building2 aria-hidden size={16} className="shrink-0 text-muted-foreground" />
+                  Empresa: {lead.company}
+                </span>
+              )}
+              {lead.jobTitle && (
+                <span className="flex items-center gap-2 text-body text-foreground">
+                  <Briefcase aria-hidden size={16} className="shrink-0 text-muted-foreground" />
+                  Cargo: {lead.jobTitle}
+                </span>
+              )}
+              {lead.city && (
+                <span className="flex items-center gap-2 text-body text-foreground">
+                  <MapPin aria-hidden size={16} className="shrink-0 text-muted-foreground" />
+                  Cidade: {lead.city}
+                </span>
+              )}
+              {lead.linkedinUrl && (
+                <a
+                  href={lead.linkedinUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-body text-blue-600 hover:underline dark:text-blue-400"
+                >
+                  <ExternalLink aria-hidden size={16} className="shrink-0 text-blue-500" />
+                  LinkedIn Perfil
+                </a>
+              )}
+              {lead.ownerName && (
+                <span className="flex items-center gap-2 text-body text-foreground">
+                  <UserCheck aria-hidden size={16} className="shrink-0 text-muted-foreground" />
+                  Responsável: {lead.ownerName}
+                </span>
+              )}
+              {lead.situation && (
+                <span className="flex items-start gap-2 text-body text-foreground">
+                  <FileText
+                    aria-hidden
+                    size={16}
+                    className="mt-0.5 shrink-0 text-muted-foreground"
+                  />
+                  Situação: {lead.situation}
+                </span>
               )}
               <span className="flex items-center gap-2 text-body text-foreground">
                 <Tag aria-hidden size={16} className="shrink-0 text-muted-foreground" />
