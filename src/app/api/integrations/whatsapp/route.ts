@@ -84,13 +84,52 @@ export const POST = handleRoute(async (request) => {
     }
   }
 
-  const messageId = `wamid.HBgM${Date.now()}A8F9B2C4E6D8`;
+  const metaToken = process.env.WHATSAPP_API_TOKEN || process.env.META_WHATSAPP_TOKEN;
+  const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID;
+
+  let realDispatchSuccess = false;
+  let realDispatchError: string | null = null;
+  let messageId = `wamid.HBgM${Date.now()}A8F9B2C4E6D8`;
+
+  // Disparo real via Meta WhatsApp Cloud API se configurada
+  if (metaToken && phoneNumberId) {
+    try {
+      const metaRes = await fetch(`https://graph.facebook.com/v20.0/${phoneNumberId}/messages`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${metaToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          messaging_product: "whatsapp",
+          recipient_type: "individual",
+          to: formattedPhone,
+          type: "text",
+          text: { body: message },
+        }),
+      });
+      const metaData = await metaRes.json();
+      if (metaRes.ok && metaData.messages?.[0]?.id) {
+        realDispatchSuccess = true;
+        messageId = metaData.messages[0].id;
+      } else {
+        realDispatchError = JSON.stringify(metaData);
+        console.warn("[whatsapp] Meta API respondeu com erro:", metaData);
+      }
+    } catch (err) {
+      realDispatchError = err instanceof Error ? err.message : String(err);
+      console.warn("[whatsapp] Falha na conexão com a Meta Cloud API:", err);
+    }
+  }
 
   return NextResponse.json({
     success: true,
+    realDispatchSuccess,
+    realDispatchError,
+    mode: metaToken && phoneNumberId ? "real_cloud_api" : "simulation",
     messageId,
     to: formattedPhone,
-    status: "sent",
+    status: realDispatchSuccess ? "sent_to_meta" : "simulated_local",
     sentAt: new Date().toISOString(),
     clickToChatUrl,
   });

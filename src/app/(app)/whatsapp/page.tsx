@@ -280,6 +280,30 @@ function WhatsAppChatContent() {
     setFunnelStepIndex(0);
   }
 
+  // Disparar a mensagem real para o WhatsApp físico do lead
+  function handleDispatchToRealWhatsApp() {
+    if (!selectedLead?.phone) return;
+    const cleanDigits = selectedLead.phone.replace(/\D/g, "");
+    const fullNumber = cleanDigits.startsWith("55") ? cleanDigits : `55${cleanDigits}`;
+    const lastSdrMsg =
+      [...activeMessages].reverse().find((m) => m.sender === "sdr")?.text ||
+      `Olá ${selectedLead.name.split(" ")[0]}! Tudo bem? Sou do time do Cleiton Silva (Mentoria Tech).`;
+
+    // Dispara tentativa na API do CRM
+    apiFetch("/api/integrations/whatsapp", {
+      method: "POST",
+      body: {
+        to: fullNumber,
+        message: lastSdrMsg,
+        leadId: selectedLead.id,
+      },
+    }).catch(() => null);
+
+    // Abre o WhatsApp no celular ou web com a mensagem real direcionada
+    const url = `https://wa.me/${fullNumber}?text=${encodeURIComponent(lastSdrMsg)}`;
+    window.open(url, "_blank");
+  }
+
   return (
     <div className="flex h-[calc(100vh-8.5rem)] w-full flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
       {/* Barra Superior Informativa do WhatsApp Cloud API */}
@@ -456,6 +480,17 @@ function WhatsAppChatContent() {
 
                 {/* Ações Rápidas de CRM */}
                 <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleDispatchToRealWhatsApp}
+                    className="shadow-xs inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-1 text-caption font-semibold text-white transition-all hover:bg-emerald-700 active:scale-95 dark:bg-emerald-600 dark:hover:bg-emerald-700"
+                    title={`Disparar mensagem no WhatsApp real de ${selectedLead.name} (${selectedLead.phone})`}
+                  >
+                    <MessageCircle className="h-3.5 w-3.5" />
+                    <span className="hidden sm:inline">Disparar no WhatsApp Real</span>
+                    <span className="sm:hidden">Disparar</span>
+                  </button>
+
                   <Link
                     href={`/calendar`}
                     className="hover:bg-muted inline-flex items-center gap-1 rounded-lg border border-border bg-background px-2.5 py-1 text-caption font-medium text-foreground"
