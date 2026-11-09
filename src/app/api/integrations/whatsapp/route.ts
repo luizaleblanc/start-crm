@@ -39,7 +39,7 @@ export const GET = handleRoute(async (request) => {
         id: "presentation",
         name: "Apresentação Comercial",
         category: "MARKETING",
-        body: "Olá {{1}}! Tudo bem? Sou a Luiza Ferraz, closer da Mentoria Tech do Cleiton Silva. Vi seu interesse em acelerar sua carreira tech e gostaria de bater um papo rápido de 10 min. Podemos conversar hoje?",
+        body: "Olá {{1}}! Tudo bem? Sou a Simone, closer da Mentoria Tech do Cleiton Silva. Vi seu interesse em acelerar sua carreira tech e gostaria de bater um papo rápido de 10 min. Podemos conversar hoje?",
       },
       {
         id: "meeting_invite",

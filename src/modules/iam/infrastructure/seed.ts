@@ -51,8 +51,8 @@ export const usersSeed: User[] = [
   {
     id: "user_si",
     organizationId: "org_1",
-    name: "Si",
-    email: "si@startcrm.local",
+    name: "Simone",
+    email: "simone@startcrm.local",
     ativo: true,
     createdAt: now,
     updatedAt: now,

@@ -52,7 +52,7 @@ interface ChatMessage {
   meetingUrl?: string;
   isAudio?: boolean;
   audioDuration?: string;
-  audioVoice?: "cleiton" | "luiza";
+  audioVoice?: "cleiton" | "simone" | "luiza";
   audioTranscript?: string;
 }
 
@@ -86,12 +86,12 @@ function WhatsAppChatContent() {
   const [inputText, setInputText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
 
-  // Perfil da Usuária: Luiza Ferraz
+  // Perfil da Closer Comercial: Simone
   const closerProfile = {
-    name: "Luiza Ferraz",
-    role: "Closer & Co-fundadora",
-    phone: "+55 (83) 99142-9201",
-    instanceId: "closer_luiza",
+    name: "Simone",
+    role: "Closer Comercial",
+    phone: "+55 (11) 98888-0001",
+    instanceId: "closer_simone",
   };
 
   // Seleciona o lead passado via URL ou Luiza Ferraz ou o primeiro lead
@@ -269,7 +269,11 @@ function WhatsAppChatContent() {
   }, [activeMessages, isTyping]);
 
   // Função de reprodução de áudio via Web Speech Synthesis (PT-BR) com animação
-  function playVoiceNote(msgId: string, transcript?: string, voice?: "cleiton" | "luiza") {
+  function playVoiceNote(
+    msgId: string,
+    transcript?: string,
+    voice?: "cleiton" | "simone" | "luiza",
+  ) {
     if (playingAudioId === msgId) {
       if (typeof window !== "undefined" && window.speechSynthesis) {
         window.speechSynthesis.cancel();
@@ -567,7 +571,7 @@ function WhatsAppChatContent() {
       <div className="bg-muted/40 flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-2.5">
         <div className="flex items-center gap-3">
           <div className="shadow-xs flex h-9 w-9 items-center justify-center rounded-full bg-emerald-600 text-caption font-bold text-white">
-            LF
+            SC
           </div>
           <div className="flex flex-col">
             <div className="flex items-center gap-2">
@@ -967,7 +971,7 @@ function WhatsAppChatContent() {
                                   <span>
                                     {playingAudioId === msg.id
                                       ? "Reproduzindo áudio oficial…"
-                                      : `Voz de ${msg.audioVoice === "cleiton" ? "Cleiton Silva (Mentor)" : "Luiza Ferraz (Closer)"}`}
+                                      : `Voz de ${msg.audioVoice === "cleiton" ? "Cleiton Silva (Mentor)" : "Simone (Closer)"}`}
                                   </span>
                                   <span className="font-mono">{msg.audioDuration || "0:38"}</span>
                                 </div>
@@ -1042,7 +1046,7 @@ function WhatsAppChatContent() {
                 className="flex shrink-0 items-center gap-2 border-t border-border bg-card p-3"
               >
                 <div className="flex items-center gap-1.5 text-caption font-semibold text-muted-foreground">
-                  <span className="hidden sm:inline">Closer: Luiza Ferraz</span>
+                  <span className="hidden sm:inline">Closer: Simone</span>
                 </div>
 
                 <input
@@ -1168,7 +1172,7 @@ function WhatsAppChatContent() {
                       {step.isAudio && (
                         <span className="inline-flex items-center gap-1 rounded bg-emerald-500/15 px-2 py-0.5 text-[10px] font-semibold text-emerald-700 dark:text-emerald-300">
                           <Mic className="h-3 w-3" />
-                          Áudio de Voz ({step.audioVoice === "cleiton" ? "Cleiton" : "Luiza"})
+                          Áudio de Voz ({step.audioVoice === "cleiton" ? "Cleiton" : "Simone"})
                         </span>
                       )}
                     </div>

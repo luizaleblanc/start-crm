@@ -12,11 +12,22 @@ export interface CloserInstance {
 
 export const CLOSER_INSTANCES: CloserInstance[] = [
   {
+    id: "closer_simone",
+    name: "Instância Simone (Closer)",
+    closerName: "Simone",
+    phone: "+55 (11) 98888-0001",
+    role: "Closer",
+    status: "connected",
+    batteryLevel: 98,
+    provider: "closer_gateway",
+    lastSyncAt: new Date().toISOString(),
+  },
+  {
     id: "closer_luiza",
     name: "Instância Luiza Ferraz",
     closerName: "Luiza Ferraz",
     phone: "+55 (83) 99142-9201",
-    role: "Closer & Co-fundadora",
+    role: "Co-fundadora",
     status: "connected",
     batteryLevel: 94,
     provider: "closer_gateway",

@@ -8,7 +8,7 @@ export interface SalesMessage {
   meetingUrl?: string;
   isAudio?: boolean;
   audioDuration?: string;
-  audioVoice?: "cleiton" | "luiza";
+  audioVoice?: "cleiton" | "simone" | "luiza";
   audioTranscript?: string;
 }
 
@@ -44,7 +44,7 @@ export interface FunnelStepDefinition {
   crmAction?: string;
   isAudio?: boolean;
   audioDuration?: string;
-  audioVoice?: "cleiton" | "luiza";
+  audioVoice?: "cleiton" | "simone" | "luiza";
   audioTranscript?: string;
   stepTimerSeconds?: number;
 }
@@ -82,10 +82,13 @@ export function detectFunnelFromKanban(lead: {
 }
 
 /**
- * Constrói os 3 funis personalizados por Kanban para a marca Cleiton Silva & Luiza Ferraz:
+ * Constrói os 3 funis personalizados por Kanban para a marca Cleiton Silva (Mentoria Tech):
+ * - Co-fundador & Mentor: Cleiton Silva
+ * - Co-fundadora: Luiza Ferraz
+ * - Closer Responsável: Simone
  * 1. Lead Frio (Aquecimento, Diagnóstico Suave e Roadmap Cleiton)
  * 2. Lead Quente (Aceleração, Método 1:1 Cleiton e Agendamento Meet)
- * 3. Lead em Fechamento (Contorno Objeções, Condições Luiza 12x, Sprint R$ 97 e Won)
+ * 3. Lead em Fechamento (Contorno Objeções, Condições Simone 12x, Sprint R$ 97 e Won)
  */
 export function getFunnelConfigs(lead: LeadContext): Record<FunnelType, FunnelConfig> {
   const firstName = lead.name.split(" ")[0] || "Dev";
@@ -106,8 +109,8 @@ export function getFunnelConfigs(lead: LeadContext): Record<FunnelType, FunnelCo
       steps: [
         {
           stage: "primeiro_contato",
-          sdr: `Olá, ${firstName}! Tudo bem? Sou a Luiza Ferraz, closer da Mentoria Tech do Cleiton Silva. Vi seu perfil atuando como ${cargo} em ${empresa}. Estamos mapeando os principais desafios que devs enfrentam para destravar vagas de R$ 15k+. Posso te fazer uma pergunta rápida?`,
-          leadResponse: `Oi Luiza! Tudo bem sim. Claro, pode perguntar!`,
+          sdr: `Olá, ${firstName}! Tudo bem? Sou a Simone, closer da Mentoria Tech do Cleiton Silva. Vi seu perfil atuando como ${cargo} em ${empresa}. Estamos mapeando os principais desafios que devs enfrentam para destravar vagas de R$ 15k+. Posso te fazer uma pergunta rápida?`,
+          leadResponse: `Oi Simone! Tudo bem sim. Claro, pode perguntar!`,
           crmAction: "Abordagem consultiva suave via Closer WhatsApp Gateway",
           stepTimerSeconds: 6,
         },
@@ -132,14 +135,14 @@ export function getFunnelConfigs(lead: LeadContext): Record<FunnelType, FunnelCo
         {
           stage: "agendamento_call",
           sdr: `Selecionamos 5 profissionais esta semana para montar esse plano de aceleração individualmente com o Cleiton em 15 minutos pelo Google Meet, 100% sem custo. Fica bom para você amanhã às 15h?`,
-          leadResponse: `Com certeza Luiza! Amanhã às 15h está perfeito para mim!`,
+          leadResponse: `Com certeza Simone! Amanhã às 15h está perfeito para mim!`,
           crmAction: "Lead Frio qualificado e avançado para Sessão de Diagnóstico",
           stepTimerSeconds: 5,
         },
         {
           stage: "fechamento",
           sdr: `Perfeito, ${firstName}! Reservei seu horário e o link da sala é https://meet.google.com/crm-mentoria-${lead.id.slice(-6)}. Já atualizei seu cadastro aqui no CRM para Lead Quente!`,
-          leadResponse: `Combinado Luiza! Já coloquei na minha agenda e até amanhã!`,
+          leadResponse: `Combinado Simone! Já coloquei na minha agenda e até amanhã!`,
           crmAction: "Transição concluída: Lead avançado para Quente no Kanban",
           stepTimerSeconds: 4,
         },
@@ -158,8 +161,8 @@ export function getFunnelConfigs(lead: LeadContext): Record<FunnelType, FunnelCo
       steps: [
         {
           stage: "primeiro_contato",
-          sdr: `Fala ${firstName}! Tudo bem? Luiza Ferraz aqui da Mentoria Tech do Cleiton Silva. Vi que você já acompanha nossos conteúdos e tem interesse em acelerar sua carreira para o nível Sênior/Tech Lead. Como está seu plano de carreira para este semestre?`,
-          leadResponse: `Oi Luiza! Sim, acompanho o Cleiton e quero muito dar o próximo passo agora, mas preciso de um acompanhamento mais personalizado.`,
+          sdr: `Fala ${firstName}! Tudo bem? Simone aqui da Mentoria Tech do Cleiton Silva. Vi que você já acompanha nossos conteúdos e tem interesse em acelerar sua carreira para o nível Sênior/Tech Lead. Como está seu plano de carreira para este semestre?`,
+          leadResponse: `Oi Simone! Sim, acompanho o Cleiton e quero muito dar o próximo passo agora, mas preciso de um acompanhamento mais personalizado.`,
           crmAction: "Conexão direta com lead de alto interesse",
           stepTimerSeconds: 4,
         },
@@ -184,14 +187,14 @@ export function getFunnelConfigs(lead: LeadContext): Record<FunnelType, FunnelCo
         {
           stage: "agendamento_call",
           sdr: `Perfeito! Já reservei seu horário prioritário na agenda do Cleiton. Segue o link exclusivo da sala no Google Meet: https://meet.google.com/crm-mentoria-${lead.id.slice(-6)}. Amanhã às 15h fica bom?`,
-          leadResponse: `Confirmado, Luiza! Amanhã às 15h estarei na sala sem falta.`,
+          leadResponse: `Confirmado, Simone! Amanhã às 15h estarei na sala sem falta.`,
           crmAction: "Reunião Google Meet confirmada e sincronizada na agenda",
           stepTimerSeconds: 4,
         },
         {
           stage: "fechamento",
           sdr: `Ótimo, ${firstName}! Enviei o material preparatório para o seu e-mail e adicionei o evento no Google Calendar. Nos vemos amanhã!`,
-          leadResponse: `Tudo pronto Luiza! Até amanhã e muito obrigado!`,
+          leadResponse: `Tudo pronto Simone! Até amanhã e muito obrigado!`,
           crmAction: "Lead Quente pronto para proposta final na reunião",
           stepTimerSeconds: 3,
         },
@@ -200,7 +203,7 @@ export function getFunnelConfigs(lead: LeadContext): Record<FunnelType, FunnelCo
 
     closing: {
       id: "closing",
-      name: "Funil 3: Lead em Fechamento (Negociação & Condições Luiza)",
+      name: "Funil 3: Lead em Fechamento (Negociação & Condições Simone)",
       shortLabel: "Fechamento (Script 3)",
       description:
         "Foco em fechamento imediato, superação de objeções de preço e tempo, condições facilitadas em 12x, Sprint de R$ 97 e contrato ganho.",
@@ -210,8 +213,8 @@ export function getFunnelConfigs(lead: LeadContext): Record<FunnelType, FunnelCo
       steps: [
         {
           stage: "primeiro_contato",
-          sdr: `Oi ${firstName}! Luiza Ferraz aqui. O Cleiton acabou de me passar o parecer da sua call de diagnóstico e aprovou sua vaga na Mentoria Tech! Ele destacou seu potencial para alcançar vaga Sênior rapidamente. Vamos dar o start na sua mentoria?`,
-          leadResponse: `Oi Luiza! A conversa com o Cleiton foi sensacional mesmo! Eu adorei o plano, mas fiquei com um pé atrás em relação ao investimento e como funciona o parcelamento.`,
+          sdr: `Oi ${firstName}! Simone aqui. O Cleiton acabou de me passar o parecer da sua call de diagnóstico e aprovou sua vaga na Mentoria Tech! Ele destacou seu potencial para alcançar vaga Sênior rapidamente. Vamos dar o start na sua mentoria?`,
+          leadResponse: `Oi Simone! A conversa com o Cleiton foi sensacional mesmo! Eu adorei o plano, mas fiquei com um pé atrás em relação ao investimento e como funciona o parcelamento.`,
           crmAction: "Apresentação da aprovação pelo Co-fundador Cleiton Silva",
           stepTimerSeconds: 3,
         },
@@ -225,25 +228,25 @@ export function getFunnelConfigs(lead: LeadContext): Record<FunnelType, FunnelCo
         {
           stage: "apresentacao",
           sdr: `Ouça este áudio de 36 segundos que gravei para você explicando nossa garantia incondicional e o Sprint inicial de R$ 97:`,
-          leadResponse: `Nossa Luiza, com essa garantia de 15 dias e o bônus do Sprint eu fico totalmente tranquilo! Quero fechar a mentoria completa parcelada!`,
-          crmAction: "Áudio da Closer Luiza Ferraz — Objeção superada com sucesso",
+          leadResponse: `Nossa Simone, com essa garantia de 15 dias e o bônus do Sprint eu fico totalmente tranquilo! Quero fechar a mentoria completa parcelada!`,
+          crmAction: "Áudio da Closer Simone — Objeção superada com sucesso",
           isAudio: true,
           audioDuration: "0:36",
-          audioVoice: "luiza",
-          audioTranscript: `Oi ${firstName}, Luiza aqui! A Mentoria individual do Cleiton é personalizada com suporte direto no WhatsApp e encontros semanais. O investimento é parcelado em até 12x e se paga logo no primeiro mês com o novo salário. E se você quiser começar validando a metodologia agora mesmo, temos o Sprint de R$ 97. Mas se fechar a mentoria completa hoje, o Sprint sai como bônus e você tem 15 dias de garantia total!`,
+          audioVoice: "simone",
+          audioTranscript: `Oi ${firstName}, Simone aqui! A Mentoria individual do Cleiton é personalizada com suporte direto no WhatsApp e encontros semanais. O investimento é parcelado em até 12x e se paga logo no primeiro mês com o novo salário. E se você quiser começar validando a metodologia agora mesmo, temos o Sprint de R$ 97. Mas se fechar a mentoria completa hoje, o Sprint sai como bônus e você tem 15 dias de garantia total!`,
           stepTimerSeconds: 5,
         },
         {
           stage: "agendamento_call",
           sdr: `Parabéns pela decisão, ${firstName}! Já gerei seu link de matrícula prioritária com a condição especial aprovada pelo Cleiton: https://pay.mentoriatech.com.br/matricula/${lead.id.slice(-6)}. Me avisa assim que concluir para eu liberar seus acessos VIP!`,
-          leadResponse: `Prontinho Luiza, acabei de efetuar o pagamento em 12x! Já chegou a nota e a confirmação no meu e-mail!`,
+          leadResponse: `Prontinho Simone, acabei de efetuar o pagamento em 12x! Já chegou a nota e a confirmação no meu e-mail!`,
           crmAction: "Link de pagamento gerado e confirmado pelo lead",
           stepTimerSeconds: 4,
         },
         {
           stage: "fechamento",
           sdr: `Show de bola, ${firstName}! Seja muito bem-vindo à Mentoria Tech! Já atualizei seu negócio como GANHO no nosso CRM e o Cleiton já vai te adicionar no grupo VIP exclusivo no WhatsApp. Vamos acelerar juntos!`,
-          leadResponse: `Sensacional Luiza! Muito obrigado por todo o suporte no atendimento. Vamos com tudo!`,
+          leadResponse: `Sensacional Simone! Muito obrigado por todo o suporte no atendimento. Vamos com tudo!`,
           crmAction: "Fechamento 100% Concluído — Negócio Ganho (Won) no CRM",
           stepTimerSeconds: 3,
         },
