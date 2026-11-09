@@ -133,7 +133,7 @@ function WhatsAppChatContent() {
     return userSelectedFunnelForLead[selectedLead.id] || kanbanSuggestedFunnel;
   }, [selectedLead, userSelectedFunnelForLead, kanbanSuggestedFunnel]);
 
-  // Timers personalizados por tipo de funil (em segundos) inicializados do localStorage
+  // Timers personalizados por tipo de funil (em segundos)
   const [funnelTimers, setFunnelTimers] = useState<Record<FunnelType, number>>(() => {
     if (typeof window === "undefined") return { cold: 6, warm: 4, closing: 3 };
     try {

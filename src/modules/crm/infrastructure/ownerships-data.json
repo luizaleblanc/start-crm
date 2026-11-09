@@ -2320,14 +2320,6 @@
     "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "ownership_291",
-    "leadId": "lead_291",
-    "userId": "user_admin",
-    "assignedAt": "2025-07-15T12:00:00.000Z",
-    "createdAt": "2025-07-15T12:00:00.000Z",
-    "updatedAt": "2025-07-15T12:00:00.000Z"
-  },
-  {
     "id": "ownership_292",
     "leadId": "lead_292",
     "userId": "user_admin",
@@ -3184,14 +3176,6 @@
     "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "ownership_399",
-    "leadId": "lead_399",
-    "userId": "user_admin",
-    "assignedAt": "2025-07-15T12:00:00.000Z",
-    "createdAt": "2025-07-15T12:00:00.000Z",
-    "updatedAt": "2025-07-15T12:00:00.000Z"
-  },
-  {
     "id": "ownership_400",
     "leadId": "lead_400",
     "userId": "user_admin",
@@ -3266,14 +3250,6 @@
   {
     "id": "ownership_409",
     "leadId": "lead_409",
-    "userId": "user_admin",
-    "assignedAt": "2025-07-15T12:00:00.000Z",
-    "createdAt": "2025-07-15T12:00:00.000Z",
-    "updatedAt": "2025-07-15T12:00:00.000Z"
-  },
-  {
-    "id": "ownership_410",
-    "leadId": "lead_410",
     "userId": "user_admin",
     "assignedAt": "2025-07-15T12:00:00.000Z",
     "createdAt": "2025-07-15T12:00:00.000Z",
@@ -3586,14 +3562,6 @@
   {
     "id": "ownership_449",
     "leadId": "lead_449",
-    "userId": "user_admin",
-    "assignedAt": "2025-07-15T12:00:00.000Z",
-    "createdAt": "2025-07-15T12:00:00.000Z",
-    "updatedAt": "2025-07-15T12:00:00.000Z"
-  },
-  {
-    "id": "ownership_450",
-    "leadId": "lead_450",
     "userId": "user_admin",
     "assignedAt": "2025-07-15T12:00:00.000Z",
     "createdAt": "2025-07-15T12:00:00.000Z",
@@ -6744,14 +6712,6 @@
     "updatedAt": "2025-07-15T12:00:00.000Z"
   },
   {
-    "id": "ownership_844",
-    "leadId": "lead_844",
-    "userId": "user_admin",
-    "assignedAt": "2025-07-15T12:00:00.000Z",
-    "createdAt": "2025-07-15T12:00:00.000Z",
-    "updatedAt": "2025-07-15T12:00:00.000Z"
-  },
-  {
     "id": "ownership_845",
     "leadId": "lead_845",
     "userId": "user_admin",
@@ -6937,7 +6897,7 @@
   },
   {
     "id": "ownership_868",
-    "leadId": "lead_868",
+    "leadId": "lead_5",
     "userId": "user_admin",
     "assignedAt": "2025-07-15T12:00:00.000Z",
     "createdAt": "2025-07-15T12:00:00.000Z",
@@ -7705,7 +7665,7 @@
   },
   {
     "id": "ownership_964",
-    "leadId": "lead_964",
+    "leadId": "lead_119",
     "userId": "user_bruno",
     "assignedAt": "2025-07-15T12:00:00.000Z",
     "createdAt": "2025-07-15T12:00:00.000Z",
