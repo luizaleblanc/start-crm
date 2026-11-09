@@ -12,7 +12,15 @@ import type { PaginatedResult } from "@/shared/domain/pagination";
 export function useLeads(page = 1, pageSize = 20) {
   return useQuery({
     queryKey: ["leads", { page, pageSize }],
-    queryFn: () => apiFetch<PaginatedResult<Lead>>(`/api/leads?page=${page}&pageSize=${pageSize}`),
+    queryFn: async () => {
+      const result = await apiFetch<PaginatedResult<Lead>>(
+        `/api/leads?page=${page}&pageSize=${pageSize}`,
+      );
+      return {
+        ...result,
+        data: Array.isArray(result?.data) ? result.data : [],
+      };
+    },
   });
 }
 

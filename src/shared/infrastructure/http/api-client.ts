@@ -26,9 +26,10 @@ export function getStoredSession(): StoredSession | null {
       return cachedSession;
     }
 
-    // Fallback: tenta recuperar via cookie se o localStorage estiver vazio
+    // Fallback: recupera via cookie se o localStorage estiver vazio
     const cookieRaw = readCookie(SESSION_STORAGE_KEY);
     if (cookieRaw) {
+      if (cookieRaw === cachedRaw && cachedSession) return cachedSession;
       try {
         const parsed = JSON.parse(cookieRaw) as StoredSession;
         if (parsed?.accessToken) {
@@ -128,11 +129,9 @@ export async function apiFetch<T>(path: string, options: RequestOptions = {}): P
   const payload = await response.json().catch(() => null);
 
   if (!response.ok) {
-    // Se receber 401 em rota autenticada e estivermos fora do /login,
-    // só desloga se realmente não houver mais sessão válida
+    // Se receber 401 em rota autenticada fora de /login, a sessão expirou
     if (response.status === 401 && auth && typeof window !== "undefined") {
-      const current = getStoredSession();
-      if (!current?.accessToken && window.location.pathname !== "/login") {
+      if (window.location.pathname !== "/login") {
         setStoredSession(null);
         window.location.replace("/login");
       }

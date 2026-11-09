@@ -18,6 +18,7 @@ import { useDeals } from "@/modules/crm/presentation/hooks/use-deals";
 import { useFunnelStages, useSources } from "@/modules/crm/presentation/hooks/use-catalog";
 import { useLeads } from "@/modules/crm/presentation/hooks/use-leads";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/shared/ui/card";
+import { Button } from "@/shared/ui/button";
 import { PieChart } from "@/shared/ui/charts/pie-chart";
 import { ErrorState } from "@/shared/ui/error-state";
 import { cn } from "@/shared/ui/cn";
@@ -73,7 +74,25 @@ export default function DashboardPage() {
   const isError = leadsQuery.isError || dealsQuery.isError;
 
   if (isError) {
-    return <ErrorState title="Não foi possível carregar o painel" />;
+    return (
+      <div className="flex flex-col items-center justify-center gap-4 py-16">
+        <ErrorState
+          title="Não foi possível carregar o painel"
+          description="Houve uma instabilidade temporária. Clique no botão abaixo para tentar novamente."
+        />
+        <Button
+          onClick={() => {
+            leadsQuery.refetch();
+            dealsQuery.refetch();
+            sourcesQuery.refetch();
+            funnelStagesQuery.refetch();
+          }}
+          variant="outline"
+        >
+          Recarregar dados
+        </Button>
+      </div>
+    );
   }
 
   return (

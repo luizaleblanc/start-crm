@@ -6,13 +6,27 @@ import { apiFetch } from "@/shared/infrastructure/http/api-client";
 export function useFunnelStages() {
   return useQuery({
     queryKey: ["funnel-stages"],
-    queryFn: () => apiFetch<PaginatedResult<FunnelStage>>("/api/funnel-stages?pageSize=100"),
+    queryFn: async () => {
+      const result = await apiFetch<PaginatedResult<FunnelStage>>(
+        "/api/funnel-stages?pageSize=100",
+      );
+      return {
+        ...result,
+        data: Array.isArray(result?.data) ? result.data : [],
+      };
+    },
   });
 }
 
 export function useSources() {
   return useQuery({
     queryKey: ["sources"],
-    queryFn: () => apiFetch<PaginatedResult<Source>>("/api/sources?pageSize=100"),
+    queryFn: async () => {
+      const result = await apiFetch<PaginatedResult<Source>>("/api/sources?pageSize=100");
+      return {
+        ...result,
+        data: Array.isArray(result?.data) ? result.data : [],
+      };
+    },
   });
 }

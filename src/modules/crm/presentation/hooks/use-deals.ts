@@ -50,9 +50,10 @@ export function useDeals() {
     queryKey: ["deals"],
     queryFn: async () => {
       const result = await apiFetch<PaginatedResult<RawDeal>>("/api/deals?pageSize=1000");
+      const list = Array.isArray(result?.data) ? result.data : [];
       return {
         ...result,
-        data: (result.data ?? []).map(normalizeDeal),
+        data: list.map(normalizeDeal),
       };
     },
   });
